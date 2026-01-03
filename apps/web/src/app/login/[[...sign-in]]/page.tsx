@@ -12,7 +12,6 @@ export default function LoginPage() {
         }}
         signUpUrl="/register"
         fallbackRedirectUrl="/"
-        forceRedirectUrl="/"
       />
     </div>
   );

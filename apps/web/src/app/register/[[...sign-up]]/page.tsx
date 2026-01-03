@@ -12,7 +12,6 @@ export default function RegisterPage() {
         }}
         signInUrl="/login"
         fallbackRedirectUrl="/onboarding"
-        forceRedirectUrl="/onboarding"
       />
     </div>
   );
