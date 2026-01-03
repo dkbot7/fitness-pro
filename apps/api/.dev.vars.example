@@ -1,0 +1,5 @@
+# Neon Postgres
+DATABASE_URL=postgres://user:password@host/database
+
+# Clerk
+CLERK_SECRET_KEY=sk_test_xxxxx

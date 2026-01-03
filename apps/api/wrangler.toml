@@ -1,0 +1,15 @@
+name = "fitness-pro-api"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+# Environment variables (use .dev.vars for local secrets)
+[vars]
+ENVIRONMENT = "production"
+
+# Cron triggers for weekly workout adjustments
+[triggers]
+crons = ["0 6 * * 1"] # Every Monday at 6am UTC
