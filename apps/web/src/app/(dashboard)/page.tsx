@@ -22,20 +22,36 @@ export default async function DashboardPage() {
         </CardHeader>
       </Card>
 
-      {/* TODO: Check if user has completed onboarding */}
-      <Card className="border-blue-200 bg-blue-50">
-        <CardHeader>
-          <CardTitle className="text-lg">Complete seu perfil</CardTitle>
-          <CardDescription className="text-blue-700">
-            Precisamos de algumas informações para criar seu plano de treino personalizado.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button asChild>
-            <Link href="/onboarding">Começar agora</Link>
-          </Button>
-        </CardContent>
-      </Card>
+      {/* Quick Actions */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card className="border-blue-200 bg-blue-50">
+          <CardHeader>
+            <CardTitle className="text-lg">Complete seu perfil</CardTitle>
+            <CardDescription className="text-blue-700">
+              Configure suas preferências e gere seu plano de treino personalizado.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild>
+              <Link href="/onboarding">Começar onboarding</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-green-200 bg-green-50">
+          <CardHeader>
+            <CardTitle className="text-lg">Meu Plano de Treino</CardTitle>
+            <CardDescription className="text-green-700">
+              Veja seus treinos da semana e acompanhe seu progresso.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild variant="default" className="bg-green-600 hover:bg-green-700">
+              <Link href="/plano">Ver plano</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

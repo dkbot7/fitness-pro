@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { handleOnboarding } from './handlers/onboarding';
+import { getWorkoutPlan, completeWorkout } from './handlers/training';
 
 type Bindings = {
   DATABASE_URL: string;
@@ -27,6 +28,10 @@ app.get('/api', (c) => {
 
 // Onboarding
 app.post('/api/onboarding', handleOnboarding);
+
+// Training
+app.get('/api/training/plan', getWorkoutPlan);
+app.post('/api/training/complete', completeWorkout);
 
 // 404 handler
 app.notFound((c) => {
