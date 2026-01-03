@@ -8,6 +8,46 @@ Um SaaS de treinamento físico que gera planos de treino personalizados e se ada
 
 "Um personal trainer digital em português que monta e ajusta seu treino automaticamente"
 
+## ✨ Features Principais
+
+### 🎯 Onboarding Inteligente
+- Multi-step form com validação Zod
+- Seleção de objetivo (emagrecer/ganhar massa/manter)
+- Frequência de treino (2-6x/semana)
+- Equipamentos disponíveis (casa ou academia)
+- Limitações físicas (lesões, dores)
+
+### 📊 Geração Automática de Planos
+- **Algoritmo baseado em regras** (sem ML)
+- Splits inteligentes por frequência:
+  - 2x/semana: Full Body
+  - 3x/semana: Upper/Lower/Full
+  - 4x/semana: Upper/Lower
+  - 5-6x/semana: Push/Pull/Legs
+- Volume adaptado por objetivo (sets/reps/rest)
+- Seleção de exercícios por equipamento disponível
+
+### 📈 Ajuste Semanal Automático (Progressive Overload)
+- Coleta de feedback após cada treino (Fácil/Ok/Difícil)
+- Ajuste automático toda segunda-feira (Cron Trigger)
+- **60%+ fácil → +10% volume**
+- **60%+ difícil → -10% volume**
+- Mínimo 3 feedbacks para ajustar
+- Troca de 2 exercícios a cada 4 semanas (variedade)
+
+### 📱 PWA (Progressive Web App)
+- Instalável em mobile e desktop
+- Funciona offline (service worker)
+- Prompt de instalação inteligente (30s delay)
+- Manifest em português
+
+### 🎨 UX/UI
+- Design mobile-first responsivo
+- Toast notifications para feedback
+- Error boundaries em todas as páginas
+- 404 customizada com links úteis
+- Timer de descanso com presets (30s, 1min, 1:30, 2min)
+
 ## 🏗️ Arquitetura
 
 - **Monorepo**: Turborepo + pnpm workspaces
@@ -139,6 +179,25 @@ pnpm --filter @fitness-pro/web dev
 pnpm --filter @fitness-pro/api dev
 ```
 
+### Testar Localmente
+
+1. **Criar conta**: http://localhost:3000/register
+2. **Completar onboarding**: 4 passos (objetivo, frequência, equipamento, limitações)
+3. **Ver plano gerado**: http://localhost:3000/plano
+4. **Iniciar treino**: Clique em um workout
+5. **Completar treino**: Use o timer e marque como concluído
+6. **Dar feedback**: Escolha dificuldade (Fácil/Ok/Difícil)
+7. **Ver perfil**: http://localhost:3000/perfil
+
+## 📖 Documentação Adicional
+
+- **[SETUP.md](./SETUP.md)**: Guia detalhado de setup local
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)**: Guia completo de deploy em produção
+  - Configuração Neon Database
+  - Setup Clerk produção
+  - Deploy Cloudflare Pages + Workers
+  - Monitoramento e troubleshooting
+
 ## 🗄️ Database
 
 ### Comandos Drizzle
@@ -212,17 +271,63 @@ pnpm format
 - **Auth**: Clerk (free 10k MAU)
 - **Storage**: Cloudflare R2 (free 10GB)
 
-## 📊 Próximas Tasks (Week 1)
+## 📊 Progresso do MVP (6 Semanas)
 
-- [x] Setup monorepo
+### ✅ Week 1: Foundation & Setup (Completo)
+- [x] Setup monorepo (Turborepo + pnpm)
 - [x] Criar apps (web + api)
 - [x] Criar packages (database + shared)
-- [x] Definir 30 exercícios
-- [ ] Configurar Clerk no Next.js
-- [ ] Criar middleware de auth (Clerk JWT)
-- [ ] Configurar shadcn/ui
-- [ ] Criar seed script para exercícios
-- [ ] Testar fluxo de auth completo
+- [x] Definir 30 exercícios catalogados
+- [x] Configurar Clerk no Next.js (PT-BR)
+- [x] Criar middleware de auth (Clerk JWT)
+- [x] Configurar shadcn/ui + Tailwind
+- [x] Criar schema Drizzle completo
+- [x] Criar seed script para exercícios
+
+### ✅ Week 2: Onboarding Flow (Completo)
+- [x] Multi-step onboarding form (4 passos)
+- [x] Validação com React Hook Form + Zod
+- [x] POST /api/onboarding endpoint
+- [x] Algoritmo de geração de plano inicial
+- [x] Seleção inteligente de exercícios por equipamento
+- [x] Volume por objetivo (sets/reps/rest)
+
+### ✅ Week 3: Workout Display & Execution (Completo)
+- [x] GET /api/training/plan endpoint
+- [x] Weekly plan view com estatísticas
+- [x] Workout detail page
+- [x] ExerciseCard component
+- [x] WorkoutTimer com countdown
+- [x] POST /api/training/complete endpoint
+- [x] TanStack Query + optimistic updates
+
+### ✅ Week 4: Feedback & Adjustment (Completo)
+- [x] Feedback page (Fácil/Ok/Difícil)
+- [x] POST /api/feedback endpoint
+- [x] Algoritmo de ajuste semanal (±10%)
+- [x] Cloudflare Cron Trigger (Segunda 6am UTC)
+- [x] Progressive overload implementation
+- [x] Troca de exercícios a cada 4 semanas
+
+### ✅ Week 5: PWA & Profile (Completo)
+- [x] Configurar next-pwa
+- [x] Manifest.json em português
+- [x] Service worker + offline support
+- [x] Profile page (GET /me, PUT /me/profile)
+- [x] Translations PT-BR completas
+- [x] Mobile-first responsive design
+
+### 🔄 Week 6: Polish, Testing & Launch (Em Progresso)
+- [x] Error boundaries (error.tsx)
+- [x] 404 page customizada
+- [x] PWA install prompt component
+- [x] Toast notifications support
+- [x] DEPLOYMENT.md guide completo
+- [ ] Loading states em todas as páginas
+- [ ] Analytics integration (PostHog)
+- [ ] Error monitoring (Sentry)
+- [ ] End-to-end testing completo
+- [ ] Production deployment
 
 ## 🎯 Métricas de Sucesso (MVP)
 
