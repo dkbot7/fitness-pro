@@ -104,9 +104,8 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
 
     try {
       await completeWorkoutMutation.mutateAsync(workoutId);
-      // Show success message
-      alert('Parabéns! Treino concluído com sucesso! 💪');
-      router.push('/plano');
+      // Redirect to feedback page
+      router.push(`/treino/${workoutId}/feedback`);
     } catch (error) {
       alert('Erro ao concluir treino. Tente novamente.');
       setIsCompleting(false);

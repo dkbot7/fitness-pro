@@ -29,6 +29,12 @@ importers:
 
   apps/api:
     dependencies:
+      '@fitness-pro/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@fitness-pro/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@neondatabase/serverless':
         specifier: ^1.0.2
         version: 1.0.2

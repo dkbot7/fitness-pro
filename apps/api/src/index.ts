@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { handleOnboarding } from './handlers/onboarding';
 import { getWorkoutPlan, completeWorkout } from './handlers/training';
+import { submitFeedback } from './handlers/feedback';
 
 type Bindings = {
   DATABASE_URL: string;
@@ -33,6 +34,34 @@ app.post('/api/onboarding', handleOnboarding);
 app.get('/api/training/plan', getWorkoutPlan);
 app.post('/api/training/complete', completeWorkout);
 
+// Feedback
+app.post('/api/feedback', submitFeedback);
+
+// Manual trigger for weekly adjustment (for testing)
+app.post('/api/admin/adjust-week', async (c) => {
+  try {
+    const { userId, weekNumber } = await c.req.json();
+
+    if (!userId || !weekNumber) {
+      return c.json({ error: 'Missing userId or weekNumber' }, 400);
+    }
+
+    const { neon } = await import('@neondatabase/serverless');
+    const { drizzle } = await import('drizzle-orm/neon-http');
+    const { adjustWeeklyPlan } = await import('./services/workout-adjuster');
+
+    const sql = neon(c.env.DATABASE_URL);
+    const db = drizzle(sql);
+
+    const result = await adjustWeeklyPlan(db, userId, weekNumber);
+
+    return c.json(result);
+  } catch (error: any) {
+    console.error('Manual adjustment error:', error);
+    return c.json({ error: error.message }, 500);
+  }
+});
+
 // 404 handler
 app.notFound((c) => {
   return c.json({ error: 'Not found' }, 404);
@@ -44,4 +73,20 @@ app.onError((err, c) => {
   return c.json({ error: 'Internal server error' }, 500);
 });
 
-export default app;
+// Scheduled event handler (Cloudflare Cron Triggers)
+export default {
+  fetch: app.fetch,
+  async scheduled(
+    event: ScheduledEvent,
+    env: Bindings,
+    ctx: ExecutionContext
+  ): Promise<void> {
+    // Import cron handler dynamically to avoid circular dependencies
+    const { handleWeeklyAdjustment } = await import('./cron/weekly-adjustment');
+
+    console.log('Cron trigger fired:', event.cron);
+
+    // Run weekly adjustment
+    ctx.waitUntil(handleWeeklyAdjustment(env));
+  },
+};
