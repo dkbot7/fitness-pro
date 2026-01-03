@@ -10,6 +10,16 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Fitness Pro - Seu Personal Trainer Digital',
   description: 'Personal trainer digital em português para brasileiros no exterior',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Fitness Pro',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  themeColor: '#2563eb',
 };
 
 export default function RootLayout({
