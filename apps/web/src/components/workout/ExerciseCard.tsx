@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MUSCLE_GROUPS } from '@fitness-pro/shared';
 import type { WorkoutExercise } from '@/lib/api-client';
+import { VideoPlayer } from './VideoPlayer';
 
 interface ExerciseCardProps {
   exercise: WorkoutExercise;
@@ -100,33 +101,12 @@ export function ExerciseCard({ exercise, exerciseNumber, workoutId }: ExerciseCa
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Video Placeholder */}
-        <div className="overflow-hidden rounded-lg bg-gray-100">
-          <div className="flex aspect-video items-center justify-center text-gray-400">
-            <div className="text-center">
-              <svg
-                className="mx-auto h-12 w-12"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <p className="mt-2 text-sm">Vídeo disponível na próxima versão</p>
-            </div>
-          </div>
-        </div>
+        {/* Video Player */}
+        <VideoPlayer
+          videoUrl={exercise.videoUrl}
+          thumbnailUrl={exercise.thumbnailUrl}
+          exerciseName={exercise.exerciseName}
+        />
 
         {/* Exercise Details */}
         <div className="grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-4">
