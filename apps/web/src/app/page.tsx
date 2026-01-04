@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -18,22 +19,48 @@ export default function Home() {
             Treinos personalizados que se adaptam automaticamente ao seu progresso
           </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button asChild size="lg" className="w-full sm:w-auto">
-              <Link href="/login">Entrar</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-              <Link href="/register">Criar conta grátis</Link>
-            </Button>
-          </div>
+          {/* CTA Buttons - Only show when signed out */}
+          <SignedOut>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button asChild size="lg" className="w-full sm:w-auto">
+                <Link href="/login">Entrar</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                <Link href="/register">Criar conta grátis</Link>
+              </Button>
+            </div>
 
-          {/* Quick Access */}
-          <div className="mt-8">
-            <Button asChild variant="link">
-              <Link href="/onboarding">Ir para Dashboard →</Link>
-            </Button>
-          </div>
+            {/* Quick Access */}
+            <div className="mt-8">
+              <Button asChild variant="link">
+                <Link href="/onboarding">Ir para Dashboard →</Link>
+              </Button>
+            </div>
+          </SignedOut>
+
+          {/* Signed In - Show Dashboard Access */}
+          <SignedIn>
+            <div className="flex flex-col items-center justify-center gap-6">
+              <div className="flex items-center gap-4">
+                <p className="text-lg text-gray-700">Bem-vindo de volta! 👋</p>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: 'w-12 h-12',
+                    },
+                  }}
+                />
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" className="w-full sm:w-auto">
+                  <Link href="/plano">Ver Meu Plano de Treino</Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                  <Link href="/onboarding">Configurar Preferências</Link>
+                </Button>
+              </div>
+            </div>
+          </SignedIn>
         </div>
 
         {/* Features Grid */}

@@ -14,8 +14,8 @@ interface Env {
  */
 export async function getWorkoutPlan(c: Context<{ Bindings: Env }>) {
   try {
-    // 1. Get user info from headers
-    const userId = c.req.header('X-User-ID');
+    // 1. Get user info from auth middleware
+    const userId = c.get('userId');
 
     if (!userId) {
       return c.json({ error: 'Missing user information' }, 401);
@@ -131,8 +131,8 @@ export async function getWorkoutPlan(c: Context<{ Bindings: Env }>) {
  */
 export async function completeWorkout(c: Context<{ Bindings: Env }>) {
   try {
-    // 1. Get user info from headers
-    const userId = c.req.header('X-User-ID');
+    // 1. Get user info from auth middleware
+    const userId = c.get('userId');
 
     if (!userId) {
       return c.json({ error: 'Missing user information' }, 401);

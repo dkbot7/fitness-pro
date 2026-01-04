@@ -6,6 +6,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 
 interface RequestOptions extends RequestInit {
   headers?: Record<string, string>;
+  token?: string | null;
 }
 
 async function apiRequest<T>(
@@ -14,12 +15,22 @@ async function apiRequest<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+
+  // Add Authorization header if token is provided
+  if (options.token) {
+    headers['Authorization'] = `Bearer ${options.token}`;
+    console.log('[API] Sending request with token, length:', options.token.length);
+  } else {
+    console.log('[API] No token provided for request to:', endpoint);
+  }
+
   const response = await fetch(url, {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+    headers,
   });
 
   if (!response.ok) {
@@ -79,13 +90,17 @@ export interface WorkoutPlanResponse {
   };
 }
 
-export async function getWorkoutPlan(): Promise<WorkoutPlanResponse> {
+export async function getWorkoutPlan(token?: string | null): Promise<WorkoutPlanResponse> {
   return apiRequest('/api/training/plan', {
     method: 'GET',
+    token,
   });
 }
 
-export async function completeWorkout(workoutId: number): Promise<{
+export async function completeWorkout(
+  workoutId: number,
+  token?: string | null
+): Promise<{
   success: boolean;
   message: string;
   workout: Workout;
@@ -93,5 +108,6 @@ export async function completeWorkout(workoutId: number): Promise<{
   return apiRequest('/api/training/complete', {
     method: 'POST',
     body: JSON.stringify({ workoutId }),
+    token,
   });
 }

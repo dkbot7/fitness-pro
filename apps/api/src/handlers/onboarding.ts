@@ -15,10 +15,11 @@ interface Env {
  */
 export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
   try {
-    // 1. Get user info from headers (sent from Next.js frontend)
-    const userId = c.req.header('X-User-ID');
-    const userEmail = c.req.header('X-User-Email');
-    const userName = c.req.header('X-User-Name');
+    // 1. Get user info from auth middleware
+    const userId = c.get('userId');
+    const user = c.get('user');
+    const userEmail = user?.email || user?.email_address;
+    const userName = user?.name || user?.full_name;
 
     if (!userId || !userEmail) {
       return c.json({ error: 'Missing user information' }, 401);
