@@ -11,7 +11,7 @@ export default function LoginPage() {
           },
         }}
         signUpUrl="/register"
-        fallbackRedirectUrl="/"
+        fallbackRedirectUrl="/plano"
       />
     </div>
   );

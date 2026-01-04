@@ -59,8 +59,8 @@ export default function OnboardingPage() {
         throw new Error('Failed to save onboarding');
       }
 
-      // Redirect to dashboard after successful onboarding
-      router.push('/');
+      // Redirect to workout plan after successful onboarding
+      router.push('/plano');
       router.refresh();
     } catch (error) {
       console.error('Onboarding error:', error);
