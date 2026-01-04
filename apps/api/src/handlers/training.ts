@@ -70,6 +70,8 @@ export async function getWorkoutPlan(c: Context<{ Bindings: Env }>) {
             exerciseSlug: exercises.slug,
             muscleGroups: exercises.muscleGroups,
             difficulty: exercises.difficulty,
+            videoUrl: exercises.videoUrl,
+            thumbnailUrl: exercises.thumbnailUrl,
           })
           .from(workoutExercises)
           .innerJoin(exercises, eq(workoutExercises.exerciseId, exercises.id))

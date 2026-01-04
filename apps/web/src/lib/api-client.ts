@@ -58,6 +58,8 @@ export interface WorkoutExercise {
   exerciseSlug: string;
   muscleGroups: string[];
   difficulty: string;
+  videoUrl: string | null;
+  thumbnailUrl: string | null;
 }
 
 export interface Workout {
