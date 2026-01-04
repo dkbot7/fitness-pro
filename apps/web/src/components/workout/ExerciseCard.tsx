@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MUSCLE_GROUPS } from '@fitness-pro/shared';
 import type { WorkoutExercise } from '@/lib/api-client';
@@ -8,17 +8,58 @@ import type { WorkoutExercise } from '@/lib/api-client';
 interface ExerciseCardProps {
   exercise: WorkoutExercise;
   exerciseNumber: number;
+  workoutId?: number;
 }
 
-export function ExerciseCard({ exercise, exerciseNumber }: ExerciseCardProps) {
-  const [completedSets, setCompletedSets] = useState<boolean[]>(
-    new Array(exercise.sets).fill(false)
-  );
+export function ExerciseCard({ exercise, exerciseNumber, workoutId }: ExerciseCardProps) {
+  // Generate unique storage key for this exercise
+  const storageKey = workoutId
+    ? `workout-${workoutId}-exercise-${exercise.id}`
+    : null;
+
+  // Initialize from localStorage if available
+  const [completedSets, setCompletedSets] = useState<boolean[]>(() => {
+    if (typeof window === 'undefined' || !storageKey) {
+      return new Array(exercise.sets).fill(false);
+    }
+
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Ensure array length matches current sets count
+        if (Array.isArray(parsed) && parsed.length === exercise.sets) {
+          return parsed;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load exercise progress:', error);
+    }
+
+    return new Array(exercise.sets).fill(false);
+  });
+
+  // Save to localStorage whenever completedSets changes
+  useEffect(() => {
+    if (storageKey && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(completedSets));
+      } catch (error) {
+        console.error('Failed to save exercise progress:', error);
+      }
+    }
+  }, [completedSets, storageKey]);
 
   const toggleSet = (index: number) => {
     setCompletedSets((prev) => {
       const updated = [...prev];
       updated[index] = !updated[index];
+
+      // Haptic feedback on mobile when marking a set as complete
+      if (updated[index] && 'vibrate' in navigator) {
+        navigator.vibrate(50); // 50ms vibration
+      }
+
       return updated;
     });
   };

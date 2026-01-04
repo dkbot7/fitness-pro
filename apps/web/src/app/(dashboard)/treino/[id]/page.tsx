@@ -149,7 +149,12 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
           </Card>
 
           {workout.exercises.map((exercise, index) => (
-            <ExerciseCard key={exercise.id} exercise={exercise} exerciseNumber={index + 1} />
+            <ExerciseCard
+              key={exercise.id}
+              exercise={exercise}
+              exerciseNumber={index + 1}
+              workoutId={workoutId}
+            />
           ))}
 
           {/* Complete Workout Button */}
