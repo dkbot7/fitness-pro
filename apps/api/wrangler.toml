@@ -6,6 +6,12 @@ compatibility_flags = ["nodejs_compat"]
 [observability]
 enabled = true
 
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "fitness-pro-db"
+database_id = "8156de65-ed3d-46a9-8b5c-c314e6920aef"
+
 # Environment variables (use .dev.vars for local secrets)
 [vars]
 ENVIRONMENT = "production"
