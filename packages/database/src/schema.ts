@@ -105,3 +105,43 @@ export const workoutFeedback = pgTable('workout_feedback', {
   workoutIdIdx: index('workout_feedback_workout_id_idx').on(table.workoutId),
   userIdIdx: index('workout_feedback_user_id_idx').on(table.userId),
 }));
+
+// User streaks (gamification)
+export const userStreaks = pgTable('user_streaks', {
+  id: serial('id').primaryKey(),
+  userId: varchar('user_id', { length: 255 }).notNull().unique().references(() => users.id, { onDelete: 'cascade' }),
+  currentStreak: integer('current_streak').default(0).notNull(), // Days
+  longestStreak: integer('longest_streak').default(0).notNull(), // Days
+  lastWorkoutDate: timestamp('last_workout_date'),
+  totalWorkoutsCompleted: integer('total_workouts_completed').default(0).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  userIdIdx: index('user_streaks_user_id_idx').on(table.userId),
+}));
+
+// Achievements/Badges
+export const achievements = pgTable('achievements', {
+  id: serial('id').primaryKey(),
+  slug: varchar('slug', { length: 100 }).notNull().unique(),
+  namePt: varchar('name_pt', { length: 255 }).notNull(),
+  descriptionPt: text('description_pt').notNull(),
+  iconName: varchar('icon_name', { length: 100 }).notNull(), // Lucide icon name
+  category: varchar('category', { length: 50 }).notNull(), // 'streak', 'milestone', 'special'
+  requirement: integer('requirement').notNull(), // Number needed to unlock (e.g., 7 for week streak)
+  rarity: varchar('rarity', { length: 20 }).notNull(), // 'common', 'rare', 'epic', 'legendary'
+  isActive: boolean('is_active').default(true).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// User achievements (unlocked badges)
+export const userAchievements = pgTable('user_achievements', {
+  id: serial('id').primaryKey(),
+  userId: varchar('user_id', { length: 255 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+  achievementId: integer('achievement_id').notNull().references(() => achievements.id, { onDelete: 'cascade' }),
+  unlockedAt: timestamp('unlocked_at').defaultNow().notNull(),
+}, (table) => ({
+  userIdIdx: index('user_achievements_user_id_idx').on(table.userId),
+  achievementIdIdx: index('user_achievements_achievement_id_idx').on(table.achievementId),
+  userAchievementUnique: uniqueIndex('user_achievements_user_achievement_unique').on(table.userId, table.achievementId),
+}));
