@@ -1,8 +1,10 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { clerkAuth } from './middleware/auth';
 import { handleOnboarding } from './handlers/onboarding';
 import { getWorkoutPlan, completeWorkout } from './handlers/training';
 import { submitFeedback } from './handlers/feedback';
+import { getUserProfile, getUserStats } from './handlers/user';
 
 type Bindings = {
   DATABASE_URL: string;
@@ -28,14 +30,18 @@ app.get('/api', (c) => {
 });
 
 // Onboarding
-app.post('/api/onboarding', handleOnboarding);
+app.post('/api/onboarding', clerkAuth, handleOnboarding);
 
 // Training
-app.get('/api/training/plan', getWorkoutPlan);
-app.post('/api/training/complete', completeWorkout);
+app.get('/api/training/plan', clerkAuth, getWorkoutPlan);
+app.post('/api/training/complete', clerkAuth, completeWorkout);
 
 // Feedback
-app.post('/api/feedback', submitFeedback);
+app.post('/api/feedback', clerkAuth, submitFeedback);
+
+// User
+app.get('/api/users/me/profile', clerkAuth, getUserProfile);
+app.get('/api/users/me/stats', clerkAuth, getUserStats);
 
 // Manual trigger for weekly adjustment (for testing)
 app.post('/api/admin/adjust-week', async (c) => {

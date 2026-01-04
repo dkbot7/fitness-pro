@@ -1,16 +1,79 @@
 'use client';
 
-import { useState } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useUser, SignOutButton } from '@clerk/nextjs';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
+// Goal labels mapping
+const GOAL_LABELS: Record<string, string> = {
+  lose_weight: 'Emagrecer',
+  gain_muscle: 'Ganhar Massa Muscular',
+  maintenance: 'Manter Forma',
+};
+
+// Location labels
+const LOCATION_LABELS: Record<string, string> = {
+  home: 'Em Casa',
+  gym: 'Academia',
+};
+
+// Experience labels
+const EXPERIENCE_LABELS: Record<string, string> = {
+  beginner: 'Iniciante',
+  intermediate: 'Intermediário',
+  advanced: 'Avançado',
+};
+
 export default function PerfilPage() {
   const { user, isLoaded } = useUser();
-  const [isEditing, setIsEditing] = useState(false);
 
-  if (!isLoaded) {
+  // Fetch user profile
+  const { data: profileData, isLoading: isLoadingProfile } = useQuery({
+    queryKey: ['user-profile'],
+    queryFn: async () => {
+      const res = await fetch('/api/users/me/profile', {
+        headers: {
+          'Authorization': `Bearer ${await user?.getToken()}`,
+        },
+      });
+      if (!res.ok) {
+        if (res.status === 404) {
+          return null; // No profile yet
+        }
+        throw new Error('Failed to fetch profile');
+      }
+      return res.json();
+    },
+    enabled: !!user,
+  });
+
+  // Fetch user stats
+  const { data: statsData, isLoading: isLoadingStats } = useQuery({
+    queryKey: ['user-stats'],
+    queryFn: async () => {
+      const res = await fetch('/api/users/me/stats', {
+        headers: {
+          'Authorization': `Bearer ${await user?.getToken()}`,
+        },
+      });
+      if (!res.ok) {
+        if (res.status === 404) {
+          return null;
+        }
+        throw new Error('Failed to fetch stats');
+      }
+      return res.json();
+    },
+    enabled: !!user,
+  });
+
+  const profile = profileData?.profile;
+  const stats = statsData?.stats;
+  const isLoading = !isLoaded || isLoadingProfile || isLoadingStats;
+
+  if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-4">
@@ -66,7 +129,9 @@ export default function PerfilPage() {
               <div>
                 <label className="text-sm font-medium text-gray-600">Membro desde</label>
                 <p className="text-base">
-                  {user?.createdAt
+                  {stats?.memberSince
+                    ? new Date(stats.memberSince).toLocaleDateString('pt-BR')
+                    : user?.createdAt
                     ? new Date(user.createdAt).toLocaleDateString('pt-BR')
                     : '-'}
                 </p>
@@ -75,7 +140,9 @@ export default function PerfilPage() {
 
             <div className="pt-4">
               <Button asChild variant="outline">
-                <Link href="https://clerk.com/user">Editar informações da conta</Link>
+                <a href="https://accounts.clerk.dev/user" target="_blank" rel="noopener noreferrer">
+                  Editar informações da conta
+                </a>
               </Button>
             </div>
           </CardContent>
@@ -89,15 +156,19 @@ export default function PerfilPage() {
           <CardContent className="space-y-3">
             <div>
               <p className="text-sm text-gray-600">Semana atual</p>
-              <p className="text-2xl font-bold">1</p>
+              <p className="text-2xl font-bold">{stats?.currentWeekNumber || 1}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Treinos concluídos</p>
-              <p className="text-2xl font-bold">0</p>
+              <p className="text-2xl font-bold">{stats?.totalWorkoutsCompleted || 0}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Taxa de conclusão</p>
-              <p className="text-2xl font-bold">0%</p>
+              <p className="text-2xl font-bold">{stats?.overallCompletionRate || 0}%</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Semanas treinadas</p>
+              <p className="text-2xl font-bold">{stats?.totalWeeks || 0}</p>
             </div>
           </CardContent>
         </Card>
@@ -116,30 +187,77 @@ export default function PerfilPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Objetivo:</span>
-                <span className="font-medium">Não configurado</span>
+            {profile ? (
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Objetivo:</span>
+                  <span className="font-medium">{GOAL_LABELS[profile.goal] || profile.goal}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Frequência:</span>
+                  <span className="font-medium">{profile.frequencyPerWeek}x/semana</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Local:</span>
+                  <span className="font-medium">
+                    {LOCATION_LABELS[profile.location] || profile.location}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Nível:</span>
+                  <span className="font-medium">
+                    {EXPERIENCE_LABELS[profile.experienceLevel] || profile.experienceLevel}
+                  </span>
+                </div>
+                {profile.equipment && profile.equipment.length > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Equipamentos:</span>
+                    <span className="font-medium">{profile.equipment.length} selecionados</span>
+                  </div>
+                )}
+                {profile.limitations && profile.limitations.length > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Limitações:</span>
+                    <span className="font-medium">{profile.limitations.length} informadas</span>
+                  </div>
+                )}
+                {profile.onboardingCompletedAt && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Perfil criado em:</span>
+                    <span className="font-medium">
+                      {new Date(profile.onboardingCompletedAt).toLocaleDateString('pt-BR')}
+                    </span>
+                  </div>
+                )}
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Frequência:</span>
-                <span className="font-medium">-</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Local:</span>
-                <span className="font-medium">-</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Nível:</span>
-                <span className="font-medium">-</span>
-              </div>
-            </div>
+            ) : (
+              <>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Objetivo:</span>
+                    <span className="font-medium">Não configurado</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Frequência:</span>
+                    <span className="font-medium">-</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Local:</span>
+                    <span className="font-medium">-</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Nível:</span>
+                    <span className="font-medium">-</span>
+                  </div>
+                </div>
 
-            <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
-              <p className="text-sm text-blue-900">
-                💡 Complete o onboarding para personalizar seu plano de treino
-              </p>
-            </div>
+                <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
+                  <p className="text-sm text-blue-900">
+                    💡 Complete o onboarding para personalizar seu plano de treino
+                  </p>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -155,12 +273,49 @@ export default function PerfilPage() {
             <Button asChild variant="outline" className="w-full justify-start">
               <Link href="/onboarding">Reconfigurar Preferências</Link>
             </Button>
-            <Button variant="outline" className="w-full justify-start text-red-600" onClick={() => {}}>
-              Sair da Conta
-            </Button>
+            <SignOutButton>
+              <Button variant="outline" className="w-full justify-start text-red-600">
+                Sair da Conta
+              </Button>
+            </SignOutButton>
           </CardContent>
         </Card>
       </div>
+
+      {/* Current Week Progress */}
+      {stats?.currentWeek && stats.currentWeek.total > 0 && (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="text-base">Progresso desta Semana</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <p className="text-sm text-gray-600">Total</p>
+                <p className="text-2xl font-bold">{stats.currentWeek.total}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Concluídos</p>
+                <p className="text-2xl font-bold text-green-600">{stats.currentWeek.completed}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Taxa</p>
+                <p className="text-2xl font-bold">{stats.currentWeek.completionRate}%</p>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mt-4">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                <div
+                  className="h-full bg-green-600 transition-all duration-300"
+                  style={{ width: `${stats.currentWeek.completionRate}%` }}
+                ></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* App Info */}
       <Card className="mt-6">
