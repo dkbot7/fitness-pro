@@ -5,9 +5,11 @@ import { ExerciseCard } from '@/components/workout/ExerciseCard';
 import { WorkoutTimer } from '@/components/workout/WorkoutTimer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AchievementUnlockedModal } from '@/components/gamification/AchievementUnlockedModal';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import type { UnlockedAchievement } from '@/lib/api-client';
 
 const DAYS_OF_WEEK = [
   'Segunda-feira',
@@ -30,6 +32,8 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
   const { data, isLoading, error } = useWorkoutPlan();
   const completeWorkoutMutation = useCompleteWorkout();
   const [isCompleting, setIsCompleting] = useState(false);
+  const [achievementQueue, setAchievementQueue] = useState<UnlockedAchievement[]>([]);
+  const [currentAchievement, setCurrentAchievement] = useState<UnlockedAchievement | null>(null);
 
   const workoutId = parseInt(params.id, 10);
 
@@ -103,17 +107,47 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
     setIsCompleting(true);
 
     try {
-      await completeWorkoutMutation.mutateAsync(workoutId);
-      // Redirect to feedback page
-      router.push(`/treino/${workoutId}/feedback`);
+      const result = await completeWorkoutMutation.mutateAsync(workoutId);
+
+      // Check if there are new achievements to show
+      if (result.newAchievements && result.newAchievements.length > 0) {
+        setAchievementQueue(result.newAchievements);
+        setCurrentAchievement(result.newAchievements[0]);
+      } else {
+        // No achievements, go directly to feedback
+        router.push(`/treino/${workoutId}/feedback`);
+      }
     } catch (error) {
       alert('Erro ao concluir treino. Tente novamente.');
       setIsCompleting(false);
     }
   };
 
+  const handleAchievementClose = () => {
+    // Find next achievement in queue
+    const currentIndex = achievementQueue.findIndex((a) => a.id === currentAchievement?.id);
+    const nextAchievement = achievementQueue[currentIndex + 1];
+
+    if (nextAchievement) {
+      // Show next achievement
+      setCurrentAchievement(nextAchievement);
+    } else {
+      // No more achievements, redirect to feedback
+      setCurrentAchievement(null);
+      setAchievementQueue([]);
+      router.push(`/treino/${workoutId}/feedback`);
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
+      {/* Achievement Unlock Modal */}
+      <AchievementUnlockedModal
+        achievement={currentAchievement}
+        onClose={handleAchievementClose}
+      />
+
+      <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-6">
         <Link
@@ -236,5 +270,6 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }

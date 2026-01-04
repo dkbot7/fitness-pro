@@ -188,10 +188,22 @@ export async function completeWorkout(c: Context<{ Bindings: Env }>) {
       .where(eq(workouts.id, workoutId))
       .returning();
 
+    // 6. Update streak and check for new achievements
+    let streakData = { currentStreak: 0, newAchievements: [] };
+    try {
+      const { updateUserStreak } = await import('./gamification');
+      streakData = await updateUserStreak(db, userId);
+    } catch (gamificationError: any) {
+      console.error('Gamification update error (non-fatal):', gamificationError);
+      // Don't fail workout completion if gamification fails
+    }
+
     return c.json({
       success: true,
       message: 'Treino concluído com sucesso!',
       workout: updatedWorkout,
+      streak: streakData.currentStreak,
+      newAchievements: streakData.newAchievements,
     });
   } catch (error: any) {
     console.error('Complete workout error:', error);

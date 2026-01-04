@@ -4,6 +4,7 @@ import { useUser, SignOutButton } from '@clerk/nextjs';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { StreakCard } from '@/components/gamification/StreakCard';
 import Link from 'next/link';
 
 // Goal labels mapping
@@ -69,9 +70,29 @@ export default function PerfilPage() {
     enabled: !!user,
   });
 
+  // Fetch user streak
+  const { data: streakData, isLoading: isLoadingStreak } = useQuery({
+    queryKey: ['user-streak'],
+    queryFn: async () => {
+      const res = await fetch('/api/gamification/streak', {
+        headers: {
+          'Authorization': `Bearer ${await user?.getToken()}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error('Failed to fetch streak');
+      }
+      return res.json();
+    },
+    enabled: !!user,
+  });
+
   const profile = profileData?.profile;
   const stats = statsData?.stats;
-  const isLoading = !isLoaded || isLoadingProfile || isLoadingStats;
+  const currentStreak = streakData?.streak?.currentStreak || 0;
+  const longestStreak = streakData?.streak?.longestStreak || 0;
+  const totalWorkouts = streakData?.streak?.totalWorkoutsCompleted || 0;
+  const isLoading = !isLoaded || isLoadingProfile || isLoadingStats || isLoadingStreak;
 
   if (isLoading) {
     return (
@@ -90,6 +111,17 @@ export default function PerfilPage() {
         <h1 className="text-3xl font-bold">Meu Perfil</h1>
         <p className="text-gray-600">Gerencie suas informações e preferências de treino</p>
       </div>
+
+      {/* Streak Card */}
+      {totalWorkouts > 0 && (
+        <div className="mb-6">
+          <StreakCard
+            currentStreak={currentStreak}
+            longestStreak={longestStreak}
+            totalWorkouts={totalWorkouts}
+          />
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* User Info Card */}
@@ -269,6 +301,9 @@ export default function PerfilPage() {
           <CardContent className="space-y-2">
             <Button asChild variant="outline" className="w-full justify-start">
               <Link href="/plano">Ver Plano de Treino</Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link href="/conquistas">Ver Conquistas</Link>
             </Button>
             <Button asChild variant="outline" className="w-full justify-start">
               <Link href="/onboarding">Reconfigurar Preferências</Link>

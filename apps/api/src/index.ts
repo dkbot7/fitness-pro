@@ -5,6 +5,7 @@ import { handleOnboarding } from './handlers/onboarding';
 import { getWorkoutPlan, completeWorkout } from './handlers/training';
 import { submitFeedback } from './handlers/feedback';
 import { getUserProfile, getUserStats } from './handlers/user';
+import { getUserStreak, getUserAchievements, checkAndUnlockAchievements } from './handlers/gamification';
 
 type Bindings = {
   DATABASE_URL: string;
@@ -42,6 +43,11 @@ app.post('/api/feedback', clerkAuth, submitFeedback);
 // User
 app.get('/api/users/me/profile', clerkAuth, getUserProfile);
 app.get('/api/users/me/stats', clerkAuth, getUserStats);
+
+// Gamification
+app.get('/api/gamification/streak', clerkAuth, getUserStreak);
+app.get('/api/gamification/achievements', clerkAuth, getUserAchievements);
+app.post('/api/gamification/check-unlocks', clerkAuth, checkAndUnlockAchievements);
 
 // Manual trigger for weekly adjustment (for testing)
 app.post('/api/admin/adjust-week', async (c) => {

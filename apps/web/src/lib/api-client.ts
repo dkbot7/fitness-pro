@@ -99,6 +99,15 @@ export async function getWorkoutPlan(token?: string | null): Promise<WorkoutPlan
   });
 }
 
+export interface UnlockedAchievement {
+  id: number;
+  slug: string;
+  namePt: string;
+  descriptionPt: string;
+  iconName: string;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+}
+
 export async function completeWorkout(
   workoutId: number,
   token?: string | null
@@ -106,6 +115,8 @@ export async function completeWorkout(
   success: boolean;
   message: string;
   workout: Workout;
+  streak: number;
+  newAchievements: UnlockedAchievement[];
 }> {
   return apiRequest('/api/training/complete', {
     method: 'POST',
