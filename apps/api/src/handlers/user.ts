@@ -1,11 +1,10 @@
 import { Context } from 'hono';
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
+import { drizzle } from 'drizzle-orm/d1';
 import { profiles, workoutPlans, workouts, users } from '@fitness-pro/database';
 import { eq, and, desc } from 'drizzle-orm';
 
 interface Env {
-  DATABASE_URL: string;
+  DB: D1Database;
 }
 
 /**
@@ -21,9 +20,8 @@ export async function getUserProfile(c: Context<{ Bindings: Env }>) {
       return c.json({ error: 'Missing user information' }, 401);
     }
 
-    // 2. Connect to database
-    const sql = neon(c.env.DATABASE_URL);
-    const db = drizzle(sql);
+    // 2. Connect to D1 database
+    const db = drizzle(c.env.DB);
 
     // 3. Get user profile
     const profileRecords = await db
@@ -82,9 +80,8 @@ export async function getUserStats(c: Context<{ Bindings: Env }>) {
       return c.json({ error: 'Missing user information' }, 401);
     }
 
-    // 2. Connect to database
-    const sql = neon(c.env.DATABASE_URL);
-    const db = drizzle(sql);
+    // 2. Connect to D1 database
+    const db = drizzle(c.env.DB);
 
     // 3. Get current week number (most recent active plan)
     const activePlans = await db

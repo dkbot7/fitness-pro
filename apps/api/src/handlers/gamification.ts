@@ -4,8 +4,7 @@
  */
 
 import { Context } from 'hono';
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
+import { drizzle } from 'drizzle-orm/d1';
 import {
   userStreaks,
   achievements,
@@ -15,7 +14,7 @@ import {
 import { eq, and, desc, sql } from 'drizzle-orm';
 
 interface Env {
-  DATABASE_URL: string;
+  DB: D1Database;
 }
 
 /**
@@ -30,8 +29,7 @@ export async function getUserStreak(c: Context<{ Bindings: Env }>) {
       return c.json({ error: 'Missing user information' }, 401);
     }
 
-    const sqlClient = neon(c.env.DATABASE_URL);
-    const db = drizzle(sqlClient);
+    const db = drizzle(c.env.DB);
 
     // Get or create streak record
     let streakRecords = await db
@@ -109,8 +107,7 @@ export async function getUserAchievements(c: Context<{ Bindings: Env }>) {
       return c.json({ error: 'Missing user information' }, 401);
     }
 
-    const sqlClient = neon(c.env.DATABASE_URL);
-    const db = drizzle(sqlClient);
+    const db = drizzle(c.env.DB);
 
     // Get all active achievements
     const allAchievements = await db
@@ -200,8 +197,7 @@ export async function checkAndUnlockAchievements(c: Context<{ Bindings: Env }>) 
       return c.json({ error: 'Missing user information' }, 401);
     }
 
-    const sqlClient = neon(c.env.DATABASE_URL);
-    const db = drizzle(sqlClient);
+    const db = drizzle(c.env.DB);
 
     // Get user's current streak data
     const streakRecords = await db

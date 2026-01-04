@@ -1,12 +1,11 @@
 import { Context } from 'hono';
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
+import { drizzle } from 'drizzle-orm/d1';
 import { users, profiles, workoutPlans, workouts, workoutExercises, exercises } from '@fitness-pro/database';
 import { eq } from 'drizzle-orm';
 import { generateInitialWorkoutPlan, type UserProfile } from '../services/workout-generator';
 
 interface Env {
-  DATABASE_URL: string;
+  DB: D1Database;
 }
 
 /**
@@ -40,62 +39,57 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
       gender,
     } = body;
 
-    // 3. Connect to database
-    const sql = neon(c.env.DATABASE_URL);
-    const db = drizzle(sql);
+    // 3. Connect to D1 database
+    const db = drizzle(c.env.DB);
 
     // 4. Upsert user (ensure user exists in our DB)
-    await db
-      .insert(users)
-      .values({
+    // Check if user exists
+    const existingUser = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+
+    if (existingUser.length === 0) {
+      // Insert new user
+      await db.insert(users).values({
         id: userId,
         email: userEmail,
-        name: userName || null,
-      })
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          email: userEmail,
-          name: userName || null,
-          updatedAt: new Date(),
-        },
       });
+    } else {
+      // Update existing user
+      await db.update(users)
+        .set({
+          email: userEmail,
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(users.id, userId));
+    }
 
     // 5. Insert/Update profile
-    const [profile] = await db
-      .insert(profiles)
-      .values({
-        userId,
-        goal,
-        frequencyPerWeek,
-        location,
-        experienceLevel,
-        equipment,
-        limitations: limitations || [],
-        currentWeightKg: currentWeightKg || null,
-        heightCm: heightCm || null,
-        age: age || null,
-        gender: gender || null,
-        onboardingCompletedAt: new Date(),
-      })
-      .onConflictDoUpdate({
-        target: profiles.userId,
-        set: {
-          goal,
-          frequencyPerWeek,
-          location,
-          experienceLevel,
-          equipment,
-          limitations: limitations || [],
-          currentWeightKg: currentWeightKg || null,
-          heightCm: heightCm || null,
-          age: age || null,
-          gender: gender || null,
-          onboardingCompletedAt: new Date(),
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
+    const existingProfile = await db.select().from(profiles).where(eq(profiles.userId, userId)).limit(1);
+
+    let profile;
+    const profileData = {
+      userId,
+      goal,
+      frequencyPerWeek,
+      location,
+      experienceLevel,
+      equipment: JSON.stringify(equipment || []),
+      limitations: JSON.stringify(limitations || []),
+      onboardingCompletedAt: new Date().toISOString(),
+    };
+
+    if (existingProfile.length === 0) {
+      const result = await db.insert(profiles).values(profileData).returning();
+      profile = result[0];
+    } else {
+      const result = await db.update(profiles)
+        .set({
+          ...profileData,
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(profiles.userId, userId))
+        .returning();
+      profile = result[0];
+    }
 
     // 6. Generate Week 1 workout plan
     const userProfile: UserProfile = {
@@ -110,22 +104,30 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
     const generatedPlan = generateInitialWorkoutPlan(userProfile);
 
     // 7. Save workout plan to database
-    const [workoutPlan] = await db
-      .insert(workoutPlans)
-      .values({
+    const existingPlan = await db.select().from(workoutPlans)
+      .where(eq(workoutPlans.userId, userId))
+      .limit(1);
+
+    let workoutPlan;
+    if (existingPlan.length === 0) {
+      const result = await db.insert(workoutPlans).values({
         userId,
         weekNumber: 1,
         status: 'active',
         difficultyMultiplier: '1.00',
-      })
-      .onConflictDoUpdate({
-        target: [workoutPlans.userId, workoutPlans.weekNumber],
-        set: {
+      }).returning();
+      workoutPlan = result[0];
+    } else {
+      const result = await db.update(workoutPlans)
+        .set({
           status: 'active',
           difficultyMultiplier: '1.00',
-        },
-      })
-      .returning();
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(workoutPlans.userId, userId))
+        .returning();
+      workoutPlan = result[0];
+    }
 
     // 8. Get exercise IDs by slug (map slugs to DB IDs)
     const exerciseSlugs = generatedPlan.workouts.flatMap((w) =>

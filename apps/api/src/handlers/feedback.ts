@@ -1,11 +1,10 @@
 import { Context } from 'hono';
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
+import { drizzle } from 'drizzle-orm/d1';
 import { workoutFeedback, workouts } from '@fitness-pro/database';
 import { eq, and } from 'drizzle-orm';
 
 interface Env {
-  DATABASE_URL: string;
+  DB: D1Database;
 }
 
 /**
@@ -40,9 +39,8 @@ export async function submitFeedback(c: Context<{ Bindings: Env }>) {
       );
     }
 
-    // 3. Connect to database
-    const sql = neon(c.env.DATABASE_URL);
-    const db = drizzle(sql);
+    // 3. Connect to D1 database
+    const db = drizzle(c.env.DB);
 
     // 4. Verify workout belongs to user and is completed
     const workoutRecords = await db

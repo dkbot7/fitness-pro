@@ -1,11 +1,10 @@
 import { Context } from 'hono';
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
+import { drizzle } from 'drizzle-orm/d1';
 import { workoutPlans, workouts, workoutExercises, exercises } from '@fitness-pro/database';
 import { eq, and, desc } from 'drizzle-orm';
 
 interface Env {
-  DATABASE_URL: string;
+  DB: D1Database;
 }
 
 /**
@@ -21,9 +20,8 @@ export async function getWorkoutPlan(c: Context<{ Bindings: Env }>) {
       return c.json({ error: 'Missing user information' }, 401);
     }
 
-    // 2. Connect to database
-    const sql = neon(c.env.DATABASE_URL);
-    const db = drizzle(sql);
+    // 2. Connect to D1 database
+    const db = drizzle(c.env.DB);
 
     // 3. Get the most recent (active) workout plan for user
     const plans = await db
@@ -148,9 +146,8 @@ export async function completeWorkout(c: Context<{ Bindings: Env }>) {
       return c.json({ error: 'Missing workoutId' }, 400);
     }
 
-    // 3. Connect to database
-    const sql = neon(c.env.DATABASE_URL);
-    const db = drizzle(sql);
+    // 3. Connect to D1 database
+    const db = drizzle(c.env.DB);
 
     // 4. Verify workout belongs to user
     const workoutRecords = await db
@@ -183,7 +180,7 @@ export async function completeWorkout(c: Context<{ Bindings: Env }>) {
       .update(workouts)
       .set({
         status: 'completed',
-        completedAt: new Date(),
+        completedAt: new Date().toISOString(),
       })
       .where(eq(workouts.id, workoutId))
       .returning();
