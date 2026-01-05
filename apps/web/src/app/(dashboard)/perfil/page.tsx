@@ -98,8 +98,8 @@ export default function PerfilPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-4">
-          <div className="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
-          <div className="h-64 animate-pulse rounded bg-gray-200"></div>
+          <div className="h-8 w-48 animate-pulse rounded bg-muted"></div>
+          <div className="h-64 animate-pulse rounded bg-muted"></div>
         </div>
       </div>
     );
@@ -108,8 +108,8 @@ export default function PerfilPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Meu Perfil</h1>
-        <p className="text-gray-600">Gerencie suas informações e preferências de treino</p>
+        <h1 className="text-3xl font-bold text-fitpro-charcoal">Meu Perfil</h1>
+        <p className="text-muted-foreground">Gerencie suas informações e preferências de treino</p>
       </div>
 
       {/* Streak Card */}
@@ -141,25 +141,25 @@ export default function PerfilPage() {
               )}
               <div>
                 <p className="text-lg font-semibold">{user?.fullName || 'Usuário'}</p>
-                <p className="text-sm text-gray-600">{user?.primaryEmailAddress?.emailAddress}</p>
+                <p className="text-sm text-muted-foreground">{user?.primaryEmailAddress?.emailAddress}</p>
               </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-sm font-medium text-gray-600">Nome</label>
+                <label className="text-sm font-medium text-muted-foreground">Nome</label>
                 <p className="text-base">{user?.firstName || '-'}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600">Sobrenome</label>
+                <label className="text-sm font-medium text-muted-foreground">Sobrenome</label>
                 <p className="text-base">{user?.lastName || '-'}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600">Email</label>
+                <label className="text-sm font-medium text-muted-foreground">Email</label>
                 <p className="text-base">{user?.primaryEmailAddress?.emailAddress || '-'}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-600">Membro desde</label>
+                <label className="text-sm font-medium text-muted-foreground">Membro desde</label>
                 <p className="text-base">
                   {stats?.memberSince
                     ? new Date(stats.memberSince).toLocaleDateString('pt-BR')
@@ -187,19 +187,19 @@ export default function PerfilPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <div>
-              <p className="text-sm text-gray-600">Semana atual</p>
+              <p className="text-sm text-muted-foreground">Semana atual</p>
               <p className="text-2xl font-bold">{stats?.currentWeekNumber || 1}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Treinos concluídos</p>
+              <p className="text-sm text-muted-foreground">Treinos concluídos</p>
               <p className="text-2xl font-bold">{stats?.totalWorkoutsCompleted || 0}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Taxa de conclusão</p>
+              <p className="text-sm text-muted-foreground">Taxa de conclusão</p>
               <p className="text-2xl font-bold">{stats?.overallCompletionRate || 0}%</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Semanas treinadas</p>
+              <p className="text-sm text-muted-foreground">Semanas treinadas</p>
               <p className="text-2xl font-bold">{stats?.totalWeeks || 0}</p>
             </div>
           </CardContent>
@@ -222,40 +222,40 @@ export default function PerfilPage() {
             {profile ? (
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Objetivo:</span>
+                  <span className="text-muted-foreground">Objetivo:</span>
                   <span className="font-medium">{GOAL_LABELS[profile.goal] || profile.goal}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Frequência:</span>
+                  <span className="text-muted-foreground">Frequência:</span>
                   <span className="font-medium">{profile.frequencyPerWeek}x/semana</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Local:</span>
+                  <span className="text-muted-foreground">Local:</span>
                   <span className="font-medium">
                     {LOCATION_LABELS[profile.location] || profile.location}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Nível:</span>
+                  <span className="text-muted-foreground">Nível:</span>
                   <span className="font-medium">
                     {EXPERIENCE_LABELS[profile.experienceLevel] || profile.experienceLevel}
                   </span>
                 </div>
                 {profile.equipment && profile.equipment.length > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Equipamentos:</span>
+                    <span className="text-muted-foreground">Equipamentos:</span>
                     <span className="font-medium">{profile.equipment.length} selecionados</span>
                   </div>
                 )}
                 {profile.limitations && profile.limitations.length > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Limitações:</span>
+                    <span className="text-muted-foreground">Limitações:</span>
                     <span className="font-medium">{profile.limitations.length} informadas</span>
                   </div>
                 )}
                 {profile.onboardingCompletedAt && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Perfil criado em:</span>
+                    <span className="text-muted-foreground">Perfil criado em:</span>
                     <span className="font-medium">
                       {new Date(profile.onboardingCompletedAt).toLocaleDateString('pt-BR')}
                     </span>
@@ -266,19 +266,19 @@ export default function PerfilPage() {
               <>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Objetivo:</span>
+                    <span className="text-muted-foreground">Objetivo:</span>
                     <span className="font-medium">Não configurado</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Frequência:</span>
+                    <span className="text-muted-foreground">Frequência:</span>
                     <span className="font-medium">-</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Local:</span>
+                    <span className="text-muted-foreground">Local:</span>
                     <span className="font-medium">-</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Nível:</span>
+                    <span className="text-muted-foreground">Nível:</span>
                     <span className="font-medium">-</span>
                   </div>
                 </div>
@@ -309,7 +309,7 @@ export default function PerfilPage() {
               <Link href="/onboarding">Reconfigurar Preferências</Link>
             </Button>
             <SignOutButton>
-              <Button variant="outline" className="w-full justify-start text-red-600">
+              <Button variant="outline" className="w-full justify-start text-error">
                 Sair da Conta
               </Button>
             </SignOutButton>
@@ -326,24 +326,24 @@ export default function PerfilPage() {
           <CardContent>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <p className="text-sm text-gray-600">Total</p>
+                <p className="text-sm text-muted-foreground">Total</p>
                 <p className="text-2xl font-bold">{stats.currentWeek.total}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Concluídos</p>
-                <p className="text-2xl font-bold text-green-600">{stats.currentWeek.completed}</p>
+                <p className="text-sm text-muted-foreground">Concluídos</p>
+                <p className="text-2xl font-bold text-success">{stats.currentWeek.completed}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Taxa</p>
+                <p className="text-sm text-muted-foreground">Taxa</p>
                 <p className="text-2xl font-bold">{stats.currentWeek.completionRate}%</p>
               </div>
             </div>
 
             {/* Progress Bar */}
             <div className="mt-4">
-              <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full bg-green-600 transition-all duration-300"
+                  className="h-full bg-success transition-all duration-300"
                   style={{ width: `${stats.currentWeek.completionRate}%` }}
                 ></div>
               </div>
@@ -359,15 +359,15 @@ export default function PerfilPage() {
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-gray-600">Versão:</span>
+            <span className="text-muted-foreground">Versão:</span>
             <span className="font-medium">1.0.0 (MVP)</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Última atualização:</span>
+            <span className="text-muted-foreground">Última atualização:</span>
             <span className="font-medium">Janeiro 2026</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Exercícios disponíveis:</span>
+            <span className="text-muted-foreground">Exercícios disponíveis:</span>
             <span className="font-medium">30+</span>
           </div>
         </CardContent>

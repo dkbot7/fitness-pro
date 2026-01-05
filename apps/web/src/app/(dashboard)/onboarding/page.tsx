@@ -100,7 +100,7 @@ export default function OnboardingPage() {
             <div
               key={step.id}
               className={`flex-1 h-2 mx-1 rounded-full transition-colors ${
-                step.id <= currentStep ? 'bg-primary' : 'bg-gray-200'
+                step.id <= currentStep ? 'bg-primary' : 'bg-muted'
               }`}
             />
           ))}

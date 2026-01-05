@@ -41,11 +41,11 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-4">
-          <div className="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
-          <div className="h-64 animate-pulse rounded bg-gray-200"></div>
+          <div className="h-8 w-48 animate-pulse rounded bg-muted"></div>
+          <div className="h-64 animate-pulse rounded bg-muted"></div>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-96 animate-pulse rounded bg-gray-200"></div>
+              <div key={i} className="h-96 animate-pulse rounded bg-muted"></div>
             ))}
           </div>
         </div>
@@ -61,7 +61,7 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
             <CardTitle>Erro ao carregar treino</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="mb-4 text-gray-600">
+            <p className="mb-4 text-muted-foreground">
               {error instanceof Error ? error.message : 'Treino não encontrado'}
             </p>
             <Button asChild variant="outline">
@@ -156,12 +156,12 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
         >
           ← Voltar ao plano
         </Link>
-        <h1 className="text-3xl font-bold">{DAYS_OF_WEEK[workout.dayOfWeek - 1]}</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-fitpro-charcoal">{DAYS_OF_WEEK[workout.dayOfWeek - 1]}</h1>
+        <p className="text-muted-foreground">
           {workout.exercises.length} exercícios • Semana {data.plan.weekNumber}
         </p>
         {isCompleted && (
-          <div className="mt-2 inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
+          <div className="mt-2 inline-flex items-center rounded-full bg-success-light px-3 py-1 text-sm font-medium text-success">
             ✓ Treino concluído
           </div>
         )}
@@ -175,7 +175,7 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
               <CardTitle>Exercícios do Treino</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Complete todas as séries de cada exercício. Marque as séries conforme você as
                 completa e use o cronômetro para controlar o tempo de descanso.
               </p>
@@ -195,10 +195,10 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
           {!isCompleted && (
             <Card className="border-2 border-green-500 bg-green-50">
               <CardContent className="p-6">
-                <h3 className="mb-2 text-lg font-semibold text-green-900">
+                <h3 className="mb-2 text-lg font-semibold text-green-900 text-fitpro-charcoal">
                   Terminou o treino?
                 </h3>
-                <p className="mb-4 text-sm text-green-800">
+                <p className="mb-4 text-sm text-success">
                   Ao concluir o treino, você poderá dar feedback sobre a dificuldade para que
                   possamos ajustar seus próximos treinos.
                 </p>
@@ -206,7 +206,7 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
                   onClick={handleCompleteWorkout}
                   disabled={isCompleting}
                   size="lg"
-                  className="w-full bg-green-600 hover:bg-green-700"
+                  className="w-full bg-success hover:bg-green-700"
                 >
                   {isCompleting ? 'Concluindo...' : 'Concluir Treino ✓'}
                 </Button>
@@ -217,8 +217,8 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
           {isCompleted && (
             <Card className="border-2 border-gray-300">
               <CardContent className="p-6">
-                <h3 className="mb-2 text-lg font-semibold">Treino já concluído</h3>
-                <p className="mb-4 text-sm text-gray-600">
+                <h3 className="mb-2 text-lg font-semibold text-fitpro-charcoal">Treino já concluído</h3>
+                <p className="mb-4 text-sm text-muted-foreground">
                   Você já completou este treino. Continue com os próximos treinos da semana!
                 </p>
                 <Button asChild className="w-full">
@@ -241,17 +241,17 @@ export default function WorkoutPage({ params }: WorkoutPageProps) {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Total de exercícios:</span>
+                  <span className="text-sm text-muted-foreground">Total de exercícios:</span>
                   <span className="font-semibold">{workout.exercises.length}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Total de séries:</span>
+                  <span className="text-sm text-muted-foreground">Total de séries:</span>
                   <span className="font-semibold">
                     {workout.exercises.reduce((sum, ex) => sum + ex.sets, 0)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Tempo estimado:</span>
+                  <span className="text-sm text-muted-foreground">Tempo estimado:</span>
                   <span className="font-semibold">
                     {Math.round(
                       (workout.exercises.reduce(

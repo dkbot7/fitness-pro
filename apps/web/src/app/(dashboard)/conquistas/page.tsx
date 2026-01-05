@@ -50,9 +50,9 @@ export default function ConquistasPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">
-          <div className="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
-          <div className="h-64 animate-pulse rounded bg-gray-200"></div>
-          <div className="h-96 animate-pulse rounded bg-gray-200"></div>
+          <div className="h-8 w-48 animate-pulse rounded bg-muted"></div>
+          <div className="h-64 animate-pulse rounded bg-muted"></div>
+          <div className="h-96 animate-pulse rounded bg-muted"></div>
         </div>
       </div>
     );
@@ -83,8 +83,8 @@ export default function ConquistasPage() {
             <Trophy className="h-8 w-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Minhas Conquistas</h1>
-            <p className="text-gray-600">
+            <h1 className="text-3xl font-bold text-fitpro-charcoal">Minhas Conquistas</h1>
+            <p className="text-muted-foreground">
               {unlockedCount} de {totalCount} desbloqueadas
             </p>
           </div>
@@ -106,7 +106,7 @@ export default function ConquistasPage() {
           <p className="text-center text-lg font-semibold text-gray-800">
             🎉 Parabéns! Você já desbloqueou {unlockedCount} conquista{unlockedCount > 1 ? 's' : ''}!
           </p>
-          <p className="mt-1 text-center text-sm text-gray-600">
+          <p className="mt-1 text-center text-sm text-muted-foreground">
             Continue treinando para desbloquear as {totalCount - unlockedCount} restantes.
           </p>
         </div>
@@ -129,8 +129,8 @@ export default function ConquistasPage() {
 
       {/* Footer Tips */}
       <div className="mt-8 rounded-lg bg-gray-50 p-6">
-        <h2 className="mb-3 font-semibold text-gray-800">Como desbloquear conquistas?</h2>
-        <div className="space-y-2 text-sm text-gray-600">
+        <h2 className="mb-3 font-semibold text-gray-800 text-fitpro-charcoal">Como desbloquear conquistas?</h2>
+        <div className="space-y-2 text-sm text-muted-foreground">
           <p>
             🔥 <strong>Sequências:</strong> Treine em dias consecutivos para desbloquear badges de streak
           </p>
