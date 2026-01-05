@@ -1,0 +1,29 @@
+# Robots.txt para FitPro - Seu Personal Trainer Digital
+# https://fitpro.vip
+
+# Permitir todos os bots em todas as páginas públicas
+User-agent: *
+Allow: /
+
+# Bloquear páginas privadas/autenticadas
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /plano
+Disallow: /treino/
+Disallow: /perfil
+Disallow: /conquistas
+
+# Bloquear rotas de autenticação (Clerk)
+Disallow: /login
+Disallow: /register
+
+# Bloquear arquivos de sistema
+Disallow: /manifest.json
+Disallow: /sw.js
+Disallow: /workbox-*.js
+
+# Sitemap
+Sitemap: https://fitpro.vip/sitemap.xml
+
+# Crawl-delay (opcional, evita sobrecarga)
+Crawl-delay: 1
