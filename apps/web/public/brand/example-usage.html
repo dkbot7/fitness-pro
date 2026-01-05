@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPro - Exemplo de Uso do Brand Kit</title>
+
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Brand Tokens CSS -->
+  <link rel="stylesheet" href="../../../src/styles/brand-tokens.css">
+
+  <!-- Custom Styles -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family-primary);
+      color: var(--color-text-primary);
+      background-color: var(--color-bg-primary);
+      line-height: var(--line-height-normal);
+    }
+
+    /* Header */
+    .header {
+      background-color: var(--color-white);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--spacing-md) var(--spacing-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 40px;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: var(--color-bg-secondary);
+      padding: var(--spacing-3xl) var(--spacing-xl);
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: var(--font-size-5xl);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+      margin-bottom: var(--spacing-md);
+      color: var(--fitpro-charcoal);
+    }
+
+    .hero .highlight {
+      color: var(--fitpro-red);
+    }
+
+    .hero p {
+      font-size: var(--font-size-xl);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-xl);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: var(--spacing-md) var(--spacing-xl);
+      border-radius: var(--radius-lg);
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-size-base);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: var(--color-white);
+      box-shadow: var(--shadow-primary-md);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-primary-lg);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--fitpro-charcoal);
+      border: 2px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    /* Features Section */
+    .features {
+      max-width: 1280px;
+      margin: var(--spacing-4xl) auto;
+      padding: 0 var(--spacing-xl);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-xl);
+      margin-top: var(--spacing-2xl);
+    }
+
+    .feature-card {
+      background: var(--color-white);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      transition: all var(--transition-slow);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-primary);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--color-primary-lighter);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--color-primary);
+    }
+
+    .feature-card h3 {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--spacing-sm);
+      color: var(--fitpro-charcoal);
+    }
+
+    .feature-card p {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-base);
+    }
+
+    /* Stats Section */
+    .stats {
+      background: linear-gradient(135deg, var(--fitpro-red) 0%, var(--fitpro-red-dark) 100%);
+      padding: var(--spacing-3xl) var(--spacing-xl);
+      color: var(--color-white);
+    }
+
+    .stats-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-xl);
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: var(--font-size-5xl);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+    }
+
+    .stat-label {
+      font-size: var(--font-size-base);
+      opacity: 0.9;
+      margin-top: var(--spacing-sm);
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--fitpro-charcoal);
+      color: var(--color-gray-300);
+      padding: var(--spacing-2xl) var(--spacing-xl);
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--color-white);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: var(--color-primary);
+    }
+
+    /* Color Palette Demo */
+    .color-palette {
+      max-width: 1280px;
+      margin: var(--spacing-4xl) auto;
+      padding: 0 var(--spacing-xl);
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-xl);
+    }
+
+    .color-swatch {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .color-preview {
+      height: 100px;
+    }
+
+    .color-info {
+      background: var(--color-white);
+      padding: var(--spacing-md);
+      font-size: var(--font-size-sm);
+    }
+
+    .color-name {
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .color-hex {
+      color: var(--color-text-secondary);
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <img src="./logos/fitpro-logo-original.png" alt="FitPro" class="logo">
+      <nav style="display: flex; gap: var(--spacing-lg);">
+        <a href="#" style="color: var(--fitpro-charcoal); text-decoration: none; font-weight: 500;">Início</a>
+        <a href="#" style="color: var(--color-text-secondary); text-decoration: none;">Funcionalidades</a>
+        <a href="#" style="color: var(--color-text-secondary); text-decoration: none;">Preços</a>
+        <button class="btn btn-primary">Começar Agora</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Seu Personal Trainer <span class="highlight">com IA</span></h1>
+    <p>Treinos personalizados que evoluem com você. Resultados reais, acompanhamento inteligente.</p>
+    <div style="display: flex; gap: var(--spacing-md); justify-content: center; margin-top: var(--spacing-xl);">
+      <button class="btn btn-primary">Experimentar Grátis</button>
+      <button class="btn btn-secondary">Saber Mais</button>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <h2 style="text-align: center; font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold);">
+      Por que escolher FitPro?
+    </h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3>100% Personalizado</h3>
+        <p>Treinos criados especificamente para você, considerando seu nível, equipamentos e objetivos.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3>Progressão Inteligente</h3>
+        <p>A IA ajusta automaticamente intensidade e volume baseado no seu feedback semanal.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <h3>Gamificação</h3>
+        <p>Conquiste badges, mantenha streaks e acompanhe sua evolução de forma motivadora.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stats-grid">
+      <div>
+        <div class="stat-number">10K+</div>
+        <div class="stat-label">Usuários Ativos</div>
+      </div>
+      <div>
+        <div class="stat-number">50K+</div>
+        <div class="stat-label">Treinos Completados</div>
+      </div>
+      <div>
+        <div class="stat-number">4.8★</div>
+        <div class="stat-label">Avaliação Média</div>
+      </div>
+      <div>
+        <div class="stat-number">92%</div>
+        <div class="stat-label">Taxa de Retenção</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Color Palette Demo -->
+  <section class="color-palette">
+    <h2 style="text-align: center; font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-xl);">
+      Paleta de Cores
+    </h2>
+
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-preview" style="background-color: #DC2626;"></div>
+        <div class="color-info">
+          <div class="color-name">FitPro Red</div>
+          <div class="color-hex">#DC2626</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="color-preview" style="background-color: #B91C1C;"></div>
+        <div class="color-info">
+          <div class="color-name">FitPro Dark Red</div>
+          <div class="color-hex">#B91C1C</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="color-preview" style="background-color: #2D3748;"></div>
+        <div class="color-info">
+          <div class="color-name">FitPro Charcoal</div>
+          <div class="color-hex">#2D3748</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="color-preview" style="background-color: #10B981;"></div>
+        <div class="color-info">
+          <div class="color-name">Success Green</div>
+          <div class="color-hex">#10B981</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="color-preview" style="background-color: #F59E0B;"></div>
+        <div class="color-info">
+          <div class="color-name">Warning Orange</div>
+          <div class="color-hex">#F59E0B</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="color-preview" style="background-color: #3B82F6;"></div>
+        <div class="color-info">
+          <div class="color-name">Info Blue</div>
+          <div class="color-hex">#3B82F6</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <img src="./logos/fitpro-logo-original.png" alt="FitPro" style="height: 32px; margin-bottom: var(--spacing-md); filter: brightness(0) invert(1);">
+    <p style="margin-bottom: var(--spacing-sm);">
+      © 2026 FitPro. Todos os direitos reservados.
+    </p>
+    <div style="display: flex; gap: var(--spacing-lg); justify-content: center; margin-top: var(--spacing-md);">
+      <a href="#">Termos de Uso</a>
+      <a href="#">Privacidade</a>
+      <a href="#">Contato</a>
+      <a href="#">Brand Kit</a>
+    </div>
+  </footer>
+
+</body>
+</html>
