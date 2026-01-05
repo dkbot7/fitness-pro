@@ -1,31 +1,44 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <main className="min-h-screen bg-white">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-4 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          {/* Logo */}
+          <div className="mb-8 flex justify-center">
+            <Image
+              src="/brand/logos/fitpro-logo-original.png"
+              alt="FitPro"
+              width={120}
+              height={120}
+              priority
+              className="h-24 w-24 sm:h-32 sm:w-32"
+            />
+          </div>
+
+          <h1 className="mb-4 text-5xl font-bold tracking-tight text-fitpro-charcoal sm:text-6xl">
             Fitness Pro
           </h1>
-          <p className="mb-2 text-xl text-gray-600">
+          <p className="mb-2 text-xl text-fitpro-charcoal-600">
             Seu personal trainer digital em português
           </p>
-          <p className="mb-8 text-lg text-gray-500">
+          <p className="mb-8 text-lg text-fitpro-charcoal-500">
             Treinos personalizados que se adaptam automaticamente ao seu progresso
           </p>
 
           {/* CTA Buttons - Only show when signed out */}
           <SignedOut>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button asChild size="lg" className="w-full sm:w-auto">
+              <Button asChild size="lg" className="w-full shadow-primary-md transition-all hover:shadow-primary-lg sm:w-auto">
                 <Link href="/login">Entrar</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+              <Button asChild variant="outline" size="lg" className="w-full border-fitpro-charcoal-300 hover:border-fitpro-red sm:w-auto">
                 <Link href="/register">Criar conta grátis</Link>
               </Button>
             </div>
@@ -42,7 +55,7 @@ export default function Home() {
           <SignedIn>
             <div className="flex flex-col items-center justify-center gap-6">
               <div className="flex items-center gap-4">
-                <p className="text-lg text-gray-700">Bem-vindo de volta! 👋</p>
+                <p className="text-lg text-fitpro-charcoal-700">Bem-vindo de volta! 👋</p>
                 <UserButton
                   appearance={{
                     elements: {
@@ -52,10 +65,10 @@ export default function Home() {
                 />
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Button asChild size="lg" className="w-full sm:w-auto">
+                <Button asChild size="lg" className="w-full shadow-primary-md transition-all hover:shadow-primary-lg sm:w-auto">
                   <Link href="/plano">Ver Meu Plano de Treino</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                <Button asChild variant="outline" size="lg" className="w-full border-fitpro-charcoal-300 hover:border-fitpro-red sm:w-auto">
                   <Link href="/onboarding">Configurar Preferências</Link>
                 </Button>
               </div>
@@ -65,9 +78,9 @@ export default function Home() {
 
         {/* Features Grid */}
         <div className="mx-auto mt-16 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <Card>
+          <Card className="transition-all hover:border-fitpro-red hover:shadow-primary-md">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-fitpro-charcoal">
                 <span className="text-2xl">🎯</span>
                 Personalizado
               </CardTitle>
@@ -79,9 +92,9 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all hover:border-fitpro-red hover:shadow-primary-md">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-fitpro-charcoal">
                 <span className="text-2xl">📈</span>
                 Adaptativo
               </CardTitle>
@@ -93,9 +106,9 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all hover:border-fitpro-red hover:shadow-primary-md">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-fitpro-charcoal">
                 <span className="text-2xl">💪</span>
                 Completo
               </CardTitle>
@@ -107,9 +120,9 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all hover:border-fitpro-red hover:shadow-primary-md">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-fitpro-charcoal">
                 <span className="text-2xl">🏠</span>
                 Casa ou Academia
               </CardTitle>
@@ -121,9 +134,9 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all hover:border-fitpro-red hover:shadow-primary-md">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-fitpro-charcoal">
                 <span className="text-2xl">⏱️</span>
                 Flexível
               </CardTitle>
@@ -135,9 +148,9 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all hover:border-fitpro-red hover:shadow-primary-md">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-fitpro-charcoal">
                 <span className="text-2xl">🇧🇷</span>
                 Em Português
               </CardTitle>
@@ -152,63 +165,63 @@ export default function Home() {
 
         {/* How it Works */}
         <div className="mx-auto mt-16 max-w-3xl">
-          <h2 className="mb-8 text-center text-3xl font-bold">Como funciona</h2>
+          <h2 className="mb-8 text-center text-3xl font-bold text-fitpro-charcoal">Como funciona</h2>
           <div className="space-y-6">
             <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red shadow-primary-md text-white font-bold">
                 1
               </div>
               <div>
-                <h3 className="mb-1 font-semibold">Complete o Onboarding</h3>
-                <p className="text-gray-600">
+                <h3 className="mb-1 font-semibold text-fitpro-charcoal">Complete o Onboarding</h3>
+                <p className="text-fitpro-charcoal-600">
                   Conte sobre seus objetivos, experiência e equipamentos disponíveis
                 </p>
               </div>
             </div>
 
             <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red shadow-primary-md text-white font-bold">
                 2
               </div>
               <div>
-                <h3 className="mb-1 font-semibold">Receba seu Plano Personalizado</h3>
-                <p className="text-gray-600">
+                <h3 className="mb-1 font-semibold text-fitpro-charcoal">Receba seu Plano Personalizado</h3>
+                <p className="text-fitpro-charcoal-600">
                   Geramos automaticamente sua Semana 1 com exercícios específicos para você
                 </p>
               </div>
             </div>
 
             <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red shadow-primary-md text-white font-bold">
                 3
               </div>
               <div>
-                <h3 className="mb-1 font-semibold">Execute os Treinos</h3>
-                <p className="text-gray-600">
+                <h3 className="mb-1 font-semibold text-fitpro-charcoal">Execute os Treinos</h3>
+                <p className="text-fitpro-charcoal-600">
                   Use nosso cronômetro, marque as séries e acompanhe seu progresso
                 </p>
               </div>
             </div>
 
             <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red shadow-primary-md text-white font-bold">
                 4
               </div>
               <div>
-                <h3 className="mb-1 font-semibold">Dê Feedback</h3>
-                <p className="text-gray-600">
+                <h3 className="mb-1 font-semibold text-fitpro-charcoal">Dê Feedback</h3>
+                <p className="text-fitpro-charcoal-600">
                   Após cada treino, nos diga se foi fácil, ok ou difícil
                 </p>
               </div>
             </div>
 
             <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red shadow-primary-md text-white font-bold">
                 5
               </div>
               <div>
-                <h3 className="mb-1 font-semibold">Evolua Automaticamente</h3>
-                <p className="text-gray-600">
+                <h3 className="mb-1 font-semibold text-fitpro-charcoal">Evolua Automaticamente</h3>
+                <p className="text-fitpro-charcoal-600">
                   Toda segunda-feira, seu plano é ajustado baseado no seu feedback
                 </p>
               </div>
@@ -218,10 +231,10 @@ export default function Home() {
 
         {/* Final CTA */}
         <div className="mx-auto mt-16 max-w-2xl text-center">
-          <Card className="border-blue-200 bg-blue-50">
+          <Card className="border-fitpro-red-200 bg-fitpro-red-50">
             <CardContent className="p-8">
               <h2 className="mb-4 text-2xl font-bold">Pronto para começar?</h2>
-              <p className="mb-6 text-gray-600">
+              <p className="mb-6 text-fitpro-charcoal-600">
                 Crie sua conta grátis e receba seu primeiro plano de treino personalizado
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
