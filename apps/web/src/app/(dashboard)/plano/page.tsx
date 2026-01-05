@@ -25,9 +25,9 @@ function getWorkoutTypeLabel(workoutType: string): string {
 
 function getStatusBadge(status: string) {
   const badges = {
-    pending: { label: 'Pendente', className: 'bg-yellow-100 text-yellow-800' },
-    completed: { label: 'Concluído', className: 'bg-green-100 text-green-800' },
-    skipped: { label: 'Pulado', className: 'bg-gray-100 text-gray-800' },
+    pending: { label: 'Pendente', className: 'bg-warning-light text-warning' },
+    completed: { label: 'Concluído', className: 'bg-success-light text-success' },
+    skipped: { label: 'Pulado', className: 'bg-muted text-muted-foreground' },
   };
 
   const badge = badges[status as keyof typeof badges] || badges.pending;
@@ -48,11 +48,11 @@ export default function PlanoPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-4">
-          <div className="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
-          <div className="h-24 animate-pulse rounded bg-gray-200"></div>
+          <div className="h-8 w-48 animate-pulse rounded bg-muted"></div>
+          <div className="h-24 animate-pulse rounded bg-muted"></div>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 animate-pulse rounded bg-gray-200"></div>
+              <div key={i} className="h-32 animate-pulse rounded bg-muted"></div>
             ))}
           </div>
         </div>
@@ -65,7 +65,7 @@ export default function PlanoPage() {
       <div className="container mx-auto px-4 py-8">
         <Card>
           <CardHeader>
-            <CardTitle>Erro ao carregar plano</CardTitle>
+            <CardTitle className="text-fitpro-charcoal">Erro ao carregar plano</CardTitle>
             <CardDescription>
               {error instanceof Error ? error.message : 'Erro desconhecido'}
             </CardDescription>
@@ -89,36 +89,36 @@ export default function PlanoPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Meu Plano de Treino</h1>
-        <p className="text-gray-600">Semana {plan.weekNumber}</p>
+        <h1 className="text-3xl font-bold text-fitpro-charcoal">Meu Plano de Treino</h1>
+        <p className="text-muted-foreground">Semana {plan.weekNumber}</p>
       </div>
 
       {/* Stats Card */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Progresso da Semana</CardTitle>
+          <CardTitle className="text-fitpro-charcoal">Progresso da Semana</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <p className="text-sm text-gray-600">Total</p>
+              <p className="text-sm text-muted-foreground">Total</p>
               <p className="text-2xl font-bold">{stats.total}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Concluídos</p>
-              <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
+              <p className="text-sm text-muted-foreground">Concluídos</p>
+              <p className="text-2xl font-bold text-success">{stats.completed}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Taxa de conclusão</p>
+              <p className="text-sm text-muted-foreground">Taxa de conclusão</p>
               <p className="text-2xl font-bold">{stats.completionRate}%</p>
             </div>
           </div>
 
           {/* Progress Bar */}
           <div className="mt-4">
-            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
               <div
-                className="h-full bg-green-600 transition-all duration-300"
+                className="h-full bg-success transition-all duration-300"
                 style={{ width: `${stats.completionRate}%` }}
               ></div>
             </div>
@@ -128,14 +128,14 @@ export default function PlanoPage() {
 
       {/* Workouts List */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Treinos da Semana</h2>
+        <h2 className="text-xl font-semibold text-fitpro-charcoal">Treinos da Semana</h2>
 
         {workouts.map((workout) => (
-          <Card key={workout.id} className="transition-shadow hover:shadow-lg">
+          <Card key={workout.id} className="transition-shadow hover:shadow-lg hover:border-fitpro-red">
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg">
+                  <CardTitle className="text-lg text-fitpro-charcoal">
                     {DAYS_OF_WEEK[workout.dayOfWeek - 1]}
                   </CardTitle>
                   <CardDescription>
@@ -147,12 +147,12 @@ export default function PlanoPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   {workout.exercises.length} exercícios
                 </p>
 
                 {workout.status === 'completed' && workout.completedAt && (
-                  <p className="text-sm text-green-600">
+                  <p className="text-sm text-success">
                     Concluído em {new Date(workout.completedAt).toLocaleDateString('pt-BR')}
                   </p>
                 )}
@@ -172,7 +172,7 @@ export default function PlanoPage() {
         {workouts.length === 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Nenhum treino encontrado</CardTitle>
+              <CardTitle className="text-fitpro-charcoal">Nenhum treino encontrado</CardTitle>
               <CardDescription>
                 Complete o onboarding para gerar seu plano de treino.
               </CardDescription>
