@@ -66,7 +66,8 @@ export default function FeedbackPage({ params }: FeedbackPageProps) {
     setError(null);
 
     try {
-      const response = await fetch('/api/feedback', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.fitpro.vip';
+      const response = await fetch(`${apiUrl}/feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

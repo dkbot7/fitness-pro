@@ -49,7 +49,8 @@ export default function OnboardingPage() {
   const onSubmit = async (data: OnboardingFormData) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/onboarding', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.fitpro.vip';
+      const response = await fetch(`${apiUrl}/onboarding`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
