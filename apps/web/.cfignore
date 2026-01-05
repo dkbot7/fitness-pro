@@ -1,0 +1,7 @@
+# Cloudflare Pages - Ignore cache and large files
+.next/cache/
+node_modules/
+.git/
+*.log
+.env*
+!.env.example
