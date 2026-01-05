@@ -17,6 +17,51 @@ const config: Config = {
     },
     extend: {
       colors: {
+        // FitPro Brand Colors
+        'fitpro-red': {
+          DEFAULT: '#DC2626',
+          50: '#FEF2F2',
+          100: '#FEE2E2',
+          200: '#FECACA',
+          300: '#FCA5A5',
+          400: '#F87171',
+          500: '#EF4444',
+          600: '#DC2626',
+          700: '#B91C1C',
+          800: '#991B1B',
+          900: '#7F1D1D',
+        },
+        'fitpro-charcoal': {
+          DEFAULT: '#2D3748',
+          50: '#F7FAFC',
+          100: '#EDF2F7',
+          200: '#E2E8F0',
+          300: '#CBD5E1',
+          400: '#A0AEC0',
+          500: '#718096',
+          600: '#4A5568',
+          700: '#2D3748',
+          800: '#1A202C',
+          900: '#171923',
+        },
+        success: {
+          DEFAULT: '#10B981',
+          light: '#D1FAE5',
+        },
+        warning: {
+          DEFAULT: '#F59E0B',
+          light: '#FEF3C7',
+        },
+        info: {
+          DEFAULT: '#3B82F6',
+          light: '#DBEAFE',
+        },
+        error: {
+          DEFAULT: '#EF4444',
+          light: '#FEE2E2',
+        },
+
+        // Shadcn UI Colors (mantidos para compatibilidade)
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -51,6 +96,15 @@ const config: Config = {
           foreground: 'hsl(var(--card-foreground))',
         },
       },
+      fontFamily: {
+        sans: [
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'sans-serif',
+        ],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -69,6 +123,11 @@ const config: Config = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+      },
+      boxShadow: {
+        'primary-sm': '0 1px 2px 0 rgba(220, 38, 38, 0.1)',
+        'primary-md': '0 4px 6px -1px rgba(220, 38, 38, 0.2)',
+        'primary-lg': '0 10px 15px -3px rgba(220, 38, 38, 0.3)',
       },
     },
   },
