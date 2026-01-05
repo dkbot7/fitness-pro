@@ -15,7 +15,7 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Bem-vindo, {user.firstName || 'atleta'}!</CardTitle>
+          <CardTitle className="text-fitpro-charcoal">Bem-vindo, {user.firstName || 'atleta'}!</CardTitle>
           <CardDescription>
             Seu personal trainer digital está pronto para começar.
           </CardDescription>
@@ -24,10 +24,10 @@ export default async function DashboardPage() {
 
       {/* Quick Actions */}
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-blue-200 bg-blue-50">
+        <Card className="border-fitpro-red-200 bg-fitpro-red-50">
           <CardHeader>
-            <CardTitle className="text-lg">Complete seu perfil</CardTitle>
-            <CardDescription className="text-blue-700">
+            <CardTitle className="text-lg text-fitpro-charcoal">Complete seu perfil</CardTitle>
+            <CardDescription className="text-fitpro-red-700">
               Configure suas preferências e gere seu plano de treino personalizado.
             </CardDescription>
           </CardHeader>
@@ -38,15 +38,15 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-green-200 bg-green-50">
+        <Card className="border-success-light bg-success-light">
           <CardHeader>
-            <CardTitle className="text-lg">Meu Plano de Treino</CardTitle>
-            <CardDescription className="text-green-700">
+            <CardTitle className="text-lg text-fitpro-charcoal">Meu Plano de Treino</CardTitle>
+            <CardDescription className="text-success">
               Veja seus treinos da semana e acompanhe seu progresso.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild variant="default" className="bg-green-600 hover:bg-green-700">
+            <Button asChild variant="default" className="bg-success hover:bg-success shadow-md">
               <Link href="/plano">Ver plano</Link>
             </Button>
           </CardContent>
