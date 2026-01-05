@@ -1,0 +1,111 @@
+========================================
+CLOUDFLARE PAGES - CONFIGURAÇÃO
+========================================
+
+🔗 LINK: https://dash.cloudflare.com/ce11d202b2917777965b5131b5edc627/pages
+
+========================================
+PASSO 1: CRIAR PROJETO
+========================================
+
+1. Clique em "Create application"
+2. Escolha "Pages"
+3. Clique em "Connect to Git"
+
+========================================
+PASSO 2: CONECTAR GITHUB
+========================================
+
+1. Se aparecer "Install GitHub App":
+   - Clique em "Install GitHub"
+   - Autorize o Cloudflare no GitHub
+   - Selecione "dkbot7/fitness-pro" ou "All repositories"
+   - Clique em "Install & Authorize"
+
+2. Selecione o repositório:
+   - Procure: fitness-pro
+   - Clique em "Begin setup"
+
+========================================
+PASSO 3: CONFIGURAR BUILD
+========================================
+
+📝 COPIE E COLE ESTAS CONFIGURAÇÕES:
+
+Project name:
+---
+fitness-pro
+---
+
+Production branch:
+---
+main
+---
+
+Framework preset:
+---
+Next.js
+---
+
+Build command:
+---
+pnpm install --frozen-lockfile && cd apps/web && pnpm build && npx @opennextjs/cloudflare@latest
+---
+
+Build output directory:
+---
+apps/web/.worker-next
+---
+
+Root directory (Project root path):
+---
+/
+---
+
+========================================
+PASSO 4: VARIÁVEIS DE AMBIENTE
+========================================
+
+Clique em "Add variable" para cada uma:
+
+1. NODE_VERSION
+   Value: 20
+
+2. NEXT_PUBLIC_API_URL
+   Value: https://api.fitpro.vip
+
+3. NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+   Value: pk_test_OyGg3O6tZ4N3lQRN9ZL7Iwqyq4mr4p6Q2JnoJQqhoM
+
+4. NEXT_PUBLIC_CLERK_SIGN_IN_URL
+   Value: /login
+
+5. NEXT_PUBLIC_CLERK_SIGN_UP_URL
+   Value: /register
+
+6. NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL
+   Value: /
+
+7. NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL
+   Value: /onboarding
+
+========================================
+PASSO 5: SALVAR E DEPLOY
+========================================
+
+1. Clique em "Save and Deploy"
+2. Aguarde 5-10 minutos
+3. Build vai rodar automaticamente
+
+========================================
+DEPOIS DO DEPLOY
+========================================
+
+Você receberá uma URL temporária como:
+https://fitness-pro-xxx.pages.dev
+
+Depois vamos configurar:
+https://fitpro.vip
+https://www.fitpro.vip
+
+========================================
