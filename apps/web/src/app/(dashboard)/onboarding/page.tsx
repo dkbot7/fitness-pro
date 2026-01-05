@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -26,6 +27,7 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const { getToken } = useAuth();
 
   const {
     watch,
@@ -49,10 +51,18 @@ export default function OnboardingPage() {
   const onSubmit = async (data: OnboardingFormData) => {
     setIsSubmitting(true);
     try {
+      const token = await getToken();
+      if (!token) {
+        throw new Error('Não autenticado');
+      }
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.fitpro.vip';
       const response = await fetch(`${apiUrl}/onboarding`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify(data),
       });
 
