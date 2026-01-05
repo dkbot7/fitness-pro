@@ -1,0 +1,13 @@
+NAMESERVERS DO CLOUDFLARE PARA fitpro.vip
+==========================================
+
+Copie e cole estes nameservers na GoDaddy:
+
+Nameserver 1: luciana.ns.cloudflare.com
+Nameserver 2: rustam.ns.cloudflare.com
+
+DELETAR os nameservers antigos:
+- ns73.domaincontrol.com
+- ns74.domaincontrol.com
+
+Link GoDaddy: https://dcc.godaddy.com/domains

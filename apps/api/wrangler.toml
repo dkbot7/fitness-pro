@@ -16,6 +16,11 @@ database_id = "8156de65-ed3d-46a9-8b5c-c314e6920aef"
 [vars]
 ENVIRONMENT = "production"
 
+# Custom domain routes
+routes = [
+  { pattern = "api.fitpro.vip/*", zone_name = "fitpro.vip" }
+]
+
 # Cron triggers for weekly workout adjustments
 [triggers]
 crons = ["0 6 * * 1"] # Every Monday at 6am UTC
