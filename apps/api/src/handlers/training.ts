@@ -2,6 +2,7 @@ import { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { workoutPlans, workouts, workoutExercises, exercises } from '@fitness-pro/database';
 import { eq, and, desc } from 'drizzle-orm';
+import type { CompleteWorkoutInput } from '../validation/schemas';
 
 interface Env {
   DB: D1Database;
@@ -51,42 +52,63 @@ export async function getWorkoutPlan(c: Context<{ Bindings: Env }>) {
       .where(eq(workouts.planId, plan.id))
       .orderBy(workouts.dayOfWeek);
 
-    // 5. Get exercises for each workout
-    const workoutsWithExercises = await Promise.all(
-      planWorkouts.map(async (workout) => {
-        const exerciseRecords = await db
-          .select({
-            id: workoutExercises.id,
-            exerciseId: workoutExercises.exerciseId,
-            orderIndex: workoutExercises.orderIndex,
-            sets: workoutExercises.sets,
-            repsMin: workoutExercises.repsMin,
-            repsMax: workoutExercises.repsMax,
-            restSeconds: workoutExercises.restSeconds,
-            notesPt: workoutExercises.notesPt,
-            exerciseName: exercises.namePt,
-            exerciseSlug: exercises.slug,
-            muscleGroups: exercises.muscleGroups,
-            difficulty: exercises.difficulty,
-            videoUrl: exercises.videoUrl,
-            thumbnailUrl: exercises.thumbnailUrl,
-          })
-          .from(workoutExercises)
-          .innerJoin(exercises, eq(workoutExercises.exerciseId, exercises.id))
-          .where(eq(workoutExercises.workoutId, workout.id))
-          .orderBy(workoutExercises.orderIndex);
+    // 5. Get ALL exercises for ALL workouts in ONE query (optimized - no N+1)
+    // First, get all workout IDs for this plan
+    const workoutIds = planWorkouts.map(w => w.id);
 
-        return {
-          id: workout.id,
-          dayOfWeek: workout.dayOfWeek,
-          workoutType: workout.workoutType,
-          status: workout.status,
-          startedAt: workout.startedAt,
-          completedAt: workout.completedAt,
-          exercises: exerciseRecords,
-        };
-      })
-    );
+    // Fetch all workout exercises for these workouts in a single query
+    // We'll do this by querying all exercises where workout_id is in our list
+    let allExerciseRecords: any[] = [];
+
+    if (workoutIds.length > 0) {
+      // For D1/SQLite, we need to handle the IN clause differently
+      // Drizzle supports inArray for this
+      const { inArray } = await import('drizzle-orm');
+
+      allExerciseRecords = await db
+        .select({
+          workoutId: workoutExercises.workoutId,
+          id: workoutExercises.id,
+          exerciseId: workoutExercises.exerciseId,
+          orderIndex: workoutExercises.orderIndex,
+          sets: workoutExercises.sets,
+          repsMin: workoutExercises.repsMin,
+          repsMax: workoutExercises.repsMax,
+          restSeconds: workoutExercises.restSeconds,
+          notesPt: workoutExercises.notesPt,
+          exerciseName: exercises.namePt,
+          exerciseSlug: exercises.slug,
+          muscleGroups: exercises.muscleGroups,
+          difficulty: exercises.difficulty,
+          videoUrl: exercises.videoUrl,
+          thumbnailUrl: exercises.thumbnailUrl,
+        })
+        .from(workoutExercises)
+        .innerJoin(exercises, eq(workoutExercises.exerciseId, exercises.id))
+        .where(inArray(workoutExercises.workoutId, workoutIds))
+        .orderBy(workoutExercises.workoutId, workoutExercises.orderIndex);
+    }
+
+    // Group exercises by workout ID
+    const exercisesByWorkout = new Map<number, typeof allExerciseRecords>();
+    for (const exercise of allExerciseRecords) {
+      const workoutId = exercise.workoutId;
+      if (!exercisesByWorkout.has(workoutId)) {
+        exercisesByWorkout.set(workoutId, []);
+      }
+      exercisesByWorkout.get(workoutId)!.push(exercise);
+    }
+
+    // Map workouts to include their exercises (no async needed - data already fetched)
+    const workoutsWithExercises = planWorkouts.map(workout => ({
+      id: workout.id,
+      dayOfWeek: workout.dayOfWeek,
+      workoutType: workout.workoutType,
+      status: workout.status,
+      startedAt: workout.startedAt,
+      completedAt: workout.completedAt,
+      exercises: exercisesByWorkout.get(workout.id) || [],
+    }));
 
     // 6. Calculate completion stats
     const totalWorkouts = workoutsWithExercises.length;
@@ -138,13 +160,9 @@ export async function completeWorkout(c: Context<{ Bindings: Env }>) {
       return c.json({ error: 'Missing user information' }, 401);
     }
 
-    // 2. Parse request body
-    const body = await c.req.json();
+    // 2. Get validated request body
+    const body = c.get('validatedBody') as CompleteWorkoutInput;
     const { workoutId } = body;
-
-    if (!workoutId) {
-      return c.json({ error: 'Missing workoutId' }, 400);
-    }
 
     // 3. Connect to D1 database
     const db = drizzle(c.env.DB);

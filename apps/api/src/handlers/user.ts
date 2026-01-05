@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { profiles, workoutPlans, workouts, users } from '@fitness-pro/database';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, sql } from 'drizzle-orm';
 
 interface Env {
   DB: D1Database;
@@ -170,6 +170,78 @@ export async function getUserStats(c: Context<{ Bindings: Env }>) {
     return c.json(
       {
         error: 'Failed to fetch user stats',
+        details: error.message,
+      },
+      500
+    );
+  }
+}
+
+/**
+ * GET /api/users/me/workouts/history
+ * Get paginated workout history
+ * Supports query params: ?page=1&limit=20&status=completed
+ */
+export async function getWorkoutHistory(c: Context<{ Bindings: Env }>) {
+  try {
+    const userId = c.get('userId');
+
+    if (!userId) {
+      return c.json({ error: 'Missing user information' }, 401);
+    }
+
+    const db = drizzle(c.env.DB);
+
+    // Get pagination params
+    const page = parseInt(c.req.query('page') || '1');
+    const limit = Math.min(parseInt(c.req.query('limit') || '20'), 100); // Max 100 per page
+    const offset = (page - 1) * limit;
+    const statusFilter = c.req.query('status'); // Optional: completed, pending, skipped
+
+    // Build where conditions
+    let whereConditions = eq(workouts.userId, userId);
+    if (statusFilter && ['completed', 'pending', 'skipped'].includes(statusFilter)) {
+      whereConditions = and(
+        eq(workouts.userId, userId),
+        eq(workouts.status, statusFilter as any)
+      ) as any;
+    }
+
+    // Get total count
+    const countResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(workouts)
+      .where(whereConditions);
+
+    const totalCount = countResult[0]?.count || 0;
+
+    // Get paginated workouts
+    const workoutRecords = await db
+      .select()
+      .from(workouts)
+      .where(whereConditions)
+      .orderBy(desc(workouts.completedAt), desc(workouts.createdAt))
+      .limit(limit)
+      .offset(offset);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return c.json({
+      success: true,
+      workouts: workoutRecords,
+      pagination: {
+        page,
+        limit,
+        total: totalCount,
+        totalPages,
+        hasMore: page < totalPages,
+      },
+    });
+  } catch (error: any) {
+    console.error('Get workout history error:', error);
+    return c.json(
+      {
+        error: 'Failed to fetch workout history',
         details: error.message,
       },
       500

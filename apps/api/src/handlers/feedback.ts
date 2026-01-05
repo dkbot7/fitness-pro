@@ -2,6 +2,7 @@ import { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { workoutFeedback, workouts } from '@fitness-pro/database';
 import { eq, and } from 'drizzle-orm';
+import type { SubmitFeedbackInput } from '../validation/schemas';
 
 interface Env {
   DB: D1Database;
@@ -20,24 +21,9 @@ export async function submitFeedback(c: Context<{ Bindings: Env }>) {
       return c.json({ error: 'Missing user information' }, 401);
     }
 
-    // 2. Parse request body
-    const body = await c.req.json();
+    // 2. Get validated request body
+    const body = c.get('validatedBody') as SubmitFeedbackInput;
     const { workoutId, difficultyRating, durationMinutes, notes } = body;
-
-    if (!workoutId || !difficultyRating) {
-      return c.json(
-        { error: 'Missing required fields: workoutId, difficultyRating' },
-        400
-      );
-    }
-
-    // Validate difficultyRating
-    if (!['easy', 'ok', 'hard'].includes(difficultyRating)) {
-      return c.json(
-        { error: 'Invalid difficultyRating. Must be: easy, ok, or hard' },
-        400
-      );
-    }
 
     // 3. Connect to D1 database
     const db = drizzle(c.env.DB);

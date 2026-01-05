@@ -3,6 +3,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import { users, profiles, workoutPlans, workouts, workoutExercises, exercises } from '@fitness-pro/database';
 import { eq } from 'drizzle-orm';
 import { generateInitialWorkoutPlan, type UserProfile } from '../services/workout-generator';
+import type { OnboardingInput } from '../validation/schemas';
 
 interface Env {
   DB: D1Database;
@@ -24,8 +25,8 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
       return c.json({ error: 'Missing user information' }, 401);
     }
 
-    // 2. Parse request body
-    const body = await c.req.json();
+    // 2. Get validated request body from validator middleware
+    const body = c.get('validatedBody') as OnboardingInput;
     const {
       goal,
       frequencyPerWeek,

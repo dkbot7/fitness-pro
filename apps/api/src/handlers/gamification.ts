@@ -98,6 +98,7 @@ export async function getUserStreak(c: Context<{ Bindings: Env }>) {
 /**
  * GET /api/gamification/achievements
  * Returns all achievements with unlock status for current user
+ * Supports pagination via query params: ?page=1&limit=20
  */
 export async function getUserAchievements(c: Context<{ Bindings: Env }>) {
   try {
@@ -109,12 +110,27 @@ export async function getUserAchievements(c: Context<{ Bindings: Env }>) {
 
     const db = drizzle(c.env.DB);
 
-    // Get all active achievements
+    // Get pagination params (optional - defaults to all)
+    const page = parseInt(c.req.query('page') || '1');
+    const limit = parseInt(c.req.query('limit') || '100'); // Default: return all
+    const offset = (page - 1) * limit;
+
+    // Get total count of active achievements
+    const countResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(achievements)
+      .where(eq(achievements.isActive, true));
+
+    const totalCount = countResult[0]?.count || 0;
+
+    // Get paginated active achievements
     const allAchievements = await db
       .select()
       .from(achievements)
       .where(eq(achievements.isActive, true))
-      .orderBy(achievements.category, achievements.requirement);
+      .orderBy(achievements.category, achievements.requirement)
+      .limit(limit)
+      .offset(offset);
 
     // Get user's unlocked achievements
     const unlockedRecords = await db
@@ -166,11 +182,20 @@ export async function getUserAchievements(c: Context<{ Bindings: Env }>) {
       };
     });
 
+    const totalPages = Math.ceil(totalCount / limit);
+
     return c.json({
       success: true,
       achievements: achievementsWithStatus,
       currentStreak,
       totalWorkouts,
+      pagination: {
+        page,
+        limit,
+        total: totalCount,
+        totalPages,
+        hasMore: page < totalPages,
+      },
     });
   } catch (error: any) {
     console.error('Get user achievements error:', error);

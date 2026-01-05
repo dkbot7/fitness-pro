@@ -131,7 +131,7 @@ function filterExercises(profile: UserProfile): Exercise[] {
     );
 
     // Check difficulty level
-    const appropriateDifficulty = isAppropriatedifficulty(
+    const appropriateDifficulty = isAppropriateDifficulty(
       exercise.difficulty,
       profile.experienceLevel
     );
@@ -143,16 +143,7 @@ function filterExercises(profile: UserProfile): Exercise[] {
 /**
  * Check if exercise difficulty matches user's experience level
  */
-function isAppropriateEfficiency(
-  exerciseDifficulty: string,
-  userLevel: string
-): boolean {
-  if (userLevel === 'beginner') return exerciseDifficulty !== 'advanced';
-  if (userLevel === 'advanced') return exerciseDifficulty !== 'beginner';
-  return true; // Intermediate can do all
-}
-
-function isAppropriateДifficulty(
+function isAppropriateDifficulty(
   exerciseDifficulty: string,
   userLevel: string
 ): boolean {

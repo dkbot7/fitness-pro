@@ -1,74 +1,108 @@
-import { Context, Next } from 'hono';
 import { createMiddleware } from 'hono/factory';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
+import { logger } from '../utils/logger';
 
 interface Env {
   CLERK_SECRET_KEY: string;
+  CLERK_PUBLISHABLE_KEY?: string;
 }
+
+// Cache JWKS for performance
+let jwksCache: ReturnType<typeof createRemoteJWKSet> | null = null;
 
 /**
  * Clerk JWT Authentication Middleware
- * Validates Clerk session tokens and extracts user information
+ * Validates Clerk session tokens with proper signature verification
  */
 export const clerkAuth = createMiddleware<{ Bindings: Env }>(async (c, next) => {
   try {
     // Get Authorization header
     const authHeader = c.req.header('Authorization');
-    console.log('[AUTH] Authorization header:', authHeader ? 'Present' : 'Missing');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.log('[AUTH] Invalid or missing Bearer token');
       return c.json({ error: 'Missing or invalid Authorization header' }, 401);
     }
 
     // Extract token
     const token = authHeader.substring(7); // Remove "Bearer " prefix
-    console.log('[AUTH] Token extracted, length:', token?.length || 0);
 
     if (!token) {
-      console.log('[AUTH] Empty token after extraction');
       return c.json({ error: 'Missing token' }, 401);
     }
 
-    // Validate token using Clerk's Backend API
-    // In production, you should use @clerk/backend package
-    // For now, we'll decode the JWT to extract the user ID
-    const decoded = parseJwt(token);
-    console.log('[AUTH] Decoded token:', decoded ? 'Success' : 'Failed');
-    console.log('[AUTH] User ID (sub):', decoded?.sub);
-
-    if (!decoded || !decoded.sub) {
-      console.log('[AUTH] Invalid token or missing sub claim');
-      return c.json({ error: 'Invalid token' }, 401);
+    // Get Clerk secret key
+    const secretKey = c.env.CLERK_SECRET_KEY;
+    if (!secretKey) {
+      logger.error('CLERK_SECRET_KEY not configured');
+      return c.json({ error: 'Server configuration error' }, 500);
     }
 
-    // Set user ID in context
-    c.set('userId', decoded.sub);
-    c.set('user', decoded);
+    // Extract the publishable key from secret key format (sk_test_... or sk_live_...)
+    // Clerk JWKS URL format: https://[domain].clerk.accounts.dev/.well-known/jwks.json
+    const clerkDomain = await getClerkDomain(token);
 
-    console.log('[AUTH] Authentication successful for user:', decoded.sub);
+    if (!clerkDomain) {
+      return c.json({ error: 'Invalid token format' }, 401);
+    }
+
+    // Initialize JWKS if not cached
+    if (!jwksCache) {
+      const jwksUrl = `https://${clerkDomain}/.well-known/jwks.json`;
+      jwksCache = createRemoteJWKSet(new URL(jwksUrl));
+    }
+
+    // Verify JWT with signature validation
+    const { payload } = await jwtVerify(token, jwksCache, {
+      algorithms: ['RS256'],
+    });
+
+    // Validate required claims
+    if (!payload.sub) {
+      return c.json({ error: 'Invalid token: missing user ID' }, 401);
+    }
+
+    // Set user ID and full payload in context
+    c.set('userId', payload.sub);
+    c.set('user', payload);
+
+    logger.debug('Authentication successful', { userId: payload.sub });
+
     await next();
   } catch (error: any) {
-    console.error('[AUTH] Auth middleware error:', error);
-    return c.json({ error: 'Unauthorized', details: error.message }, 401);
+    // Handle specific JWT errors
+    if (error.code === 'ERR_JWT_EXPIRED') {
+      logger.warn('Token expired', { error: error.message });
+      return c.json({ error: 'Token expired' }, 401);
+    }
+    if (error.code === 'ERR_JWS_SIGNATURE_VERIFICATION_FAILED') {
+      logger.warn('Invalid token signature', { error: error.message });
+      return c.json({ error: 'Invalid token signature' }, 401);
+    }
+
+    logger.error('Authentication error', error);
+    return c.json({ error: 'Unauthorized' }, 401);
   }
 });
 
 /**
- * Simple JWT parser (without signature verification)
- * WARNING: This is NOT secure for production. Use @clerk/backend instead.
+ * Extract Clerk domain from JWT token (from 'iss' claim)
  */
-function parseJwt(token: string): any {
+async function getClerkDomain(token: string): Promise<string | null> {
   try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
+    // Decode JWT without verification to get issuer
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+
+    const payload = JSON.parse(
+      Buffer.from(parts[1], 'base64url').toString('utf-8')
     );
 
-    return JSON.parse(jsonPayload);
+    // Extract domain from issuer (e.g., "https://clerk.example.com" -> "clerk.example.com")
+    const issuer = payload.iss as string;
+    if (!issuer) return null;
+
+    const url = new URL(issuer);
+    return url.hostname;
   } catch (error) {
     return null;
   }
