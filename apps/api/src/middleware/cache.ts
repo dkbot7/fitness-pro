@@ -149,7 +149,8 @@ class MemoryCache<T = any> {
 export const memoryCache = new MemoryCache();
 
 // Cleanup expired entries every 5 minutes
-setInterval(() => memoryCache.cleanup(), 5 * 60 * 1000);
+// Note: In Cloudflare Workers, use scheduled handlers instead of setInterval
+// for periodic cleanup. For now, cleanup happens on-demand during cache operations.
 
 /**
  * Cache presets for common use cases
