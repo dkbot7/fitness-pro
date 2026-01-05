@@ -39,6 +39,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,json}'],
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB limit
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\.fitpro\.vip\/.*/i,
