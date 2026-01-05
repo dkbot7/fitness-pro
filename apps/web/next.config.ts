@@ -9,6 +9,9 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig: NextConfig = {
+  // Essencial para @opennextjs/cloudflare
+  output: 'standalone',
+
   eslint: {
     ignoreDuringBuilds: true,
   },
