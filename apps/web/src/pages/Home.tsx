@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, Heart, Globe, TrendingUp, Home, Clock, Zap } from 'lucide-react';
+import { Check, Heart, Globe, TrendingUp, Home as HomeIcon } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -216,7 +216,7 @@ export default function Home() {
             <div className="grid gap-8 md:grid-cols-3">
               <Card className="border-0 bg-white/10 backdrop-blur-sm transition-all hover:bg-white/20">
                 <CardContent className="p-8 text-center">
-                  <Home className="mx-auto mb-4 h-12 w-12" />
+                  <HomeIcon className="mx-auto mb-4 h-12 w-12" />
                   <h3 className="mb-3 text-xl font-bold">Casa ou Academia</h3>
                   <p className="opacity-90">
                     Treinos adaptados para qualquer lugar. Halteres? Elástico? Só peso corporal? Funciona com tudo.
