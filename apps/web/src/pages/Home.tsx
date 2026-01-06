@@ -1,48 +1,63 @@
 import { Link } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-4 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Fitness Pro
+      <div className="container mx-auto px-4 py-12 sm:py-20">
+        <div className="mx-auto max-w-3xl text-center">
+          {/* Logo */}
+          <div className="mb-6 flex justify-center">
+            <img
+              src="/brand/logos/fitpro-logo-original.png"
+              alt="FitPro"
+              width={96}
+              height={96}
+              className="h-20 w-20 sm:h-24 sm:w-24"
+            />
+          </div>
+
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-fitpro-charcoal sm:text-5xl md:text-6xl">
+            Seu personal trainer
+            <span className="block text-fitpro-red">sempre disponível</span>
           </h1>
-          <p className="mb-2 text-xl text-gray-600">
-            Seu personal trainer digital em português
-          </p>
-          <p className="mb-8 text-lg text-gray-500">
-            Treinos personalizados que se adaptam automaticamente ao seu progresso
+
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 sm:text-xl">
+            Treinos personalizados que evoluem com você. Sem mensalidade, sem academia cara.
           </p>
 
           {/* CTA Buttons - Only show when signed out */}
           <SignedOut>
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button asChild size="lg" className="w-full sm:w-auto">
+            <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Button
+                asChild
+                size="lg"
+                className="w-full bg-fitpro-red text-lg font-semibold shadow-lg transition-all hover:bg-fitpro-red-600 hover:shadow-xl sm:w-auto sm:px-8"
+              >
+                <Link to="/register">Começar grátis</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="w-full border-2 text-lg sm:w-auto sm:px-8"
+              >
                 <Link to="/login">Entrar</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                <Link to="/register">Criar conta grátis</Link>
-              </Button>
             </div>
-
-            {/* Quick Access */}
-            <div className="mt-8">
-              <Button asChild variant="link">
-                <Link to="/onboarding">Ir para Dashboard →</Link>
-              </Button>
-            </div>
+            <p className="mt-4 text-sm text-gray-500">
+              Sem cartão de crédito. Sem truques.
+            </p>
           </SignedOut>
 
           {/* Signed In - Show Dashboard Access */}
           <SignedIn>
             <div className="flex flex-col items-center justify-center gap-6">
               <div className="flex items-center gap-4">
-                <p className="text-lg text-gray-700">Bem-vindo de volta! 👋</p>
+                <p className="text-xl text-fitpro-charcoal-700">Bem-vindo de volta!</p>
                 <UserButton
                   appearance={{
                     elements: {
@@ -51,165 +66,113 @@ export default function Home() {
                   }}
                 />
               </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Button asChild size="lg" className="w-full sm:w-auto">
-                  <Link to="/plano">Ver Meu Plano de Treino</Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                  <Link to="/onboarding">Configurar Preferências</Link>
-                </Button>
-              </div>
+              <Button asChild size="lg" className="w-full bg-fitpro-red px-8 shadow-lg hover:bg-fitpro-red-600 sm:w-auto">
+                <Link to="/plano">Ver Meu Treino</Link>
+              </Button>
             </div>
           </SignedIn>
         </div>
 
-        {/* Features Grid */}
-        <div className="mx-auto mt-16 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="text-2xl">🎯</span>
-                Personalizado
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>
-                Planos criados especialmente para seus objetivos: emagrecer, ganhar massa ou manter forma
-              </CardDescription>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="text-2xl">📈</span>
-                Adaptativo
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>
-                Seu plano se ajusta automaticamente toda semana com base no seu feedback
-              </CardDescription>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="text-2xl">💪</span>
-                Completo
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>
-                30+ exercícios com instruções em português, cronômetro e acompanhamento de progresso
-              </CardDescription>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="text-2xl">🏠</span>
-                Casa ou Academia
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>
-                Treinos adaptados para equipamentos que você tem disponível
-              </CardDescription>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="text-2xl">⏱️</span>
-                Flexível
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>
-                Escolha sua frequência: de 2 a 6 treinos por semana
-              </CardDescription>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="text-2xl">🇧🇷</span>
-                Em Português
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>
-                Feito especialmente para brasileiros no exterior
-              </CardDescription>
-            </CardContent>
-          </Card>
+        {/* Social Proof */}
+        <div className="mx-auto mt-12 max-w-4xl">
+          <div className="grid gap-6 text-center sm:grid-cols-3">
+            <div className="rounded-lg bg-white p-6 shadow-sm">
+              <div className="text-3xl font-bold text-fitpro-red">30+</div>
+              <div className="mt-1 text-sm text-gray-600">Exercícios</div>
+            </div>
+            <div className="rounded-lg bg-white p-6 shadow-sm">
+              <div className="text-3xl font-bold text-fitpro-red">100%</div>
+              <div className="mt-1 text-sm text-gray-600">Grátis</div>
+            </div>
+            <div className="rounded-lg bg-white p-6 shadow-sm">
+              <div className="text-3xl font-bold text-fitpro-red">Em PT-BR</div>
+              <div className="mt-1 text-sm text-gray-600">Totalmente em português</div>
+            </div>
+          </div>
         </div>
 
-        {/* How it Works */}
+        {/* Features - Only 3 main ones */}
+        <div className="mx-auto mt-16 max-w-5xl">
+          <h2 className="mb-10 text-center text-3xl font-bold text-fitpro-charcoal">
+            Por que FitPro?
+          </h2>
+          <div className="grid gap-8 sm:grid-cols-3">
+            <Card className="border-0 shadow-md transition-all hover:shadow-lg">
+              <CardContent className="p-6 text-center">
+                <div className="mb-4 text-5xl">🎯</div>
+                <h3 className="mb-2 text-xl font-semibold text-fitpro-charcoal">
+                  Personalizado
+                </h3>
+                <p className="text-gray-600">
+                  Seu plano se adapta aos seus objetivos e equipamentos
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-md transition-all hover:shadow-lg">
+              <CardContent className="p-6 text-center">
+                <div className="mb-4 text-5xl">📈</div>
+                <h3 className="mb-2 text-xl font-semibold text-fitpro-charcoal">
+                  Evolutivo
+                </h3>
+                <p className="text-gray-600">
+                  Progresso automático baseado no seu feedback semanal
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-md transition-all hover:shadow-lg">
+              <CardContent className="p-6 text-center">
+                <div className="mb-4 text-5xl">⚡</div>
+                <h3 className="mb-2 text-xl font-semibold text-fitpro-charcoal">
+                  Simples
+                </h3>
+                <p className="text-gray-600">
+                  Cronômetro integrado, instruções claras, zero complicação
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* How it Works - Simplified */}
         <div className="mx-auto mt-16 max-w-3xl">
-          <h2 className="mb-8 text-center text-3xl font-bold">Como funciona</h2>
-          <div className="space-y-6">
-            <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+          <h2 className="mb-10 text-center text-3xl font-bold text-fitpro-charcoal">
+            Como funciona
+          </h2>
+          <div className="space-y-4">
+            <div className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-sm">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red text-lg font-bold text-white">
                 1
               </div>
               <div>
-                <h3 className="mb-1 font-semibold">Complete o Onboarding</h3>
+                <h3 className="mb-1 font-semibold text-fitpro-charcoal">Configure seu perfil</h3>
                 <p className="text-gray-600">
-                  Conte sobre seus objetivos, experiência e equipamentos disponíveis
+                  Responda 4 perguntas rápidas sobre seus objetivos e equipamentos
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+            <div className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-sm">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red text-lg font-bold text-white">
                 2
               </div>
               <div>
-                <h3 className="mb-1 font-semibold">Receba seu Plano Personalizado</h3>
+                <h3 className="mb-1 font-semibold text-fitpro-charcoal">Treine no seu ritmo</h3>
                 <p className="text-gray-600">
-                  Geramos automaticamente sua Semana 1 com exercícios específicos para você
+                  Receba seu plano semanal personalizado e execute os treinos
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+            <div className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-sm">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red text-lg font-bold text-white">
                 3
               </div>
               <div>
-                <h3 className="mb-1 font-semibold">Execute os Treinos</h3>
+                <h3 className="mb-1 font-semibold text-fitpro-charcoal">Evolua automaticamente</h3>
                 <p className="text-gray-600">
-                  Use nosso cronômetro, marque as séries e acompanhe seu progresso
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
-                4
-              </div>
-              <div>
-                <h3 className="mb-1 font-semibold">Dê Feedback</h3>
-                <p className="text-gray-600">
-                  Após cada treino, nos diga se foi fácil, ok ou difícil
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
-                5
-              </div>
-              <div>
-                <h3 className="mb-1 font-semibold">Evolua Automaticamente</h3>
-                <p className="text-gray-600">
-                  Toda segunda-feira, seu plano é ajustado baseado no seu feedback
+                  Dê feedback e veja seu plano se ajustar toda semana
                 </p>
               </div>
             </div>
@@ -217,25 +180,37 @@ export default function Home() {
         </div>
 
         {/* Final CTA */}
-        <div className="mx-auto mt-16 max-w-2xl text-center">
-          <Card className="border-blue-200 bg-blue-50">
-            <CardContent className="p-8">
-              <h2 className="mb-4 text-2xl font-bold">Pronto para começar?</h2>
-              <p className="mb-6 text-gray-600">
-                Crie sua conta grátis e receba seu primeiro plano de treino personalizado
+        <SignedOut>
+          <div className="mx-auto mt-16 max-w-2xl text-center">
+            <div className="rounded-2xl bg-gradient-to-br from-fitpro-red to-fitpro-red-600 p-8 shadow-xl sm:p-12">
+              <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+                Pronto para começar?
+              </h2>
+              <p className="mb-8 text-lg text-white/90">
+                Seu primeiro plano personalizado te espera
               </p>
-              <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <Button asChild size="lg">
-                  <Link to="/register">Começar agora</Link>
-                </Button>
-                <Button asChild variant="outline" size="lg">
-                  <Link to="/login">Já tenho conta</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-lg font-semibold text-fitpro-red hover:bg-gray-100 sm:px-12"
+              >
+                <Link to="/register">Criar conta grátis</Link>
+              </Button>
+              <p className="mt-4 text-sm text-white/75">
+                Leva menos de 2 minutos
+              </p>
+            </div>
+          </div>
+        </SignedOut>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-white py-8">
+        <div className="container mx-auto px-4 text-center text-sm text-gray-600">
+          <p>FitPro - Seu personal trainer digital em português</p>
+          <p className="mt-2">2026 - Feito com dedicação para brasileiros no mundo todo</p>
+        </div>
+      </footer>
     </main>
   );
 }
