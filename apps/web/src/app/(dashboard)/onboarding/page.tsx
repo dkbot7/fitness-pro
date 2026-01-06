@@ -57,7 +57,7 @@ export default function OnboardingPage() {
       }
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.fitpro.vip';
-      const response = await fetch(`${apiUrl}/onboarding`, {
+      const response = await fetch(`${apiUrl}/api/onboarding`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
