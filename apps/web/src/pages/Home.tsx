@@ -27,7 +27,7 @@ export default function Home() {
                 <Link to="/login">Entrar</Link>
               </Button>
               <Button asChild className="bg-fitpro-red hover:bg-fitpro-red-600">
-                <Link to="/register">Começar Grátis</Link>
+                <Link to="/register">Experimentar 7 Dias Grátis</Link>
               </Button>
             </SignedOut>
             <SignedIn>
@@ -86,13 +86,13 @@ export default function Home() {
                   size="lg"
                   className="w-full bg-fitpro-red px-10 py-7 text-xl font-bold shadow-2xl transition-all hover:scale-105 hover:bg-fitpro-red-600 hover:shadow-2xl sm:w-auto"
                 >
-                  <Link to="/register">Começar Meu Plano Grátis</Link>
+                  <Link to="/register">Começar Teste Grátis de 7 Dias</Link>
                 </Button>
               </div>
               <p className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
-                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> Grátis para sempre</span>
-                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> Sem cartão de crédito</span>
-                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> 100% em português</span>
+                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> 7 dias grátis</span>
+                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> R$ 97,80/mês após teste</span>
+                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> Cancele quando quiser</span>
               </p>
 
               {/* Social Proof Badge */}
@@ -423,8 +423,8 @@ export default function Home() {
                   <Link to="/register">Sim, Quero Meu Corpo de Brasileira</Link>
                 </Button>
                 <p className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/75">
-                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> Grátis para sempre</span>
-                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> Sem cartão</span>
+                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> 7 dias grátis</span>
+                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> R$ 97,80/mês</span>
                   <span className="flex items-center gap-1"><Check className="h-4 w-4" /> Cancele quando quiser</span>
                 </p>
                 <p className="mt-4 text-xs text-white/60">
@@ -475,11 +475,11 @@ export default function Home() {
                 <CardContent className="p-6">
                   <h3 className="mb-3 flex items-start gap-3 text-lg font-bold text-fitpro-charcoal">
                     <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
-                    É realmente grátis?
+                    Quanto custa?
                   </h3>
                   <p className="ml-8 text-gray-700">
-                    Sim, 100% grátis. Sem pegadinhas, sem plano premium escondido, sem limite de tempo.
-                    Todos os recursos são gratuitos para sempre.
+                    O FitPro custa R$ 97,80 por mês. Você tem 7 dias grátis para testar todos os recursos.
+                    Cancele a qualquer momento, sem multa ou burocracia.
                   </p>
                 </CardContent>
               </Card>
@@ -552,7 +552,7 @@ export default function Home() {
                 <h3 className="mb-4 font-semibold">Produto</h3>
                 <ul className="space-y-2 text-sm text-gray-400">
                   <li><Link to="/register" className="hover:text-white">Como funciona</Link></li>
-                  <li><Link to="/register" className="hover:text-white">Começar grátis</Link></li>
+                  <li><Link to="/register" className="hover:text-white">Teste grátis 7 dias</Link></li>
                   <li><Link to="/login" className="hover:text-white">Entrar</Link></li>
                 </ul>
               </div>
@@ -581,7 +581,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-400">
                     <Check className="h-4 w-4 text-green-400" />
-                    Grátis para sempre
+                    Cancele quando quiser
                   </div>
                 </div>
               </div>
