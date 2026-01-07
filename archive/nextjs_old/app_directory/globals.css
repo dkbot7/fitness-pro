@@ -1,0 +1,117 @@
+/* Importar brand tokens */
+@import '../styles/brand-tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* FitPro Colors - mapped to Shadcn variables */
+    --background: 0 0% 100%;
+    --foreground: 215 20% 23%; /* fitpro-charcoal */
+    
+    --card: 0 0% 100%;
+    --card-foreground: 215 20% 23%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 20% 23%;
+    
+    /* Primary = FitPro Red */
+    --primary: 0 78% 49%; /* #DC2626 */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 215 20% 23%;
+    
+    --muted: 210 40% 97%;
+    --muted-foreground: 215 16% 47%;
+    
+    --accent: 214 32% 91%;
+    --accent-foreground: 215 20% 23%;
+    
+    /* Destructive também usa FitPro Red */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 0 78% 49%; /* FitPro Red para focus */
+    --radius: 0.75rem; /* 12px - brand */
+  }
+
+  .dark {
+    --background: 216 28% 12%; /* fitpro-charcoal-800 */
+    --foreground: 210 40% 98%;
+    
+    --card: 215 20% 23%; /* fitpro-charcoal */
+    --card-foreground: 210 40% 98%;
+    
+    --popover: 215 20% 23%;
+    --popover-foreground: 210 40% 98%;
+    
+    /* Primary = FitPro Red (mantém) */
+    --primary: 0 78% 49%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 217 33% 18%;
+    --secondary-foreground: 210 40% 98%;
+    
+    --muted: 217 33% 18%;
+    --muted-foreground: 215 20% 65%;
+    
+    --accent: 217 33% 18%;
+    --accent-foreground: 210 40% 98%;
+    
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 0 78% 49%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Melhor renderização de fontes */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Utility classes para cores da marca */
+@layer utilities {
+  .text-fitpro-red {
+    color: #DC2626;
+  }
+  
+  .bg-fitpro-red {
+    background-color: #DC2626;
+  }
+  
+  .border-fitpro-red {
+    border-color: #DC2626;
+  }
+  
+  .shadow-primary {
+    box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.2), 0 2px 4px -1px rgba(220, 38, 38, 0.1);
+  }
+  
+  .gradient-primary {
+    background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+  }
+}

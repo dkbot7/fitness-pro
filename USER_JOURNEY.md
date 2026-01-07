@@ -26,17 +26,17 @@ Execução de Treino → Feedback → Ajuste Semanal → Progressão
 #### Primeira Impressão
 
 **Para usuários não autenticados**:
-- ✅ Hero Section clara com proposta de valor
-- ✅ Título impactante: "Fitness Pro - Seu personal trainer digital em português"
-- ✅ Subtítulo: "Treinos personalizados que se adaptam automaticamente ao seu progresso"
-- ✅ CTAs duplos: "Entrar" + "Criar conta grátis"
-- ✅ Acesso rápido ao dashboard (mesmo sem autenticação)
+- [OK] Hero Section clara com proposta de valor
+- [OK] Título impactante: "Fitness Pro - Seu personal trainer digital em português"
+- [OK] Subtítulo: "Treinos personalizados que se adaptam automaticamente ao seu progresso"
+- [OK] CTAs duplos: "Entrar" + "Criar conta grátis"
+- [OK] Acesso rápido ao dashboard (mesmo sem autenticação)
 
 **Para usuários autenticados**:
-- ✅ Mensagem de boas-vindas personalizada
-- ✅ Avatar do usuário (Clerk UserButton)
-- ✅ Acesso direto ao plano de treino
-- ✅ Opção de reconfigurar preferências
+- [OK] Mensagem de boas-vindas personalizada
+- [OK] Avatar do usuário (Clerk UserButton)
+- [OK] Acesso direto ao plano de treino
+- [OK] Opção de reconfigurar preferências
 
 #### Features Grid (6 Cards)
 
@@ -75,19 +75,19 @@ Execução de Treino → Feedback → Ajuste Semanal → Progressão
 ### 🎨 Análise de UX - Landing Page
 
 **Pontos Fortes**:
-- ✅ Proposta de valor cristalina
-- ✅ Social proof implícito (PT-BR focus)
-- ✅ Duplos CTAs em locais estratégicos
-- ✅ Explicação clara do processo (5 passos)
-- ✅ Design mobile-first responsivo
-- ✅ Sem bloqueio de conteúdo (pode ver sem criar conta)
+- [OK] Proposta de valor cristalina
+- [OK] Social proof implícito (PT-BR focus)
+- [OK] Duplos CTAs em locais estratégicos
+- [OK] Explicação clara do processo (5 passos)
+- [OK] Design mobile-first responsivo
+- [OK] Sem bloqueio de conteúdo (pode ver sem criar conta)
 
 **Pontos de Melhoria**:
-- ⚠️ Falta prova social (testemunhos, número de usuários)
-- ⚠️ Sem screenshots/preview do app
-- ⚠️ Linha 36: Link "Ir para Dashboard" está indo para `/onboarding` (confuso para não-autenticados)
-- ⚠️ Falta senso de urgência ou escassez
-- ⚠️ Sem captura de email antes do registro (lead magnet)
+- [!] Falta prova social (testemunhos, número de usuários)
+- [!] Sem screenshots/preview do app
+- [!] Linha 36: Link "Ir para Dashboard" está indo para `/onboarding` (confuso para não-autenticados)
+- [!] Falta senso de urgência ou escassez
+- [!] Sem captura de email antes do registro (lead magnet)
 
 **Recomendações**:
 ```typescript
@@ -108,10 +108,10 @@ Execução de Treino → Feedback → Ajuste Semanal → Progressão
 
 #### Componente
 
-- ✅ Usa `<SignUp />` do Clerk
-- ✅ Design customizado (shadow-xl)
-- ✅ Link para login: `/login`
-- ✅ Redirecionamento pós-registro: `/onboarding`
+- [OK] Usa `<SignUp />` do Clerk
+- [OK] Design customizado (shadow-xl)
+- [OK] Link para login: `/login`
+- [OK] Redirecionamento pós-registro: `/onboarding`
 
 #### Fluxo Clerk
 
@@ -126,21 +126,21 @@ Execução de Treino → Feedback → Ajuste Semanal → Progressão
 
 #### Componente
 
-- ✅ Usa `<SignIn />` do Clerk
-- ✅ Link para registro: `/register`
-- ✅ Redirecionamento pós-login: `/` (home)
+- [OK] Usa `<SignIn />` do Clerk
+- [OK] Link para registro: `/register`
+- [OK] Redirecionamento pós-login: `/` (home)
 
 ### 🎨 Análise de UX - Autenticação
 
 **Pontos Fortes**:
-- ✅ Clerk gerencia toda complexidade (email verification, password reset)
-- ✅ UI consistente e profissional
-- ✅ Localização em PT-BR (configurado no Clerk)
-- ✅ Social logins disponíveis (Google, GitHub via Clerk)
+- [OK] Clerk gerencia toda complexidade (email verification, password reset)
+- [OK] UI consistente e profissional
+- [OK] Localização em PT-BR (configurado no Clerk)
+- [OK] Social logins disponíveis (Google, GitHub via Clerk)
 
 **Pontos de Melhoria**:
-- ⚠️ Login redireciona para `/` ao invés de `/plano` (perda de foco)
-- ⚠️ Sem onboarding progressivo (poderia coletar dados durante registro)
+- [!] Login redireciona para `/` ao invés de `/plano` (perda de foco)
+- [!] Sem onboarding progressivo (poderia coletar dados durante registro)
 
 **Recomendações**:
 ```typescript
@@ -160,8 +160,8 @@ fallbackRedirectUrl="/plano" // Ou detectar se já completou onboarding
 
 #### Componente
 
-- ✅ Saudação personalizada: "Bem-vindo, {firstName}!"
-- ✅ 2 Cards de ação:
+- [OK] Saudação personalizada: "Bem-vindo, {firstName}!"
+- [OK] 2 Cards de ação:
   1. **Complete seu perfil** (azul) → `/onboarding`
   2. **Meu Plano de Treino** (verde) → `/plano`
 
@@ -173,12 +173,12 @@ fallbackRedirectUrl="/plano" // Ou detectar se já completou onboarding
 
 #### Estrutura
 
-- ✅ Multi-step form (4 passos)
-- ✅ Progress bar visual
-- ✅ Validação com Zod
-- ✅ React Hook Form
-- ✅ Navegação Back/Next
-- ✅ Submit apenas no passo 4
+- [OK] Multi-step form (4 passos)
+- [OK] Progress bar visual
+- [OK] Validação com Zod
+- [OK] React Hook Form
+- [OK] Navegação Back/Next
+- [OK] Submit apenas no passo 4
 
 #### PASSO 1: Objetivo 🎯
 
@@ -263,26 +263,26 @@ fallbackRedirectUrl="/plano" // Ou detectar se já completou onboarding
 
 **Redirecionamento pós-submit**: `/` (dashboard)
 - Linha 63: `router.push('/')`
-- ⚠️ **PROBLEMA**: Deveria redirecionar para `/plano` para mostrar imediatamente o plano gerado
+- [!] **PROBLEMA**: Deveria redirecionar para `/plano` para mostrar imediatamente o plano gerado
 
 ### 🎨 Análise de UX - Onboarding
 
 **Pontos Fortes**:
-- ✅ Progress bar clara (visual + "Passo X de 4")
-- ✅ Validação em tempo real
-- ✅ Navegação intuitiva
-- ✅ Último passo opcional (limitations)
-- ✅ Feedback visual em cada seleção
-- ✅ Mobile-first design
-- ✅ Descriptions claras em cada passo
+- [OK] Progress bar clara (visual + "Passo X de 4")
+- [OK] Validação em tempo real
+- [OK] Navegação intuitiva
+- [OK] Último passo opcional (limitations)
+- [OK] Feedback visual em cada seleção
+- [OK] Mobile-first design
+- [OK] Descriptions claras em cada passo
 
 **Pontos de Melhoria**:
-- ⚠️ Passo 2 muito denso (3 campos juntos)
-- ⚠️ Sem preview do plano antes de submeter
-- ⚠️ Linha 63: Redirect para `/` ao invés de `/plano`
-- ⚠️ Sem salvamento parcial (se fechar, perde tudo)
-- ⚠️ Sem estimativa de tempo ("Leva 3 minutos")
-- ⚠️ Botão "Finalizar" genérico (poderia ser "Gerar meu plano")
+- [!] Passo 2 muito denso (3 campos juntos)
+- [!] Sem preview do plano antes de submeter
+- [!] Linha 63: Redirect para `/` ao invés de `/plano`
+- [!] Sem salvamento parcial (se fechar, perde tudo)
+- [!] Sem estimativa de tempo ("Leva 3 minutos")
+- [!] Botão "Finalizar" genérico (poderia ser "Gerar meu plano")
 
 **Pontos de Fricção**:
 1. **Tempo percebido**: 4 passos parecem muitos
@@ -357,58 +357,58 @@ router.push('/plano'); // Ao invés de '/'
 #### Layout da Página
 
 **Header**:
-- ✅ "Meu Plano de Treino"
-- ✅ "Semana {weekNumber}"
+- [OK] "Meu Plano de Treino"
+- [OK] "Semana {weekNumber}"
 
 **Stats Card** (Progresso):
-- ✅ Total de treinos
-- ✅ Concluídos
-- ✅ Taxa de conclusão (%)
-- ✅ Progress bar visual
+- [OK] Total de treinos
+- [OK] Concluídos
+- [OK] Taxa de conclusão (%)
+- [OK] Progress bar visual
 
 **Lista de Workouts**:
 Para cada workout:
-- ✅ Dia da semana (ex: "Segunda-feira")
-- ✅ Tipo de treino traduzido (ex: "Peito, Ombros, Tríceps")
-- ✅ Badge de status:
+- [OK] Dia da semana (ex: "Segunda-feira")
+- [OK] Tipo de treino traduzido (ex: "Peito, Ombros, Tríceps")
+- [OK] Badge de status:
   - 🟡 Pendente
   - 🟢 Concluído
   - ⚪ Pulado
-- ✅ Número de exercícios
-- ✅ Data de conclusão (se completado)
-- ✅ CTA: "Iniciar treino" ou "Ver treino"
+- [OK] Número de exercícios
+- [OK] Data de conclusão (se completado)
+- [OK] CTA: "Iniciar treino" ou "Ver treino"
 
 #### Estados
 
 **Loading**:
-- ✅ Skeleton screens (3 placeholders animados)
+- [OK] Skeleton screens (3 placeholders animados)
 
 **Erro**:
-- ✅ Card com mensagem de erro
-- ✅ CTA: "Completar onboarding"
+- [OK] Card com mensagem de erro
+- [OK] CTA: "Completar onboarding"
 
 **Vazio**:
-- ✅ "Nenhum treino encontrado"
-- ✅ Link para onboarding
+- [OK] "Nenhum treino encontrado"
+- [OK] Link para onboarding
 
 ### 🎨 Análise de UX - Plano
 
 **Pontos Fortes**:
-- ✅ Visão clara do progresso semanal
-- ✅ Stats motivacionais (taxa de conclusão)
-- ✅ Dias da semana em português
-- ✅ Status visual com cores
-- ✅ Loading states bem implementados
-- ✅ Hover effects nos cards
-- ✅ Informação hierarquizada bem
+- [OK] Visão clara do progresso semanal
+- [OK] Stats motivacionais (taxa de conclusão)
+- [OK] Dias da semana em português
+- [OK] Status visual com cores
+- [OK] Loading states bem implementados
+- [OK] Hover effects nos cards
+- [OK] Informação hierarquizada bem
 
 **Pontos de Melhoria**:
-- ⚠️ Sem indicação de "hoje" ou "próximo treino"
-- ⚠️ Não mostra preview dos exercícios
-- ⚠️ Sem filtros (mostrar apenas pendentes, etc)
-- ⚠️ Falta dicas de quando treinar ("Treino A: Segundas e Quintas")
-- ⚠️ Sem celebração quando completa semana
-- ⚠️ Sem visualização de semanas anteriores
+- [!] Sem indicação de "hoje" ou "próximo treino"
+- [!] Não mostra preview dos exercícios
+- [!] Sem filtros (mostrar apenas pendentes, etc)
+- [!] Falta dicas de quando treinar ("Treino A: Segundas e Quintas")
+- [!] Sem celebração quando completa semana
+- [!] Sem visualização de semanas anteriores
 
 **Recomendações**:
 
@@ -453,11 +453,11 @@ const todayWorkout = workouts.find(w => w.dayOfWeek === today);
 
 #### Header
 
-- ✅ Link "← Voltar ao plano"
-- ✅ Dia da semana (ex: "Segunda-feira")
-- ✅ Número de exercícios
-- ✅ Semana atual
-- ✅ Badge "Treino concluído" (se completado)
+- [OK] Link "← Voltar ao plano"
+- [OK] Dia da semana (ex: "Segunda-feira")
+- [OK] Número de exercícios
+- [OK] Semana atual
+- [OK] Badge "Treino concluído" (se completado)
 
 #### Layout (Grid 2 colunas no desktop)
 
@@ -493,15 +493,15 @@ const todayWorkout = workouts.find(w => w.dayOfWeek === today);
 **Estrutura**:
 
 **Header**:
-- ✅ Número do exercício + nome
-- ✅ Tags de grupos musculares (chips azuis)
-- ✅ Contador de séries completadas (X/Y)
-- ✅ Badge "✓ Completo" quando 100%
+- [OK] Número do exercício + nome
+- [OK] Tags de grupos musculares (chips azuis)
+- [OK] Contador de séries completadas (X/Y)
+- [OK] Badge "✓ Completo" quando 100%
 
 **Conteúdo**:
 
 1. **Vídeo Placeholder**
-   - ⚠️ Placeholder estático (Linha 63-87)
+   - [!] Placeholder estático (Linha 63-87)
    - Mensagem: "Vídeo disponível na próxima versão"
    - Ícone de play
 
@@ -528,16 +528,16 @@ const todayWorkout = workouts.find(w => w.dayOfWeek === today);
 **Arquivo**: `apps/web/src/components/workout/WorkoutTimer.tsx`
 
 **Features**:
-- ✅ Display grande: MM:SS
-- ✅ Estados visuais:
+- [OK] Display grande: MM:SS
+- [OK] Estados visuais:
   - Parado: Cinza
   - Rodando: Azul
   - Completo: Verde
-- ✅ Progress bar animada
-- ✅ Controles: Iniciar/Pausar/Resetar
-- ✅ Quick sets: 30s, 1min, 1:30, 2min
-- ✅ Som ao finalizar (base64 encoded wav)
-- ✅ Mensagem: "✓ Descanso completo! Próxima série"
+- [OK] Progress bar animada
+- [OK] Controles: Iniciar/Pausar/Resetar
+- [OK] Quick sets: 30s, 1min, 1:30, 2min
+- [OK] Som ao finalizar (base64 encoded wav)
+- [OK] Mensagem: "✓ Descanso completo! Próxima série"
 
 #### Fluxo de Conclusão
 
@@ -552,15 +552,15 @@ const todayWorkout = workouts.find(w => w.dayOfWeek === today);
 ### 🎨 Análise de UX - Execução
 
 **Pontos Fortes**:
-- ✅ Cronômetro sticky (sempre visível)
-- ✅ Tracking visual de séries
-- ✅ Quick presets de tempo
-- ✅ Feedback sonoro ao finalizar descanso
-- ✅ Layout responsivo (sidebar vira stack no mobile)
-- ✅ Cards de exercício bem informados
-- ✅ Tempo estimado ajuda no planejamento
-- ✅ Progress visual (border verde quando completo)
-- ✅ Confirmação antes de concluir
+- [OK] Cronômetro sticky (sempre visível)
+- [OK] Tracking visual de séries
+- [OK] Quick presets de tempo
+- [OK] Feedback sonoro ao finalizar descanso
+- [OK] Layout responsivo (sidebar vira stack no mobile)
+- [OK] Cards de exercício bem informados
+- [OK] Tempo estimado ajuda no planejamento
+- [OK] Progress visual (border verde quando completo)
+- [OK] Confirmação antes de concluir
 
 **Pontos de Fricção**:
 1. **Vídeos ausentes**: Linha 63-87 - Placeholder estático
@@ -571,12 +571,12 @@ const todayWorkout = workouts.find(w => w.dayOfWeek === today);
 6. **Sem log de peso/carga**: Usuário não anota quanto usou
 
 **Pontos de Melhoria**:
-- ⚠️ Sem indicação de exercício atual (qual fazer agora?)
-- ⚠️ Não marca automaticamente série após cronômetro
-- ⚠️ Sem tutorial de primeira vez
-- ⚠️ Falta botão de emergência ("Pular exercício")
-- ⚠️ Sem opção de substituir exercício
-- ⚠️ Não guarda histórico de cargas
+- [!] Sem indicação de exercício atual (qual fazer agora?)
+- [!] Não marca automaticamente série após cronômetro
+- [!] Sem tutorial de primeira vez
+- [!] Falta botão de emergência ("Pular exercício")
+- [!] Sem opção de substituir exercício
+- [!] Não guarda histórico de cargas
 
 **Recomendações CRÍTICAS**:
 
@@ -667,9 +667,9 @@ const toggleSet = (index: number) => {
 
 #### Header
 
-- ✅ Link "← Voltar ao treino"
-- ✅ Título: "Como foi o treino?"
-- ✅ Subtítulo: "Seu feedback nos ajuda a ajustar seu plano para a próxima semana"
+- [OK] Link "← Voltar ao treino"
+- [OK] Título: "Como foi o treino?"
+- [OK] Subtítulo: "Seu feedback nos ajuda a ajustar seu plano para a próxima semana"
 
 #### Formulário
 
@@ -710,17 +710,17 @@ const toggleSet = (index: number) => {
 
 #### Info Box (Como usamos seu feedback?)
 
-- ✅ Card azul informativo
-- ✅ Explica o algoritmo:
+- [OK] Card azul informativo
+- [OK] Explica o algoritmo:
   - **Fácil**: +10% volume
   - **Ok**: Progressão natural
   - **Difícil**: -10% volume
-- ✅ Nota: "Ajustes toda segunda-feira"
+- [OK] Nota: "Ajustes toda segunda-feira"
 
 #### Actions
 
-- ✅ Botão primário: "Enviar Feedback" (disabled se não selecionou dificuldade)
-- ✅ Botão secundário: "Pular" → volta para `/plano`
+- [OK] Botão primário: "Enviar Feedback" (disabled se não selecionou dificuldade)
+- [OK] Botão secundário: "Pular" → volta para `/plano`
 
 #### Submissão
 
@@ -750,20 +750,20 @@ const toggleSet = (index: number) => {
 ### 🎨 Análise de UX - Feedback
 
 **Pontos Fortes**:
-- ✅ Interface intuitiva (emoji + cores)
-- ✅ Explica como será usado (transparência)
-- ✅ Campos opcionais (baixa fricção)
-- ✅ Opção de pular (não força)
-- ✅ Visual claro de seleção
-- ✅ Validação em tempo real
-- ✅ Feedback do algoritmo explicado
+- [OK] Interface intuitiva (emoji + cores)
+- [OK] Explica como será usado (transparência)
+- [OK] Campos opcionais (baixa fricção)
+- [OK] Opção de pular (não força)
+- [OK] Visual claro de seleção
+- [OK] Validação em tempo real
+- [OK] Feedback do algoritmo explicado
 
 **Pontos de Melhoria**:
-- ⚠️ Sem incentivo para dar feedback completo
-- ⚠️ Não mostra histórico de feedbacks anteriores
-- ⚠️ Falta campos granulares (dificuldade por exercício)
-- ⚠️ Sem pergunta sobre energia/ânimo
-- ⚠️ Não captura dor/desconforto específico
+- [!] Sem incentivo para dar feedback completo
+- [!] Não mostra histórico de feedbacks anteriores
+- [!] Falta campos granulares (dificuldade por exercício)
+- [!] Sem pergunta sobre energia/ânimo
+- [!] Não captura dor/desconforto específico
 
 **Recomendações**:
 
@@ -812,51 +812,51 @@ const toggleSet = (index: number) => {
 
 **Coluna 1-2: Informações Pessoais**
 
-- ✅ Avatar do Clerk
-- ✅ Nome completo
-- ✅ Email
-- ✅ Grid 2x2 com:
+- [OK] Avatar do Clerk
+- [OK] Nome completo
+- [OK] Email
+- [OK] Grid 2x2 com:
   - Nome
   - Sobrenome
   - Email
   - Membro desde (data formatada PT-BR)
-- ✅ Link para editar conta (Clerk dashboard)
+- [OK] Link para editar conta (Clerk dashboard)
 
 **Coluna 3: Estatísticas Rápidas**
 
-- ⚠️ **HARDCODED** (não busca dados reais):
+- [!] **HARDCODED** (não busca dados reais):
   - Semana atual: 1
   - Treinos concluídos: 0
   - Taxa de conclusão: 0%
 
 **Coluna 1-2: Preferências de Treino**
 
-- ⚠️ **HARDCODED** ("Não configurado"):
+- [!] **HARDCODED** ("Não configurado"):
   - Objetivo: -
   - Frequência: -
   - Local: -
   - Nível: -
-- ✅ Botão "Reconfigurar" → `/onboarding`
-- ✅ Info box azul incentivando onboarding
+- [OK] Botão "Reconfigurar" → `/onboarding`
+- [OK] Info box azul incentivando onboarding
 
 **Coluna 3: Ações**
 
-- ✅ Ver Plano de Treino
-- ✅ Reconfigurar Preferências
-- ⚠️ Sair da Conta (não funcional, `onClick={() => {}}`)
+- [OK] Ver Plano de Treino
+- [OK] Reconfigurar Preferências
+- [!] Sair da Conta (não funcional, `onClick={() => {}}`)
 
 **Footer: Sobre o App**
 
-- ✅ Versão: 1.0.0 (MVP)
-- ✅ Última atualização: Janeiro 2026
-- ✅ Exercícios disponíveis: 30+
+- [OK] Versão: 1.0.0 (MVP)
+- [OK] Última atualização: Janeiro 2026
+- [OK] Exercícios disponíveis: 30+
 
 ### 🎨 Análise de UX - Perfil
 
 **Pontos Fortes**:
-- ✅ Informações do Clerk bem integradas
-- ✅ Layout organizado
-- ✅ Quick actions acessíveis
+- [OK] Informações do Clerk bem integradas
+- [OK] Layout organizado
+- [OK] Quick actions acessíveis
 
 **Problemas CRÍTICOS**:
 1. **Stats hardcoded** (Linha 91-101)
@@ -962,23 +962,23 @@ import { SignOutButton } from '@clerk/nextjs';
 
 **Propósito**: Testar ajuste manual (sem esperar cron)
 
-⚠️ **PROBLEMA**: Sem autenticação (ver PRODUCTION_READINESS.md)
+[!] **PROBLEMA**: Sem autenticação (ver PRODUCTION_READINESS.md)
 
 ### 🎨 Análise - Ajuste Semanal
 
 **Pontos Fortes**:
-- ✅ Automatizado (zero esforço do usuário)
-- ✅ Baseado em dados reais (feedback)
-- ✅ Algoritmo simples e compreensível
-- ✅ Progressive overload implementado
-- ✅ Variedade (troca exercícios a cada 4 semanas)
+- [OK] Automatizado (zero esforço do usuário)
+- [OK] Baseado em dados reais (feedback)
+- [OK] Algoritmo simples e compreensível
+- [OK] Progressive overload implementado
+- [OK] Variedade (troca exercícios a cada 4 semanas)
 
 **Pontos de Melhoria**:
-- ⚠️ Sem notificação ao usuário (silent update)
-- ⚠️ Não considera contexto (feriados, viagens)
-- ⚠️ Ajuste binário (apenas ±10%)
-- ⚠️ Mínimo de 3 feedbacks pode ser restritivo
-- ⚠️ Não personaliza por exercício individual
+- [!] Sem notificação ao usuário (silent update)
+- [!] Não considera contexto (feriados, viagens)
+- [!] Ajuste binário (apenas ±10%)
+- [!] Mínimo de 3 feedbacks pode ser restritivo
+- [!] Não personaliza por exercício individual
 
 **Recomendações**:
 
@@ -1352,19 +1352,19 @@ else adjustment = 1.05; // +5% progressão natural
 - Treina em casa, sem equipamentos
 
 **Jornada**:
-1. ✅ Descobre via Google "treino em casa português"
-2. ✅ Landing page ressoa ("brasileiro no exterior")
-3. ✅ Registra rápido (Clerk email)
-4. ⚠️ Onboarding: 4 passos parecem muitos, mas completa
-5. ✅ Vê plano gerado: 3x/semana, full body
-6. ❌ Inicia primeiro treino: **TRAVA nos vídeos ausentes**
+1. [OK] Descobre via Google "treino em casa português"
+2. [OK] Landing page ressoa ("brasileiro no exterior")
+3. [OK] Registra rápido (Clerk email)
+4. [!] Onboarding: 4 passos parecem muitos, mas completa
+5. [OK] Vê plano gerado: 3x/semana, full body
+6. [X] Inicia primeiro treino: **TRAVA nos vídeos ausentes**
    - "Como faço flexão corretamente?"
-7. ⚠️ Completa treino mas com técnica duvidosa
-8. ✅ Dá feedback "Ok"
-9. ✅ Volta na quarta, completa 2º treino
-10. ❌ Sexta tem imprevisto, não treina
-11. ⚠️ Segunda: não sabia que tinha Semana 2 nova
-12. ❌ Abandona (falta de motivação + sem notificação)
+7. [!] Completa treino mas com técnica duvidosa
+8. [OK] Dá feedback "Ok"
+9. [OK] Volta na quarta, completa 2º treino
+10. [X] Sexta tem imprevisto, não treina
+11. [!] Segunda: não sabia que tinha Semana 2 nova
+12. [X] Abandona (falta de motivação + sem notificação)
 
 **Taxa de sucesso**: 40% (completa semana 1, abandona na 2)
 
@@ -1382,20 +1382,20 @@ else adjustment = 1.05; // +5% progressão natural
 - Academia completa
 
 **Jornada**:
-1. ✅ Indicação de amiga
-2. ✅ Registra e completa onboarding rápido
-3. ✅ Vê plano: 4x/semana Push/Pull/Legs
-4. ✅ Reconhece exercícios (tem experiência)
-5. ✅ Usa cronômetro constantemente
-6. ⚠️ Frustra com séries não salvando
-7. ✅ Completa semana 1 (4/4 treinos)
-8. ✅ Dá feedbacks detalhados
-9. ✅ Semana 2: vê plano ajustado (+10% volume)
-10. ✅ Continua por 4 semanas
-11. ❌ Semana 5: exercícios trocados, mas **sem vídeos**
+1. [OK] Indicação de amiga
+2. [OK] Registra e completa onboarding rápido
+3. [OK] Vê plano: 4x/semana Push/Pull/Legs
+4. [OK] Reconhece exercícios (tem experiência)
+5. [OK] Usa cronômetro constantemente
+6. [!] Frustra com séries não salvando
+7. [OK] Completa semana 1 (4/4 treinos)
+8. [OK] Dá feedbacks detalhados
+9. [OK] Semana 2: vê plano ajustado (+10% volume)
+10. [OK] Continua por 4 semanas
+11. [X] Semana 5: exercícios trocados, mas **sem vídeos**
     - "Nunca fiz Romanian Deadlift"
-12. ⚠️ Busca vídeo no YouTube
-13. ✅ Continua usando o app
+12. [!] Busca vídeo no YouTube
+13. [OK] Continua usando o app
 
 **Taxa de sucesso**: 80% (power user)
 
@@ -1413,13 +1413,13 @@ else adjustment = 1.05; // +5% progressão natural
 - Tem home gym completo
 
 **Jornada**:
-1. ✅ Testa o app por curiosidade
-2. ✅ Onboarding: seleciona "Avançado"
-3. ⚠️ Plano gerado parece genérico
-4. ❌ Quer customizar exercícios → **não permite**
-5. ❌ Quer ajustar séries/reps → **não permite**
-6. ❌ Feedback "easy" mas +10% não é suficiente
-7. ❌ Abandona: "Muito básico, preciso de Periodização"
+1. [OK] Testa o app por curiosidade
+2. [OK] Onboarding: seleciona "Avançado"
+3. [!] Plano gerado parece genérico
+4. [X] Quer customizar exercícios → **não permite**
+5. [X] Quer ajustar séries/reps → **não permite**
+6. [X] Feedback "easy" mas +10% não é suficiente
+7. [X] Abandona: "Muito básico, preciso de Periodização"
 
 **Taxa de sucesso**: 10% (churns rápido)
 

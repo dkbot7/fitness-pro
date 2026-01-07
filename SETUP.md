@@ -1,6 +1,6 @@
 # Fitness Pro - Setup Guide
 
-## ✅ Aplicação já está rodando!
+## [OK] Aplicação já está rodando!
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8787
@@ -97,9 +97,9 @@ pnpm run build
 
 Segundo o plano de 6 semanas:
 
-✅ **Week 1**: Foundation & Setup - COMPLETO
-✅ **Week 2**: Onboarding Flow - COMPLETO
-✅ **Week 3**: Workout Display & Execution - COMPLETO
+[OK] **Week 1**: Foundation & Setup - COMPLETO
+[OK] **Week 2**: Onboarding Flow - COMPLETO
+[OK] **Week 3**: Workout Display & Execution - COMPLETO
 🔜 **Week 4**: Feedback & Adjustment (próximo)
 
 Week 4 implementará:

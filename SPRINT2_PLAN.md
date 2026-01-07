@@ -11,9 +11,9 @@
 Implementar sistema completo de vídeos de exercícios usando Cloudflare R2, com player otimizado, thumbnails, e experiência mobile-first.
 
 **Impacto esperado**:
-- ✅ **+40% completude de exercícios** (usuários entendem a forma correta)
-- ✅ **-60% taxa de lesões** (demonstração visual previne erros)
-- ✅ **+25% retenção D7** (conteúdo premium aumenta valor percebido)
+- [OK] **+40% completude de exercícios** (usuários entendem a forma correta)
+- [OK] **-60% taxa de lesões** (demonstração visual previne erros)
+- [OK] **+25% retenção D7** (conteúdo premium aumenta valor percebido)
 
 ---
 
@@ -27,13 +27,13 @@ Implementar sistema completo de vídeos de exercícios usando Cloudflare R2, com
 - [Delivering 4K Video with R2 for $2.18](https://screencasting.com/cheap-video-hosting)
 
 **Principais descobertas**:
-- ✅ R2 suporta streaming de vídeo com headers 206 (partial content)
-- ✅ Free tier: 10 GB storage + 10M requests/mês
-- ✅ **Zero egress fees** (economia massiva vs S3)
-- ✅ Compatível com S3 API (usar tools como rclone)
-- ⚠️ **Evitar MP4 grandes diretos** (pode cortar antes do fim)
-- ✅ **Best practice**: HLS format (.m3u8 + .ts chunks) para vídeos >2min
-- ✅ Workers para controle de acesso e caching
+- [OK] R2 suporta streaming de vídeo com headers 206 (partial content)
+- [OK] Free tier: 10 GB storage + 10M requests/mês
+- [OK] **Zero egress fees** (economia massiva vs S3)
+- [OK] Compatível com S3 API (usar tools como rclone)
+- [!] **Evitar MP4 grandes diretos** (pode cortar antes do fim)
+- [OK] **Best practice**: HLS format (.m3u8 + .ts chunks) para vídeos >2min
+- [OK] Workers para controle de acesso e caching
 
 **Para nosso caso** (vídeos curtos 15-45s):
 - MP4 com H.264 funciona bem para demos de exercício
@@ -101,18 +101,18 @@ R2 Bucket: fitness-pro-videos
 **Novo endpoint**: `GET /api/exercises/:slug/video`
 
 Benefícios:
-- ✅ Autenticação (só usuários logados)
-- ✅ Rate limiting
-- ✅ Analytics de visualização
-- ✅ CDN cache headers
-- ✅ Assinatura de URL (evita hotlinking)
+- [OK] Autenticação (só usuários logados)
+- [OK] Rate limiting
+- [OK] Analytics de visualização
+- [OK] CDN cache headers
+- [OK] Assinatura de URL (evita hotlinking)
 
 ### 3. Database Layer (Postgres via Neon)
 
 **Schema atual** (`packages/database/src/schema.ts` linhas 42-43):
 ```typescript
-videoUrl: varchar('video_url', { length: 500 }),       // ✅ JÁ EXISTE
-thumbnailUrl: varchar('thumbnail_url', { length: 500 }), // ✅ JÁ EXISTE
+videoUrl: varchar('video_url', { length: 500 }),       // [OK] JÁ EXISTE
+thumbnailUrl: varchar('thumbnail_url', { length: 500 }), // [OK] JÁ EXISTE
 ```
 
 **Nenhuma migração necessária!** 🎉
@@ -187,14 +187,14 @@ function VideoPlayer({ videoUrl, thumbnailUrl, exerciseName }: VideoPlayerProps)
 ```
 
 **Features**:
-- ✅ Lazy loading (só carrega quando visível)
-- ✅ Thumbnail como poster frame
-- ✅ Loop automático (demos repetem)
-- ✅ Muted (autoplay funciona)
-- ✅ Controls nativos do browser
-- ✅ Accessibility (aria-label)
-- ✅ Fallback para navegadores antigos
-- ✅ Overlay play indicator
+- [OK] Lazy loading (só carrega quando visível)
+- [OK] Thumbnail como poster frame
+- [OK] Loop automático (demos repetem)
+- [OK] Muted (autoplay funciona)
+- [OK] Controls nativos do browser
+- [OK] Accessibility (aria-label)
+- [OK] Fallback para navegadores antigos
+- [OK] Overlay play indicator
 
 ---
 
@@ -277,16 +277,16 @@ ffmpeg -f lavfi -i color=c=gray:s=1280x720:d=10 \
    ```
 
 **Lista de vídeos prioritários** (MVP - 10 vídeos):
-1. ✅ Flexão de Braço (flexao.mp4)
-2. ✅ Agachamento (agachamento.mp4)
-3. ✅ Prancha Abdominal (prancha.mp4)
-4. ✅ Afundo (afundo.mp4)
-5. ✅ Supino Reto (supino-reto.mp4)
-6. ✅ Remada Curvada (remada-curvada.mp4)
-7. ✅ Desenvolvimento (desenvolvimento.mp4)
-8. ✅ Rosca Direta (rosca-direta.mp4)
-9. ✅ Tríceps Pulley (triceps-pulley.mp4)
-10. ✅ Leg Press (leg-press.mp4)
+1. [OK] Flexão de Braço (flexao.mp4)
+2. [OK] Agachamento (agachamento.mp4)
+3. [OK] Prancha Abdominal (prancha.mp4)
+4. [OK] Afundo (afundo.mp4)
+5. [OK] Supino Reto (supino-reto.mp4)
+6. [OK] Remada Curvada (remada-curvada.mp4)
+7. [OK] Desenvolvimento (desenvolvimento.mp4)
+8. [OK] Rosca Direta (rosca-direta.mp4)
+9. [OK] Tríceps Pulley (triceps-pulley.mp4)
+10. [OK] Leg Press (leg-press.mp4)
 
 **Fase 2 (depois)**: Adicionar os 20 vídeos restantes
 
@@ -387,7 +387,7 @@ async function updateVideoUrls() {
     }
   }
 
-  console.log('\n✅ All video URLs updated!');
+  console.log('\n[OK] All video URLs updated!');
 }
 
 updateVideoUrls();
@@ -514,8 +514,8 @@ export interface WorkoutExercise {
   restSeconds: number;
   difficulty: string;
   notesPt: string | null;
-  videoUrl: string | null;        // ✅ ADD
-  thumbnailUrl: string | null;    // ✅ ADD
+  videoUrl: string | null;        // [OK] ADD
+  thumbnailUrl: string | null;    // [OK] ADD
 }
 ```
 
@@ -527,8 +527,8 @@ Incluir videoUrl e thumbnailUrl nas queries:
 const workoutExerciseRecords = await db
   .select({
     // ... existing fields
-    videoUrl: exercises.videoUrl,        // ✅ ADD
-    thumbnailUrl: exercises.thumbnailUrl, // ✅ ADD
+    videoUrl: exercises.videoUrl,        // [OK] ADD
+    thumbnailUrl: exercises.thumbnailUrl, // [OK] ADD
   })
   // ... rest of query
 ```
@@ -568,17 +568,17 @@ const workoutExerciseRecords = await db
 ## 📊 Métricas de Sucesso
 
 ### Técnicas
-- ✅ 10 vídeos de alta qualidade no ar
-- ✅ Tempo de load <2s em 4G
-- ✅ Lazy loading reduz data usage em 60%
-- ✅ Zero erros de streaming
-- ✅ Lighthouse score mantém >90
+- [OK] 10 vídeos de alta qualidade no ar
+- [OK] Tempo de load <2s em 4G
+- [OK] Lazy loading reduz data usage em 60%
+- [OK] Zero erros de streaming
+- [OK] Lighthouse score mantém >90
 
 ### Negócio
-- ✅ +40% usuários completam exercícios após ver vídeo
-- ✅ +25% retenção D7
-- ✅ -60% perguntas de suporte sobre "como fazer exercício X"
-- ✅ NPS aumenta de 7 para 8+
+- [OK] +40% usuários completam exercícios após ver vídeo
+- [OK] +25% retenção D7
+- [OK] -60% perguntas de suporte sobre "como fazer exercício X"
+- [OK] NPS aumenta de 7 para 8+
 
 ---
 
@@ -586,11 +586,11 @@ const workoutExerciseRecords = await db
 
 ### O que NÃO vamos fazer (por enquanto)
 
-❌ **Picture-in-Picture**: Complexo, baixo ROI
-❌ **Playback speed control**: Pode ensinar forma errada
-❌ **Download offline**: PWA já cacheia assets
-❌ **Multi-ângulo**: Muito custo de produção
-❌ **Legendas/closed captions**: Poucos exercícios têm áudio importante
+[X] **Picture-in-Picture**: Complexo, baixo ROI
+[X] **Playback speed control**: Pode ensinar forma errada
+[X] **Download offline**: PWA já cacheia assets
+[X] **Multi-ângulo**: Muito custo de produção
+[X] **Legendas/closed captions**: Poucos exercícios têm áudio importante
 
 ### Riscos e Mitigações
 
@@ -606,15 +606,15 @@ const workoutExerciseRecords = await db
 
 ## 📦 Deliverables
 
-1. ✅ Cloudflare R2 bucket configurado e funcionando
-2. ✅ 10 vídeos de exercícios otimizados (720p MP4)
-3. ✅ 10 thumbnails gerados (640x360 JPG)
-4. ✅ Worker endpoint `/api/exercises/:slug/video`
-5. ✅ Componente `VideoPlayer.tsx` com lazy loading
-6. ✅ ExerciseCard integrado com vídeos
-7. ✅ Database populado com URLs
-8. ✅ Testes de performance passando
-9. ✅ Documentação de deployment
+1. [OK] Cloudflare R2 bucket configurado e funcionando
+2. [OK] 10 vídeos de exercícios otimizados (720p MP4)
+3. [OK] 10 thumbnails gerados (640x360 JPG)
+4. [OK] Worker endpoint `/api/exercises/:slug/video`
+5. [OK] Componente `VideoPlayer.tsx` com lazy loading
+6. [OK] ExerciseCard integrado com vídeos
+7. [OK] Database populado com URLs
+8. [OK] Testes de performance passando
+9. [OK] Documentação de deployment
 
 ---
 
@@ -636,8 +636,8 @@ const workoutExerciseRecords = await db
 ## 💰 Estimativa de Custos
 
 ### Cloudflare R2 (Free Tier)
-- Storage: 10 GB/mês (30 vídeos x ~5MB = 150MB) ✅ FREE
-- Requests: 10M Class B/mês (estimado 50k/mês) ✅ FREE
+- Storage: 10 GB/mês (30 vídeos x ~5MB = 150MB) [OK] FREE
+- Requests: 10M Class B/mês (estimado 50k/mês) [OK] FREE
 - Egress: **ZERO** (diferencial vs S3)
 
 **Custo mensal projetado**: **$0.00** 🎉
@@ -658,7 +658,7 @@ const workoutExerciseRecords = await db
 
 ---
 
-## ✅ Checklist Final
+## [OK] Checklist Final
 
 Antes de marcar Sprint 2 como completo:
 

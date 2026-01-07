@@ -1,7 +1,7 @@
-# Sprint 1 - Bugs Críticos ✅ COMPLETO
+# Sprint 1 - Bugs Críticos [OK] COMPLETO
 
 **Data**: 04/01/2026
-**Status**: ✅ **IMPLEMENTADO E CORRIGIDO**
+**Status**: [OK] **IMPLEMENTADO E CORRIGIDO**
 **Tempo total**: ~2 horas
 
 ---
@@ -12,7 +12,7 @@ Corrigir os 4 bugs críticos identificados na análise da jornada do usuário qu
 
 ---
 
-## ✅ Implementações Realizadas
+## [OK] Implementações Realizadas
 
 ### 1. Redirects Corrigidos
 
@@ -34,8 +34,8 @@ fallbackRedirectUrl="/plano"
 ```
 
 **Impacto**:
-- ✅ Pós-onboarding: Usuário vê plano gerado imediatamente
-- ✅ Pós-login: Usuário vai direto para seus treinos
+- [OK] Pós-onboarding: Usuário vê plano gerado imediatamente
+- [OK] Pós-login: Usuário vai direto para seus treinos
 - 📈 **+30% conversão esperada** (onboarding → primeiro treino)
 
 ---
@@ -56,12 +56,12 @@ fallbackRedirectUrl="/plano"
 - `apps/web/src/app/(dashboard)/perfil/page.tsx` (**REESCRITO** - 342 linhas)
 
 **Dados agora reais**:
-- ✅ Semana atual (busca do banco)
-- ✅ Treinos concluídos (contagem real)
-- ✅ Taxa de conclusão (calculada)
-- ✅ Preferências: objetivo, frequência, local, nível
-- ✅ Equipamentos e limitações
-- ✅ Progresso da semana atual (card novo)
+- [OK] Semana atual (busca do banco)
+- [OK] Treinos concluídos (contagem real)
+- [OK] Taxa de conclusão (calculada)
+- [OK] Preferências: objetivo, frequência, local, nível
+- [OK] Equipamentos e limitações
+- [OK] Progresso da semana atual (card novo)
 
 **Implementação**:
 ```typescript
@@ -81,8 +81,8 @@ const { data: profileData } = useQuery({
 ```
 
 **Impacto**:
-- ✅ Restaura confiança no app
-- ✅ Usuário vê progresso real
+- [OK] Restaura confiança no app
+- [OK] Usuário vê progresso real
 - 📈 **+50% retenção esperada** (elimina frustração)
 
 ---
@@ -134,9 +134,9 @@ if (updated[index] && 'vibrate' in navigator) {
 ```
 
 **Impacto**:
-- ✅ Progresso nunca mais se perde
-- ✅ Usuário pode pausar e voltar
-- ✅ Feedback tátil melhora UX mobile
+- [OK] Progresso nunca mais se perde
+- [OK] Usuário pode pausar e voltar
+- [OK] Feedback tátil melhora UX mobile
 - 📈 **+20% completude de treinos**
 
 ---
@@ -164,8 +164,8 @@ import { useUser, SignOutButton } from '@clerk/nextjs';
 ```
 
 **Impacto**:
-- ✅ Funcionalidade básica restaurada
-- ✅ Logout seguro via Clerk
+- [OK] Funcionalidade básica restaurada
+- [OK] Logout seguro via Clerk
 
 ---
 
@@ -195,17 +195,17 @@ cd packages/database && pnpm update drizzle-orm@latest drizzle-kit@latest
 ```
 
 **Versões atualizadas**:
-- `drizzle-orm`: 0.38.3 → **0.45.1** ✅
-- `drizzle-kit`: 0.30.2 → **0.31.8** ✅
+- `drizzle-orm`: 0.38.3 → **0.45.1** [OK]
+- `drizzle-kit`: 0.30.2 → **0.31.8** [OK]
 
 **Mudança necessária**:
-- Import path: `drizzle-orm/neon-http` → `drizzle-orm/neon-serverless` ✅
+- Import path: `drizzle-orm/neon-http` → `drizzle-orm/neon-serverless` [OK]
 
 **Resultado**:
-- ✅ Build sem erros de resolução de módulos
-- ✅ Servidor reiniciou sem erros
-- ✅ Todos os endpoints funcionando
-- ✅ Queries Drizzle compatíveis com Neon Serverless
+- [OK] Build sem erros de resolução de módulos
+- [OK] Servidor reiniciou sem erros
+- [OK] Todos os endpoints funcionando
+- [OK] Queries Drizzle compatíveis com Neon Serverless
 
 ---
 
@@ -224,31 +224,31 @@ cd packages/database && pnpm update drizzle-orm@latest drizzle-kit@latest
 
 ## 🧪 Validação e Testes
 
-### ✅ Checklist de Testes
+### [OK] Checklist de Testes
 
 - [x] **Redirect pós-onboarding**
-  - Completar onboarding → Redireciona para `/plano` ✅
+  - Completar onboarding → Redireciona para `/plano` [OK]
 
 - [x] **Redirect pós-login**
-  - Login → Redireciona para `/plano` ✅
+  - Login → Redireciona para `/plano` [OK]
 
 - [x] **Dados reais no perfil**
-  - Endpoint `/api/users/me/profile` retorna dados ✅
-  - Endpoint `/api/users/me/stats` retorna stats ✅
-  - Página renderiza sem hardcoded ✅
+  - Endpoint `/api/users/me/profile` retorna dados [OK]
+  - Endpoint `/api/users/me/stats` retorna stats [OK]
+  - Página renderiza sem hardcoded [OK]
 
 - [x] **Persistência de séries**
-  - Marcar séries → Salva em localStorage ✅
-  - Fechar e reabrir página → Séries mantidas ✅
-  - Haptic feedback funciona (mobile) ✅
+  - Marcar séries → Salva em localStorage [OK]
+  - Fechar e reabrir página → Séries mantidas [OK]
+  - Haptic feedback funciona (mobile) [OK]
 
 - [x] **Logout funcional**
-  - Clicar em "Sair" → Faz logout ✅
-  - Redireciona para landing page ✅
+  - Clicar em "Sair" → Faz logout [OK]
+  - Redireciona para landing page [OK]
 
 - [x] **Drizzle/Neon corrigido**
-  - API inicia sem erros ✅
-  - Queries executam normalmente ✅
+  - API inicia sem erros [OK]
+  - Queries executam normalmente [OK]
 
 ---
 
@@ -318,7 +318,7 @@ pnpm cf-deploy
 
 ---
 
-## ⚠️ Breaking Changes
+## [!] Breaking Changes
 
 Nenhuma breaking change. Todas as mudanças são **backwards-compatible**.
 
@@ -327,10 +327,10 @@ Nenhuma breaking change. Todas as mudanças são **backwards-compatible**.
 ## 🎉 Conclusão
 
 Sprint 1 foi um **sucesso completo**:
-- ✅ Todos os 4 bugs críticos corrigidos
-- ✅ Bug bonus do Drizzle corrigido
-- ✅ Zero breaking changes
-- ✅ Pronto para produção
+- [OK] Todos os 4 bugs críticos corrigidos
+- [OK] Bug bonus do Drizzle corrigido
+- [OK] Zero breaking changes
+- [OK] Pronto para produção
 
 **User Experience melhorada em 300%** com essas correções básicas mas críticas.
 
