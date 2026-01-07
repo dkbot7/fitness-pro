@@ -5,7 +5,7 @@ import { ClerkProvider } from '@clerk/clerk-react';
 import { ptBR } from '@clerk/localizations';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
-import './app/globals.css';
+import './styles/globals.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {

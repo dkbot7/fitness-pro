@@ -2,27 +2,69 @@ import { Link } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, Heart, Globe, TrendingUp, Home as HomeIcon } from 'lucide-react';
+import { Check, Heart, Globe, TrendingUp, Home as HomeIcon, DollarSign, Dumbbell, MessageSquare, Star, Flag } from 'lucide-react';
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
+      {/* Header / Navigation */}
+      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
+        <div className="container mx-auto flex items-center justify-between px-4 py-4">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3">
+            <img
+              src="/brand/logos/fitpro-logo-original.png"
+              alt="FitPro"
+              className="h-10 w-10 sm:h-12 sm:w-12"
+            />
+            <span className="text-2xl font-bold text-fitpro-charcoal">FitPro</span>
+          </Link>
+
+          {/* Navigation */}
+          <nav className="flex items-center gap-4">
+            <SignedOut>
+              <Button asChild variant="ghost" className="hidden sm:inline-flex">
+                <Link to="/login">Entrar</Link>
+              </Button>
+              <Button asChild className="bg-fitpro-red hover:bg-fitpro-red-600">
+                <Link to="/register">Começar Grátis</Link>
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <Button asChild variant="ghost" className="hidden sm:inline-flex">
+                <Link to="/plano">
+                  <HomeIcon className="mr-2 h-4 w-4" />
+                  Meu Treino
+                </Link>
+              </Button>
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: 'w-10 h-10',
+                  },
+                }}
+              />
+            </SignedIn>
+          </nav>
+        </div>
+      </header>
+
       {/* Hero Section - Emocional e Direto */}
       <section className="relative overflow-hidden bg-gradient-to-br from-fitpro-red-50 via-white to-fitpro-red-50">
         <div className="container mx-auto px-4 py-16 sm:py-24">
           <div className="mx-auto max-w-4xl text-center">
-            {/* Logo */}
+            {/* Logo Hero - Maior */}
             <div className="mb-8 flex justify-center">
               <img
                 src="/brand/logos/fitpro-logo-original.png"
                 alt="FitPro"
-                className="h-16 w-16 sm:h-20 sm:w-20"
+                className="h-24 w-24 sm:h-32 sm:w-32 md:h-40 md:w-40"
               />
             </div>
 
             {/* Main Headline */}
             <h1 className="mb-6 text-4xl font-extrabold leading-tight tracking-tight text-fitpro-charcoal sm:text-5xl md:text-6xl lg:text-7xl">
-              Manter seu corpo de brasileira,{' '}
+              Ter um belo corpo de brasileira,{' '}
               <span className="block text-fitpro-red">
                 mesmo morando fora do Brasil
               </span>
@@ -47,8 +89,10 @@ export default function Home() {
                   <Link to="/register">Começar Meu Plano Grátis</Link>
                 </Button>
               </div>
-              <p className="mt-4 text-sm text-gray-600">
-                ✓ Grátis para sempre &nbsp;&nbsp; ✓ Sem cartão de crédito &nbsp;&nbsp; ✓ 100% em português
+              <p className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
+                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> Grátis para sempre</span>
+                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> Sem cartão de crédito</span>
+                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> 100% em português</span>
               </p>
 
               {/* Social Proof Badge */}
@@ -100,7 +144,9 @@ export default function Home() {
                     <div className="h-12 w-12 rounded-full bg-gradient-to-br from-fitpro-red to-fitpro-red-600"></div>
                     <div>
                       <p className="font-bold text-fitpro-charcoal">Sofia M.</p>
-                      <p className="text-sm text-gray-600">🇬🇧 Londres, Reino Unido</p>
+                      <p className="flex items-center gap-1 text-sm text-gray-600">
+                        <Flag className="h-3 w-3" /> Londres, Reino Unido
+                      </p>
                     </div>
                   </div>
                   <p className="text-gray-700">
@@ -108,7 +154,7 @@ export default function Home() {
                   </p>
                   <div className="mt-4 flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-yellow-400">★</span>
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
                 </CardContent>
@@ -120,7 +166,9 @@ export default function Home() {
                     <div className="h-12 w-12 rounded-full bg-gradient-to-br from-fitpro-red to-fitpro-red-600"></div>
                     <div>
                       <p className="font-bold text-fitpro-charcoal">Camila R.</p>
-                      <p className="text-sm text-gray-600">🇨🇦 Toronto, Canadá</p>
+                      <p className="flex items-center gap-1 text-sm text-gray-600">
+                        <Flag className="h-3 w-3" /> Toronto, Canadá
+                      </p>
                     </div>
                   </div>
                   <p className="text-gray-700">
@@ -128,7 +176,7 @@ export default function Home() {
                   </p>
                   <div className="mt-4 flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-yellow-400">★</span>
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
                 </CardContent>
@@ -140,7 +188,9 @@ export default function Home() {
                     <div className="h-12 w-12 rounded-full bg-gradient-to-br from-fitpro-red to-fitpro-red-600"></div>
                     <div>
                       <p className="font-bold text-fitpro-charcoal">Juliana S.</p>
-                      <p className="text-sm text-gray-600">🇺🇸 Miami, EUA</p>
+                      <p className="flex items-center gap-1 text-sm text-gray-600">
+                        <Flag className="h-3 w-3" /> Miami, EUA
+                      </p>
                     </div>
                   </div>
                   <p className="text-gray-700">
@@ -148,7 +198,7 @@ export default function Home() {
                   </p>
                   <div className="mt-4 flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-yellow-400">★</span>
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
                 </CardContent>
@@ -175,7 +225,9 @@ export default function Home() {
 
             <div className="grid gap-6 sm:grid-cols-3">
               <div className="rounded-lg bg-gray-50 p-6">
-                <div className="mb-4 text-4xl">💸</div>
+                <div className="mb-4 flex justify-center">
+                  <DollarSign className="h-12 w-12 text-fitpro-red" />
+                </div>
                 <h3 className="mb-2 font-semibold text-fitpro-charcoal">Academia cara</h3>
                 <p className="text-sm text-gray-600">
                   £50-100/mês que você não quer gastar
@@ -183,7 +235,9 @@ export default function Home() {
               </div>
 
               <div className="rounded-lg bg-gray-50 p-6">
-                <div className="mb-4 text-4xl">🏋️</div>
+                <div className="mb-4 flex justify-center">
+                  <Dumbbell className="h-12 w-12 text-fitpro-red" />
+                </div>
                 <h3 className="mb-2 font-semibold text-fitpro-charcoal">Equipamento limitado</h3>
                 <p className="text-sm text-gray-600">
                   Treinar em casa com o que você tem
@@ -191,7 +245,9 @@ export default function Home() {
               </div>
 
               <div className="rounded-lg bg-gray-50 p-6">
-                <div className="mb-4 text-4xl">🗣️</div>
+                <div className="mb-4 flex justify-center">
+                  <MessageSquare className="h-12 w-12 text-fitpro-red" />
+                </div>
                 <h3 className="mb-2 font-semibold text-fitpro-charcoal">Apps só em inglês</h3>
                 <p className="text-sm text-gray-600">
                   Cansada de traduzir tudo na cabeça
@@ -366,8 +422,10 @@ export default function Home() {
                 >
                   <Link to="/register">Sim, Quero Meu Corpo de Brasileira</Link>
                 </Button>
-                <p className="mt-6 text-sm text-white/75">
-                  ✓ Grátis para sempre &nbsp; ✓ Sem cartão &nbsp; ✓ Cancele quando quiser
+                <p className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/75">
+                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> Grátis para sempre</span>
+                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> Sem cartão</span>
+                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> Cancele quando quiser</span>
                 </p>
                 <p className="mt-4 text-xs text-white/60">
                   Leva menos de 2 minutos para começar
@@ -533,8 +591,9 @@ export default function Home() {
               <p className="text-sm text-gray-400">
                 © 2026 FitPro - Feito com dedicação para brasileiras no exterior
               </p>
-              <p className="mt-2 text-xs text-gray-500">
-                🇧🇷 Orgulhosamente brasileiro
+              <p className="mt-2 flex items-center justify-center gap-2 text-xs text-gray-500">
+                <Flag className="h-4 w-4 text-green-500" />
+                Orgulhosamente brasileiro
               </p>
             </div>
           </div>
