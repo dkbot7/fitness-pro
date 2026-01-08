@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
-import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, Heart, Globe, TrendingUp, Home as HomeIcon, DollarSign, Dumbbell, MessageSquare, Star, Flag } from 'lucide-react';
+import { Check, Heart, Globe, TrendingUp, DollarSign, Dumbbell, MessageSquare, Star, Flag } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -22,29 +21,12 @@ export default function Home() {
 
           {/* Navigation */}
           <nav className="flex items-center gap-4">
-            <SignedOut>
-              <Button asChild variant="ghost" className="hidden sm:inline-flex">
-                <Link to="/login">Entrar</Link>
-              </Button>
-              <Button asChild className="bg-fitpro-red hover:bg-fitpro-red-600">
-                <Link to="/register">Experimentar 7 Dias Grátis</Link>
-              </Button>
-            </SignedOut>
-            <SignedIn>
-              <Button asChild variant="ghost" className="hidden sm:inline-flex">
-                <Link to="/plano">
-                  <HomeIcon className="mr-2 h-4 w-4" />
-                  Meu Treino
-                </Link>
-              </Button>
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: 'w-10 h-10',
-                  },
-                }}
-              />
-            </SignedIn>
+            <Button asChild variant="ghost" className="hidden sm:inline-flex">
+              <Link to="/login">Entrar</Link>
+            </Button>
+            <Button asChild className="bg-fitpro-red hover:bg-fitpro-red-600">
+              <Link to="/register">Experimentar 7 Dias Grátis</Link>
+            </Button>
           </nav>
         </div>
       </header>
@@ -78,54 +60,33 @@ export default function Home() {
               </span>
             </p>
 
-            {/* CTA Buttons - Only show when signed out */}
-            <SignedOut>
-              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Button
-                  asChild
-                  size="lg"
-                  className="w-full bg-fitpro-red px-10 py-7 text-xl font-bold shadow-2xl transition-all hover:scale-105 hover:bg-fitpro-red-600 hover:shadow-2xl sm:w-auto"
-                >
-                  <Link to="/register">Começar Teste Grátis de 7 Dias</Link>
-                </Button>
+            {/* CTA Buttons */}
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button
+                asChild
+                size="lg"
+                className="w-full bg-fitpro-red px-10 py-7 text-xl font-bold shadow-2xl transition-all hover:scale-105 hover:bg-fitpro-red-600 hover:shadow-2xl sm:w-auto"
+              >
+                <Link to="/register">Começar Teste Grátis de 7 Dias</Link>
+              </Button>
+            </div>
+            <p className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
+              <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> 7 dias grátis</span>
+              <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> R$ 97,80/mês após teste</span>
+              <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> Cancele quando quiser</span>
+            </p>
+
+            {/* Social Proof Badge */}
+            <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 shadow-md">
+              <div className="flex -space-x-2">
+                <div className="h-8 w-8 rounded-full bg-fitpro-red-100 border-2 border-white"></div>
+                <div className="h-8 w-8 rounded-full bg-fitpro-red-200 border-2 border-white"></div>
+                <div className="h-8 w-8 rounded-full bg-fitpro-red-300 border-2 border-white"></div>
               </div>
-              <p className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
-                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> 7 dias grátis</span>
-                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> R$ 97,80/mês após teste</span>
-                <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> Cancele quando quiser</span>
+              <p className="text-sm font-medium text-gray-700">
+                <span className="font-bold text-fitpro-red">500+</span> brasileiras no exterior já treinam com a gente
               </p>
-
-              {/* Social Proof Badge */}
-              <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 shadow-md">
-                <div className="flex -space-x-2">
-                  <div className="h-8 w-8 rounded-full bg-fitpro-red-100 border-2 border-white"></div>
-                  <div className="h-8 w-8 rounded-full bg-fitpro-red-200 border-2 border-white"></div>
-                  <div className="h-8 w-8 rounded-full bg-fitpro-red-300 border-2 border-white"></div>
-                </div>
-                <p className="text-sm font-medium text-gray-700">
-                  <span className="font-bold text-fitpro-red">500+</span> brasileiras no exterior já treinam com a gente
-                </p>
-              </div>
-            </SignedOut>
-
-            {/* Signed In */}
-            <SignedIn>
-              <div className="flex flex-col items-center justify-center gap-6">
-                <div className="flex items-center gap-4">
-                  <p className="text-2xl font-bold text-fitpro-charcoal">Bem-vinda de volta!</p>
-                  <UserButton
-                    appearance={{
-                      elements: {
-                        avatarBox: 'w-14 h-14',
-                      },
-                    }}
-                  />
-                </div>
-                <Button asChild size="lg" className="w-full bg-fitpro-red px-12 py-7 text-xl font-bold shadow-lg hover:bg-fitpro-red-600 sm:w-auto">
-                  <Link to="/plano">Ver Meu Treino</Link>
-                </Button>
-              </div>
-            </SignedIn>
+            </div>
           </div>
         </div>
       </section>
@@ -400,41 +361,39 @@ export default function Home() {
       </section>
 
       {/* CTA Final Poderoso */}
-      <SignedOut>
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="mx-auto max-w-4xl">
-              <div className="rounded-3xl bg-gradient-to-br from-fitpro-red via-fitpro-red-600 to-fitpro-red-700 p-12 text-center shadow-2xl sm:p-16">
-                <Heart className="mx-auto mb-6 h-16 w-16 text-white" />
-                <h2 className="mb-6 text-4xl font-bold text-white sm:text-5xl">
-                  Pronta para começar?
-                </h2>
-                <p className="mb-8 text-xl text-white/90 sm:text-2xl">
-                  Seu plano personalizado está esperando você
-                </p>
-                <p className="mb-10 text-lg text-white/80">
-                  Junte-se a 500+ brasileiras que já estão transformando seus corpos no exterior
-                </p>
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-white px-12 py-8 text-2xl font-bold text-fitpro-red shadow-xl transition-all hover:scale-105 hover:bg-gray-50"
-                >
-                  <Link to="/register">Sim, Quero Meu Corpo de Brasileira</Link>
-                </Button>
-                <p className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/75">
-                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> 7 dias grátis</span>
-                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> R$ 97,80/mês</span>
-                  <span className="flex items-center gap-1"><Check className="h-4 w-4" /> Cancele quando quiser</span>
-                </p>
-                <p className="mt-4 text-xs text-white/60">
-                  Leva menos de 2 minutos para começar
-                </p>
-              </div>
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-4xl">
+            <div className="rounded-3xl bg-gradient-to-br from-fitpro-red via-fitpro-red-600 to-fitpro-red-700 p-12 text-center shadow-2xl sm:p-16">
+              <Heart className="mx-auto mb-6 h-16 w-16 text-white" />
+              <h2 className="mb-6 text-4xl font-bold text-white sm:text-5xl">
+                Pronta para começar?
+              </h2>
+              <p className="mb-8 text-xl text-white/90 sm:text-2xl">
+                Seu plano personalizado está esperando você
+              </p>
+              <p className="mb-10 text-lg text-white/80">
+                Junte-se a 500+ brasileiras que já estão transformando seus corpos no exterior
+              </p>
+              <Button
+                asChild
+                size="lg"
+                className="bg-white px-12 py-8 text-2xl font-bold text-fitpro-red shadow-xl transition-all hover:scale-105 hover:bg-gray-50"
+              >
+                <Link to="/register">Sim, Quero Meu Corpo de Brasileira</Link>
+              </Button>
+              <p className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/75">
+                <span className="flex items-center gap-1"><Check className="h-4 w-4" /> 7 dias grátis</span>
+                <span className="flex items-center gap-1"><Check className="h-4 w-4" /> R$ 97,80/mês</span>
+                <span className="flex items-center gap-1"><Check className="h-4 w-4" /> Cancele quando quiser</span>
+              </p>
+              <p className="mt-4 text-xs text-white/60">
+                Leva menos de 2 minutos para começar
+              </p>
             </div>
           </div>
-        </section>
-      </SignedOut>
+        </div>
+      </section>
 
       {/* FAQ */}
       <section className="border-t border-gray-200 bg-white py-16">
