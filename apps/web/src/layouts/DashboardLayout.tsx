@@ -1,8 +1,27 @@
-import { Outlet, Link } from 'react-router-dom';
-import { UserButton } from '@clerk/clerk-react';
+import { Outlet, Link, Navigate } from 'react-router-dom';
+import { UserButton, useAuth } from '@clerk/clerk-react';
 import { PWAInstallPrompt } from '@/components/pwa-install-prompt';
 
 export default function DashboardLayout() {
+  const { isLoaded, isSignedIn } = useAuth();
+
+  // Wait for Clerk to load
+  if (!isLoaded) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fitpro-red mx-auto"></div>
+          <p className="mt-4 text-gray-600">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not signed in
+  if (!isSignedIn) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}

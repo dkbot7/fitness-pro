@@ -26,7 +26,12 @@ function App() {
           path="/login/*"
           element={
             <div className="flex min-h-screen items-center justify-center">
-              <SignIn routing="path" path="/login" signUpUrl="/register" />
+              <SignIn
+                routing="path"
+                path="/login"
+                signUpUrl="/register"
+                afterSignInUrl="/dashboard"
+              />
             </div>
           }
         />
@@ -34,7 +39,12 @@ function App() {
           path="/register/*"
           element={
             <div className="flex min-h-screen items-center justify-center">
-              <SignUp routing="path" path="/register" signInUrl="/login" />
+              <SignUp
+                routing="path"
+                path="/register"
+                signInUrl="/login"
+                afterSignUpUrl="/onboarding"
+              />
             </div>
           }
         />
