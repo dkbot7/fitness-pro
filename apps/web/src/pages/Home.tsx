@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, Heart, Globe, TrendingUp, DollarSign, Dumbbell, MessageSquare, Star, Flag } from 'lucide-react';
+import { Check, Heart, Globe, TrendingUp, DollarSign, Dumbbell, MessageSquare, Star, Flag, Home as HomeIcon } from 'lucide-react';
 
 export default function Home() {
   return (
