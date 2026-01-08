@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
+import { useAuth, UserButton } from '@clerk/clerk-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Check, Heart, Globe, TrendingUp, DollarSign, Dumbbell, MessageSquare, Star, Flag, Home as HomeIcon } from 'lucide-react';
 
 export default function Home() {
+  const { isSignedIn } = useAuth();
+
   return (
     <main className="min-h-screen bg-white">
       {/* Header / Navigation */}
@@ -21,12 +24,32 @@ export default function Home() {
 
           {/* Navigation */}
           <nav className="flex items-center gap-4">
-            <Button asChild variant="ghost" className="hidden sm:inline-flex">
-              <Link to="/login">Entrar</Link>
-            </Button>
-            <Button asChild className="bg-fitpro-red hover:bg-fitpro-red-600">
-              <Link to="/register">Experimentar 7 Dias Grátis</Link>
-            </Button>
+            {isSignedIn ? (
+              <>
+                <Button asChild variant="ghost" className="hidden sm:inline-flex">
+                  <Link to="/plano">
+                    <HomeIcon className="mr-2 h-4 w-4" />
+                    Meu Treino
+                  </Link>
+                </Button>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: 'w-10 h-10',
+                    },
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Button asChild variant="ghost" className="hidden sm:inline-flex">
+                  <Link to="/login">Entrar</Link>
+                </Button>
+                <Button asChild className="bg-fitpro-red hover:bg-fitpro-red-600">
+                  <Link to="/register">Experimentar 7 Dias Grátis</Link>
+                </Button>
+              </>
+            )}
           </nav>
         </div>
       </header>
