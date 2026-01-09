@@ -9,6 +9,17 @@ interface RequestOptions extends RequestInit {
   token?: string | null;
 }
 
+export class APIError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'APIError';
+  }
+}
+
 async function apiRequest<T>(
   endpoint: string,
   options: RequestOptions = {}
@@ -23,24 +34,54 @@ async function apiRequest<T>(
   // Add Authorization header if token is provided
   if (options.token) {
     headers['Authorization'] = `Bearer ${options.token}`;
-    console.log('[API] Sending request with token, length:', options.token.length);
-  } else {
-    console.log('[API] No token provided for request to:', endpoint);
   }
 
-  const response = await fetch(url, {
-    ...options,
-    headers,
-  });
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers,
+    });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({
-      error: 'Unknown error occurred',
-    }));
-    throw new Error(error.error || `HTTP ${response.status}`);
+    // Handle different response types
+    const contentType = response.headers.get('content-type');
+    const isJson = contentType?.includes('application/json');
+
+    if (!response.ok) {
+      const errorData = isJson
+        ? await response.json().catch(() => null)
+        : await response.text().catch(() => null);
+
+      const errorMessage = errorData?.error || errorData?.message || `HTTP ${response.status}`;
+
+      throw new APIError(
+        errorMessage,
+        response.status,
+        errorData
+      );
+    }
+
+    // Return parsed JSON response
+    return isJson ? response.json() : response.text() as any;
+  } catch (error) {
+    // Re-throw APIError as is
+    if (error instanceof APIError) {
+      throw error;
+    }
+
+    // Handle network errors
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new APIError(
+        'Não foi possível conectar ao servidor. Verifique sua conexão.',
+        0
+      );
+    }
+
+    // Handle other errors
+    throw new APIError(
+      error instanceof Error ? error.message : 'Erro desconhecido',
+      500
+    );
   }
-
-  return response.json();
 }
 
 // Training API

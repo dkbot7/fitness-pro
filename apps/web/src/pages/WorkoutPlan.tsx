@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { MUSCLE_GROUPS } from '@fitness-pro/shared';
+import { ErrorState } from '@/components/ui/error-state';
+import { LoadingState, PageLoading } from '@/components/ui/loading-state';
 
 const DAYS_OF_WEEK = [
   'Segunda-feira',
@@ -40,19 +42,18 @@ function getStatusBadge(status: string) {
 }
 
 export default function WorkoutPlan() {
-  const { data, isLoading, error } = useWorkoutPlan();
+  const { data, isLoading, error, refetch } = useWorkoutPlan();
 
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="space-y-4">
+        <div className="mb-6">
           <div className="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
-          <div className="h-24 animate-pulse rounded bg-gray-200"></div>
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 animate-pulse rounded bg-gray-200"></div>
-            ))}
-          </div>
+          <div className="h-4 w-32 mt-2 animate-pulse rounded bg-gray-200"></div>
+        </div>
+        <LoadingState variant="card" lines={4} />
+        <div className="mt-6">
+          <LoadingState variant="list" lines={3} />
         </div>
       </div>
     );
@@ -61,16 +62,21 @@ export default function WorkoutPlan() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Card>
+        <ErrorState
+          title="Erro ao carregar plano de treino"
+          message={error instanceof Error ? error.message : 'Não foi possível carregar seu plano de treino. Tente novamente.'}
+          onRetry={() => refetch()}
+        />
+        <Card className="mt-6">
           <CardHeader>
-            <CardTitle>Erro ao carregar plano</CardTitle>
+            <CardTitle>Complete seu perfil</CardTitle>
             <CardDescription>
-              {error instanceof Error ? error.message : 'Erro desconhecido'}
+              Se você ainda não completou o onboarding, faça isso primeiro para gerar seu plano de treino.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild variant="outline">
-              <Link to="/onboarding">Completar onboarding</Link>
+            <Button asChild>
+              <Link to="/onboarding">Ir para onboarding</Link>
             </Button>
           </CardContent>
         </Card>
@@ -79,7 +85,7 @@ export default function WorkoutPlan() {
   }
 
   if (!data) {
-    return null;
+    return <PageLoading message="Carregando seu plano de treino..." />;
   }
 
   const { plan, workouts, stats } = data;

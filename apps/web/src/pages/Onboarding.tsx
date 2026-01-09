@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import {
   onboardingSchema,
   type OnboardingFormData,
@@ -26,6 +27,7 @@ export default function Onboarding() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { getToken } = useAuth();
+  const { toast } = useToast();
 
   const {
     watch,
@@ -51,7 +53,12 @@ export default function Onboarding() {
     try {
       const token = await getToken();
       if (!token) {
-        throw new Error('Not authenticated');
+        toast({
+          title: 'Erro de autenticação',
+          description: 'Você precisa estar logado para completar o onboarding.',
+          variant: 'destructive',
+        });
+        return;
       }
 
       const apiUrl = import.meta.env.VITE_API_URL || 'https://api.fitpro.vip';
@@ -67,14 +74,30 @@ export default function Onboarding() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error('API Error:', errorData);
-        throw new Error(errorData.error || 'Failed to save onboarding');
+
+        toast({
+          title: 'Erro ao salvar',
+          description: errorData.error || 'Não foi possível salvar suas informações. Tente novamente.',
+          variant: 'destructive',
+        });
+        return;
       }
+
+      // Success! Show success message
+      toast({
+        title: 'Perfil configurado!',
+        description: 'Seu plano de treino foi gerado com sucesso.',
+      });
 
       // Redirect to workout plan after successful onboarding
       navigate('/plano');
     } catch (error) {
       console.error('Onboarding error:', error);
-      alert('Erro ao salvar suas informações. Por favor, tente novamente.');
+      toast({
+        title: 'Erro inesperado',
+        description: error instanceof Error ? error.message : 'Ocorreu um erro ao processar sua solicitação.',
+        variant: 'destructive',
+      });
     } finally {
       setIsSubmitting(false);
     }

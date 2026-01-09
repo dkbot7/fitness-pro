@@ -1,10 +1,11 @@
-import { useUser } from '@clerk/clerk-react';
+import { useUser, useAuth } from '@clerk/clerk-react';
 import { SignOutButton } from '@clerk/clerk-react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StreakCard } from '@/components/gamification/StreakCard';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 // Goal labels mapping
 const GOAL_LABELS: Record<string, string> = {
@@ -28,63 +29,86 @@ const EXPERIENCE_LABELS: Record<string, string> = {
 
 export default function Profile() {
   const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
+  const { toast } = useToast();
   const apiUrl = import.meta.env.VITE_API_URL || 'https://api.fitpro.vip';
 
   // Fetch user profile
-  const { data: profileData, isLoading: isLoadingProfile } = useQuery({
+  const { data: profileData, isLoading: isLoadingProfile, error: profileError } = useQuery({
     queryKey: ['user-profile'],
     queryFn: async () => {
-      const res = await fetch(`${apiUrl}/users/me/profile`, {
+      const token = await getToken();
+      if (!token) {
+        throw new Error('Not authenticated');
+      }
+
+      const res = await fetch(`${apiUrl}/api/users/me/profile`, {
         headers: {
-          'Authorization': `Bearer ${await user?.getToken()}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
       if (!res.ok) {
         if (res.status === 404) {
           return null; // No profile yet
         }
-        throw new Error('Failed to fetch profile');
+        const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || 'Failed to fetch profile');
       }
       return res.json();
     },
-    enabled: !!user,
+    enabled: isLoaded && !!user,
+    retry: 1,
   });
 
   // Fetch user stats
-  const { data: statsData, isLoading: isLoadingStats } = useQuery({
+  const { data: statsData, isLoading: isLoadingStats, error: statsError } = useQuery({
     queryKey: ['user-stats'],
     queryFn: async () => {
-      const res = await fetch(`${apiUrl}/users/me/stats`, {
+      const token = await getToken();
+      if (!token) {
+        throw new Error('Not authenticated');
+      }
+
+      const res = await fetch(`${apiUrl}/api/users/me/stats`, {
         headers: {
-          'Authorization': `Bearer ${await user?.getToken()}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
       if (!res.ok) {
         if (res.status === 404) {
           return null;
         }
-        throw new Error('Failed to fetch stats');
+        const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || 'Failed to fetch stats');
       }
       return res.json();
     },
-    enabled: !!user,
+    enabled: isLoaded && !!user,
+    retry: 1,
   });
 
   // Fetch user streak
-  const { data: streakData, isLoading: isLoadingStreak } = useQuery({
+  const { data: streakData, isLoading: isLoadingStreak, error: streakError } = useQuery({
     queryKey: ['user-streak'],
     queryFn: async () => {
-      const res = await fetch(`${apiUrl}/gamification/streak`, {
+      const token = await getToken();
+      if (!token) {
+        throw new Error('Not authenticated');
+      }
+
+      const res = await fetch(`${apiUrl}/api/gamification/streak`, {
         headers: {
-          'Authorization': `Bearer ${await user?.getToken()}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
       if (!res.ok) {
-        throw new Error('Failed to fetch streak');
+        const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || 'Failed to fetch streak');
       }
       return res.json();
     },
-    enabled: !!user,
+    enabled: isLoaded && !!user,
+    retry: 1,
   });
 
   const profile = profileData?.profile;
