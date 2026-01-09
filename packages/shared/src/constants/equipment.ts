@@ -1,4 +1,5 @@
 export const EQUIPMENT_OPTIONS = [
+  { value: 'full_gym', label: 'Academia Completa' },
   { value: 'bodyweight', label: 'Peso Corporal' },
   { value: 'dumbbells', label: 'Halteres' },
   { value: 'resistance_bands', label: 'Faixas Elásticas' },

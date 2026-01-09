@@ -44,6 +44,12 @@ function App() {
                 path="/register"
                 signInUrl="/login"
                 afterSignUpUrl="/onboarding"
+                appearance={{
+                  elements: {
+                    rootBox: "w-full",
+                    card: "w-full shadow-none",
+                  },
+                }}
               />
             </div>
           }
