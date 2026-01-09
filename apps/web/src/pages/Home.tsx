@@ -26,7 +26,10 @@ export default function Home() {
           <nav className="flex items-center gap-4">
             {isSignedIn ? (
               <>
-                <Button asChild variant="ghost" className="hidden sm:inline-flex">
+                <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+                  <Link to="/onboarding">Configurar</Link>
+                </Button>
+                <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
                   <Link to="/plano">
                     <HomeIcon className="mr-2 h-4 w-4" />
                     Meu Treino
