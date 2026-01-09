@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@clerk/clerk-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,6 +25,7 @@ export default function Onboarding() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { getToken } = useAuth();
 
   const {
     watch,
@@ -47,15 +49,25 @@ export default function Onboarding() {
   const onSubmit = async (data: OnboardingFormData) => {
     setIsSubmitting(true);
     try {
+      const token = await getToken();
+      if (!token) {
+        throw new Error('Not authenticated');
+      }
+
       const apiUrl = import.meta.env.VITE_API_URL || 'https://api.fitpro.vip';
-      const response = await fetch(`${apiUrl}/onboarding`, {
+      const response = await fetch(`${apiUrl}/api/onboarding`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify(data),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save onboarding');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('API Error:', errorData);
+        throw new Error(errorData.error || 'Failed to save onboarding');
       }
 
       // Redirect to workout plan after successful onboarding
