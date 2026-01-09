@@ -40,7 +40,12 @@ app.use('*', metricsMiddleware());
 
 // CORS middleware
 app.use('/*', cors({
-  origin: ['http://localhost:3000', 'https://fitness-pro.pages.dev'],
+  origin: [
+    'http://localhost:3000',
+    'https://fitness-pro.pages.dev',
+    'https://fitpro.vip',
+    'https://www.fitpro.vip'
+  ],
   credentials: true,
 }));
 
