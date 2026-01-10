@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm';
 import { generateInitialWorkoutPlan, type UserProfile } from '../services/workout-generator';
 import type { OnboardingInput } from '../validation/schemas';
 import type { AppContext } from '../types/hono';
+import { createClerkClient } from '@clerk/backend';
 
 /**
  * POST /api/onboarding
@@ -15,13 +16,32 @@ export async function handleOnboarding(c: Context<AppContext>) {
     // 1. Get user info from auth middleware
     const userId = c.get('userId');
     const user = c.get('user');
-    const userEmail = user?.email || user?.email_address;
+    let userEmail = user?.email || user?.email_address;
 
-    if (!userId || !userEmail) {
-      return c.json({ error: 'Missing user information' }, 401);
+    if (!userId) {
+      return c.json({ error: 'Missing user ID' }, 401);
     }
 
-    // 2. Get validated request body from validator middleware
+    // 2. If email is not in JWT, fetch from Clerk API
+    if (!userEmail) {
+      try {
+        const clerkClient = createClerkClient({
+          secretKey: c.env.CLERK_SECRET_KEY,
+        });
+
+        const clerkUser = await clerkClient.users.getUser(userId);
+        userEmail = clerkUser.emailAddresses[0]?.emailAddress;
+
+        if (!userEmail) {
+          return c.json({ error: 'User email not found' }, 400);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user from Clerk:', error);
+        return c.json({ error: 'Failed to fetch user information' }, 500);
+      }
+    }
+
+    // 3. Get validated request body from validator middleware
     const body = c.get('validatedBody') as OnboardingInput;
     const {
       goal,
@@ -32,10 +52,10 @@ export async function handleOnboarding(c: Context<AppContext>) {
       limitations,
     } = body;
 
-    // 3. Connect to D1 database
+    // 4. Connect to D1 database
     const db = drizzle(c.env.DB);
 
-    // 4. Upsert user (ensure user exists in our DB)
+    // 5. Upsert user (ensure user exists in our DB)
     // Check if user exists
     const existingUser = await db.select().from(users).where(eq(users.id, userId)).limit(1);
 
@@ -57,7 +77,7 @@ export async function handleOnboarding(c: Context<AppContext>) {
         .where(eq(users.id, userId));
     }
 
-    // 5. Insert/Update profile
+    // 6. Insert/Update profile
     const existingProfile = await db.select().from(profiles).where(eq(profiles.userId, userId)).limit(1);
 
     const profileData = {
@@ -84,7 +104,7 @@ export async function handleOnboarding(c: Context<AppContext>) {
 
     const [profile] = await db.select().from(profiles).where(eq(profiles.userId, userId)).limit(1);
 
-    // 6. Generate Week 1 workout plan
+    // 7. Generate Week 1 workout plan
     const userProfile: UserProfile = {
       goal,
       frequencyPerWeek,
@@ -96,7 +116,7 @@ export async function handleOnboarding(c: Context<AppContext>) {
 
     const generatedPlan = generateInitialWorkoutPlan(userProfile);
 
-    // 7. Save workout plan to database
+    // 8. Save workout plan to database
     const existingPlan = await db.select().from(workoutPlans)
       .where(eq(workoutPlans.userId, userId))
       .limit(1);
@@ -121,7 +141,7 @@ export async function handleOnboarding(c: Context<AppContext>) {
       workoutPlan = result[0];
     }
 
-    // 8. Get exercise IDs by slug (map slugs to DB IDs)
+    // 9. Get exercise IDs by slug (map slugs to DB IDs)
     const exerciseSlugs = generatedPlan.workouts.flatMap((w) =>
       w.exercises.map((e) => e.exerciseSlug)
     );
@@ -141,7 +161,7 @@ export async function handleOnboarding(c: Context<AppContext>) {
       }
     }
 
-    // 9. Save workouts and exercises
+    // 10. Save workouts and exercises
     for (const workout of generatedPlan.workouts) {
       const [workoutRecord] = await db
         .insert(workouts)
