@@ -1,4 +1,4 @@
-import { useUser } from '@clerk/clerk-react';
+import { useUser, useAuth } from '@clerk/clerk-react';
 import { useQuery } from '@tanstack/react-query';
 import { AchievementsGrid } from '@/components/gamification/AchievementsGrid';
 import { StreakCard } from '@/components/gamification/StreakCard';
@@ -7,15 +7,17 @@ import { ArrowLeft, Trophy } from 'lucide-react';
 
 export default function Achievements() {
   const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
   const apiUrl = import.meta.env.VITE_API_URL || 'https://api.fitpro.vip';
 
   // Fetch achievements
   const { data: achievementsData, isLoading: isLoadingAchievements } = useQuery({
     queryKey: ['user-achievements'],
     queryFn: async () => {
+      const token = await getToken();
       const res = await fetch(`${apiUrl}/gamification/achievements`, {
         headers: {
-          'Authorization': `Bearer ${await user?.getToken()}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
       if (!res.ok) {
@@ -23,16 +25,17 @@ export default function Achievements() {
       }
       return res.json();
     },
-    enabled: !!user,
+    enabled: isLoaded && !!user,
   });
 
   // Fetch streak
   const { data: streakData, isLoading: isLoadingStreak } = useQuery({
     queryKey: ['user-streak'],
     queryFn: async () => {
+      const token = await getToken();
       const res = await fetch(`${apiUrl}/gamification/streak`, {
         headers: {
-          'Authorization': `Bearer ${await user?.getToken()}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
       if (!res.ok) {

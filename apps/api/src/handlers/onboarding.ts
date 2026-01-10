@@ -1,25 +1,21 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { users, profiles, workoutPlans, workouts, workoutExercises, exercises } from '@fitness-pro/database';
 import { eq } from 'drizzle-orm';
 import { generateInitialWorkoutPlan, type UserProfile } from '../services/workout-generator';
 import type { OnboardingInput } from '../validation/schemas';
-
-interface Env {
-  DB: D1Database;
-}
+import type { AppContext } from '../types/hono';
 
 /**
  * POST /api/onboarding
  * Save user profile and generate Week 1 workout plan
  */
-export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
+export async function handleOnboarding(c: Context<AppContext>) {
   try {
     // 1. Get user info from auth middleware
     const userId = c.get('userId');
     const user = c.get('user');
     const userEmail = user?.email || user?.email_address;
-    const userName = user?.name || user?.full_name;
 
     if (!userId || !userEmail) {
       return c.json({ error: 'Missing user information' }, 401);
@@ -34,10 +30,6 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
       experienceLevel,
       equipment,
       limitations,
-      currentWeightKg,
-      heightCm,
-      age,
-      gender,
     } = body;
 
     // 3. Connect to D1 database
@@ -46,6 +38,8 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
     // 4. Upsert user (ensure user exists in our DB)
     // Check if user exists
     const existingUser = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+
+    const nowTimestamp = Math.floor(Date.now() / 1000);
 
     if (existingUser.length === 0) {
       // Insert new user
@@ -58,7 +52,7 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
       await db.update(users)
         .set({
           email: userEmail,
-          updatedAt: new Date().toISOString(),
+          updatedAt: new Date(nowTimestamp * 1000),
         })
         .where(eq(users.id, userId));
     }
@@ -66,7 +60,6 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
     // 5. Insert/Update profile
     const existingProfile = await db.select().from(profiles).where(eq(profiles.userId, userId)).limit(1);
 
-    let profile;
     const profileData = {
       userId,
       goal,
@@ -75,22 +68,21 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
       experienceLevel,
       equipment: JSON.stringify(equipment || []),
       limitations: JSON.stringify(limitations || []),
-      onboardingCompletedAt: new Date().toISOString(),
+      onboardingCompletedAt: new Date(nowTimestamp * 1000),
     };
 
     if (existingProfile.length === 0) {
-      const result = await db.insert(profiles).values(profileData).returning();
-      profile = result[0];
+      await db.insert(profiles).values(profileData);
     } else {
-      const result = await db.update(profiles)
+      await db.update(profiles)
         .set({
           ...profileData,
-          updatedAt: new Date().toISOString(),
+          updatedAt: new Date(nowTimestamp * 1000),
         })
-        .where(eq(profiles.userId, userId))
-        .returning();
-      profile = result[0];
+        .where(eq(profiles.userId, userId));
     }
+
+    const [profile] = await db.select().from(profiles).where(eq(profiles.userId, userId)).limit(1);
 
     // 6. Generate Week 1 workout plan
     const userProfile: UserProfile = {
@@ -115,15 +107,14 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
         userId,
         weekNumber: 1,
         status: 'active',
-        difficultyMultiplier: '1.00',
+        difficultyMultiplier: 1.0,
       }).returning();
       workoutPlan = result[0];
     } else {
       const result = await db.update(workoutPlans)
         .set({
           status: 'active',
-          difficultyMultiplier: '1.00',
-          updatedAt: new Date().toISOString(),
+          difficultyMultiplier: 1.0,
         })
         .where(eq(workoutPlans.userId, userId))
         .returning();
@@ -135,13 +126,6 @@ export async function handleOnboarding(c: Context<{ Bindings: Env }>) {
       w.exercises.map((e) => e.exerciseSlug)
     );
     const uniqueSlugs = [...new Set(exerciseSlugs)];
-
-    const exerciseRecords = await db
-      .select()
-      .from(exercises)
-      .where(
-        eq(exercises.slug, uniqueSlugs[0]) // Workaround: need to use `in` operator
-      );
 
     // Build slug -> ID map
     const slugToId = new Map<string, number>();

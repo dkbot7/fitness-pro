@@ -1,18 +1,15 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { workoutFeedback, workouts } from '@fitness-pro/database';
 import { eq, and } from 'drizzle-orm';
 import type { SubmitFeedbackInput } from '../validation/schemas';
-
-interface Env {
-  DB: D1Database;
-}
+import type { AppContext } from '../types/hono';
 
 /**
  * POST /api/feedback
  * Save workout feedback (difficulty rating, duration, notes)
  */
-export async function submitFeedback(c: Context<{ Bindings: Env }>) {
+export async function submitFeedback(c: Context<AppContext>) {
   try {
     // 1. Get user info from auth middleware
     const userId = c.get('userId');

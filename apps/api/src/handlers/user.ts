@@ -1,17 +1,14 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { profiles, workoutPlans, workouts, users } from '@fitness-pro/database';
 import { eq, and, desc, sql } from 'drizzle-orm';
-
-interface Env {
-  DB: D1Database;
-}
+import type { AppContext } from '../types/hono';
 
 /**
  * GET /api/users/me/profile
  * Get user profile and workout preferences
  */
-export async function getUserProfile(c: Context<{ Bindings: Env }>) {
+export async function getUserProfile(c: Context<AppContext>) {
   try {
     // 1. Get user info from auth middleware
     const userId = c.get('userId');
@@ -71,7 +68,7 @@ export async function getUserProfile(c: Context<{ Bindings: Env }>) {
  * GET /api/users/me/stats
  * Get user workout statistics
  */
-export async function getUserStats(c: Context<{ Bindings: Env }>) {
+export async function getUserStats(c: Context<AppContext>) {
   try {
     // 1. Get user info from auth middleware
     const userId = c.get('userId');
@@ -182,7 +179,7 @@ export async function getUserStats(c: Context<{ Bindings: Env }>) {
  * Get paginated workout history
  * Supports query params: ?page=1&limit=20&status=completed
  */
-export async function getWorkoutHistory(c: Context<{ Bindings: Env }>) {
+export async function getWorkoutHistory(c: Context<AppContext>) {
   try {
     const userId = c.get('userId');
 

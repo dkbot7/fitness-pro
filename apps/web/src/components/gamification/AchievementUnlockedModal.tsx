@@ -187,7 +187,7 @@ export function AchievementUnlockedModal({
         </CardContent>
       </Card>
 
-      <style jsx>{`
+      <style>{`
         @keyframes confetti {
           0% {
             transform: translateY(0) rotate(0deg);

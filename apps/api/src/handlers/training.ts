@@ -1,18 +1,15 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { workoutPlans, workouts, workoutExercises, exercises } from '@fitness-pro/database';
 import { eq, and, desc } from 'drizzle-orm';
 import type { CompleteWorkoutInput } from '../validation/schemas';
-
-interface Env {
-  DB: D1Database;
-}
+import type { AppContext } from '../types/hono';
 
 /**
  * GET /api/training/plan
  * Get current week's workout plan with completion stats
  */
-export async function getWorkoutPlan(c: Context<{ Bindings: Env }>) {
+export async function getWorkoutPlan(c: Context<AppContext>) {
   try {
     // 1. Get user info from auth middleware
     const userId = c.get('userId');
@@ -151,7 +148,7 @@ export async function getWorkoutPlan(c: Context<{ Bindings: Env }>) {
  * POST /api/training/complete
  * Mark a workout as completed
  */
-export async function completeWorkout(c: Context<{ Bindings: Env }>) {
+export async function completeWorkout(c: Context<AppContext>) {
   try {
     // 1. Get user info from auth middleware
     const userId = c.get('userId');
@@ -198,13 +195,13 @@ export async function completeWorkout(c: Context<{ Bindings: Env }>) {
       .update(workouts)
       .set({
         status: 'completed',
-        completedAt: new Date().toISOString(),
+        completedAt: new Date(),
       })
       .where(eq(workouts.id, workoutId))
       .returning();
 
     // 6. Update streak and check for new achievements
-    let streakData = { currentStreak: 0, newAchievements: [] };
+    let streakData: { currentStreak: number; newAchievements: any[] } = { currentStreak: 0, newAchievements: [] };
     try {
       const { updateUserStreak } = await import('./gamification');
       streakData = await updateUserStreak(db, userId);

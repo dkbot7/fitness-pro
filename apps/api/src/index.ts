@@ -16,14 +16,9 @@ import { getWorkoutPlan, completeWorkout } from './handlers/training';
 import { submitFeedback } from './handlers/feedback';
 import { getUserProfile, getUserStats, getWorkoutHistory } from './handlers/user';
 import { getUserStreak, getUserAchievements, checkAndUnlockAchievements } from './handlers/gamification';
+import type { AppContext } from './types/hono';
 
-type Bindings = {
-  DATABASE_URL: string;
-  CLERK_SECRET_KEY: string;
-  ENVIRONMENT?: string;
-};
-
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<AppContext>();
 
 // Configure logger based on environment
 app.use('*', async (c, next) => {
@@ -84,6 +79,7 @@ app.get('/api/gamification/achievements', clerkAuth, cache(cachePresets.achievem
 app.post('/api/gamification/check-unlocks', clerkAuth, checkAndUnlockAchievements);
 
 // Manual trigger for weekly adjustment (for testing)
+// TODO: Update to use D1 instead of Neon
 app.post('/api/admin/adjust-week', async (c) => {
   try {
     const { userId, weekNumber } = await c.req.json();
@@ -92,16 +88,8 @@ app.post('/api/admin/adjust-week', async (c) => {
       return c.json({ error: 'Missing userId or weekNumber' }, 400);
     }
 
-    const { neon } = await import('@neondatabase/serverless');
-    const { drizzle } = await import('drizzle-orm/neon-http');
-    const { adjustWeeklyPlan } = await import('./services/workout-adjuster');
-
-    const sql = neon(c.env.DATABASE_URL);
-    const db = drizzle(sql);
-
-    const result = await adjustWeeklyPlan(db, userId, weekNumber);
-
-    return c.json(result);
+    // TODO: Implement D1 version
+    return c.json({ error: 'Not implemented - requires D1 migration' }, 501);
   } catch (error: any) {
     console.error('Manual adjustment error:', error);
     return c.json({ error: error.message }, 500);
@@ -131,7 +119,7 @@ export default {
   fetch: app.fetch,
   async scheduled(
     event: ScheduledEvent,
-    env: Bindings,
+    env: AppContext['Bindings'],
     ctx: ExecutionContext
   ): Promise<void> {
     // Import cron handler dynamically to avoid circular dependencies

@@ -3,25 +3,21 @@
  * Endpoints for streaks, achievements, and user progress
  */
 
-import { Context } from 'hono';
+import type { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import {
   userStreaks,
   achievements,
   userAchievements,
-  workouts
 } from '@fitness-pro/database';
-import { eq, and, desc, sql } from 'drizzle-orm';
-
-interface Env {
-  DB: D1Database;
-}
+import { eq, sql } from 'drizzle-orm';
+import type { AppContext } from '../types/hono';
 
 /**
  * GET /api/gamification/streak
  * Returns user's current streak, longest streak, and total workouts
  */
-export async function getUserStreak(c: Context<{ Bindings: Env }>) {
+export async function getUserStreak(c: Context<AppContext>) {
   try {
     const userId = c.get('userId');
 
@@ -100,7 +96,7 @@ export async function getUserStreak(c: Context<{ Bindings: Env }>) {
  * Returns all achievements with unlock status for current user
  * Supports pagination via query params: ?page=1&limit=20
  */
-export async function getUserAchievements(c: Context<{ Bindings: Env }>) {
+export async function getUserAchievements(c: Context<AppContext>) {
   try {
     const userId = c.get('userId');
 
@@ -214,7 +210,7 @@ export async function getUserAchievements(c: Context<{ Bindings: Env }>) {
  * Called after workout completion to check and unlock new achievements
  * Returns array of newly unlocked achievements
  */
-export async function checkAndUnlockAchievements(c: Context<{ Bindings: Env }>) {
+export async function checkAndUnlockAchievements(c: Context<AppContext>) {
   try {
     const userId = c.get('userId');
 
@@ -328,7 +324,7 @@ export async function updateUserStreak(
 
     if (streakRecords.length === 0) {
       // First workout ever - create record
-      const [newStreak] = await db
+      await db
         .insert(userStreaks)
         .values({
           userId,

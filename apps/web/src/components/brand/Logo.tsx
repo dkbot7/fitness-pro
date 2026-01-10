@@ -17,7 +17,6 @@ const sizeMap = {
 export const Logo: React.FC<LogoProps> = ({
   variant = 'full',
   size = 'md',
-  theme = 'light',
   className = '',
 }) => {
   const logoSrc = `/brand/logos/fitpro-logo-${variant === 'full' ? 'original' : variant}.png`;

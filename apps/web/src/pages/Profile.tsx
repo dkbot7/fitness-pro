@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { StreakCard } from '@/components/gamification/StreakCard';
 import { Link } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 
 // Goal labels mapping
 const GOAL_LABELS: Record<string, string> = {
@@ -30,11 +29,10 @@ const EXPERIENCE_LABELS: Record<string, string> = {
 export default function Profile() {
   const { user, isLoaded } = useUser();
   const { getToken } = useAuth();
-  const { toast } = useToast();
   const apiUrl = import.meta.env.VITE_API_URL || 'https://api.fitpro.vip';
 
   // Fetch user profile
-  const { data: profileData, isLoading: isLoadingProfile, error: profileError } = useQuery({
+  const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['user-profile'],
     queryFn: async () => {
       const token = await getToken();
@@ -61,7 +59,7 @@ export default function Profile() {
   });
 
   // Fetch user stats
-  const { data: statsData, isLoading: isLoadingStats, error: statsError } = useQuery({
+  const { data: statsData, isLoading: isLoadingStats } = useQuery({
     queryKey: ['user-stats'],
     queryFn: async () => {
       const token = await getToken();
@@ -88,7 +86,7 @@ export default function Profile() {
   });
 
   // Fetch user streak
-  const { data: streakData, isLoading: isLoadingStreak, error: streakError } = useQuery({
+  const { data: streakData, isLoading: isLoadingStreak } = useQuery({
     queryKey: ['user-streak'],
     queryFn: async () => {
       const token = await getToken();

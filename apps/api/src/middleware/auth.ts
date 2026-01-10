@@ -1,11 +1,7 @@
 import { createMiddleware } from 'hono/factory';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { logger } from '../utils/logger';
-
-interface Env {
-  CLERK_SECRET_KEY: string;
-  CLERK_PUBLISHABLE_KEY?: string;
-}
+import type { AppContext } from '../types/hono';
 
 // Cache JWKS for performance
 let jwksCache: ReturnType<typeof createRemoteJWKSet> | null = null;
@@ -14,7 +10,7 @@ let jwksCache: ReturnType<typeof createRemoteJWKSet> | null = null;
  * Clerk JWT Authentication Middleware
  * Validates Clerk session tokens with proper signature verification
  */
-export const clerkAuth = createMiddleware<{ Bindings: Env }>(async (c, next) => {
+export const clerkAuth = createMiddleware<AppContext>(async (c, next) => {
   try {
     // Get Authorization header
     const authHeader = c.req.header('Authorization');
