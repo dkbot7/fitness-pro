@@ -109,7 +109,7 @@ export default function WorkoutDetail() {
         // No achievements, go directly to feedback
         navigate(`/treino/${workoutId}/feedback`);
       }
-    } catch (error) {
+    } catch {
       alert('Erro ao concluir treino. Tente novamente.');
       setIsCompleting(false);
     }

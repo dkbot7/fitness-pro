@@ -52,15 +52,11 @@ export function AchievementUnlockedModal({
   achievement,
   onClose,
 }: AchievementUnlockedModalProps) {
+  const [confetti, setConfetti] = useState<{ id: number; x: number; y: number; delay: number }[]>([]);
   const [isVisible, setIsVisible] = useState(false);
-  const [confetti, setConfetti] = useState<{ id: number; x: number; y: number; delay: number }[]>(
-    []
-  );
 
   useEffect(() => {
     if (achievement) {
-      setIsVisible(true);
-
       // Generate confetti particles
       const particles = Array.from({ length: 30 }, (_, i) => ({
         id: i,
@@ -68,28 +64,34 @@ export function AchievementUnlockedModal({
         y: -10,
         delay: Math.random() * 0.5,
       }));
-      setConfetti(particles);
 
       // Play celebration sound (if available)
       try {
         if ('vibrate' in navigator) {
           navigator.vibrate([100, 50, 100, 50, 200]);
         }
-      } catch (e) {
+      } catch {
         // Ignore vibration errors
       }
-    } else {
-      setIsVisible(false);
+
+      // Set confetti and trigger visibility in separate microtasks
+      requestAnimationFrame(() => {
+        setConfetti(particles);
+        requestAnimationFrame(() => {
+          setIsVisible(true);
+        });
+      });
+
+      return () => {
+        setIsVisible(false);
+      };
     }
   }, [achievement]);
 
   if (!achievement) return null;
 
-  const getIcon = (iconName: string): LucideIcon => {
-    return (Icons as any)[iconName] || Icons.Award;
-  };
+  const IconComponent: LucideIcon = (Icons as any)[achievement.iconName] || Icons.Award;
 
-  const Icon = getIcon(achievement.iconName);
   const config = RARITY_CONFIG[achievement.rarity];
 
   const handleClose = () => {
@@ -149,7 +151,7 @@ export function AchievementUnlockedModal({
                 }`,
               }}
             >
-              <Icon className="h-16 w-16 text-white" />
+              <IconComponent className="h-16 w-16 text-white" />
             </div>
           </div>
 
