@@ -5,7 +5,6 @@ import { eq } from 'drizzle-orm';
 import { generateInitialWorkoutPlan, type UserProfile } from '../services/workout-generator';
 import type { OnboardingInput } from '../validation/schemas';
 import type { AppContext } from '../types/hono';
-import { createClerkClient } from '@clerk/backend';
 
 /**
  * POST /api/onboarding
@@ -13,32 +12,29 @@ import { createClerkClient } from '@clerk/backend';
  */
 export async function handleOnboarding(c: Context<AppContext>) {
   try {
+    console.log('[Onboarding] === START ONBOARDING HANDLER ===');
+
     // 1. Get user info from auth middleware
     const userId = c.get('userId');
     const user = c.get('user');
     let userEmail = user?.email || user?.email_address;
 
+    console.log('[Onboarding] User from context:', { userId, hasUser: !!user, hasEmail: !!userEmail });
+
     if (!userId) {
+      console.error('[Onboarding] No userId found');
       return c.json({ error: 'Missing user ID' }, 401);
     }
 
-    // 2. If email is not in JWT, fetch from Clerk API
+    // 2. If email is not in JWT, use userId as fallback (email is optional)
     if (!userEmail) {
-      try {
-        const clerkClient = createClerkClient({
-          secretKey: c.env.CLERK_SECRET_KEY,
-        });
-
-        const clerkUser = await clerkClient.users.getUser(userId);
-        userEmail = clerkUser.emailAddresses[0]?.emailAddress;
-
-        if (!userEmail) {
-          return c.json({ error: 'User email not found' }, 400);
-        }
-      } catch (error) {
-        console.error('Failed to fetch user from Clerk:', error);
-        return c.json({ error: 'Failed to fetch user information' }, 500);
-      }
+      console.log('[Onboarding] Email not in JWT, using fallback email for user:', userId);
+      // Create a temporary email based on userId
+      // This will be updated when the user completes their profile
+      userEmail = `${userId}@clerk.temp`;
+      console.log('[Onboarding] Using fallback email:', userEmail);
+    } else {
+      console.log('[Onboarding] Email found in JWT:', userEmail);
     }
 
     // 3. Get validated request body from validator middleware
@@ -52,8 +48,18 @@ export async function handleOnboarding(c: Context<AppContext>) {
       limitations,
     } = body;
 
+    console.log('[Onboarding] Request body:', {
+      goal,
+      frequencyPerWeek,
+      location,
+      experienceLevel,
+      equipmentCount: equipment?.length || 0,
+      limitationsCount: limitations?.length || 0,
+    });
+
     // 4. Connect to D1 database
     const db = drizzle(c.env.DB);
+    console.log('[Onboarding] Database connected');
 
     // 5. Upsert user (ensure user exists in our DB)
     // Check if user exists
@@ -195,6 +201,8 @@ export async function handleOnboarding(c: Context<AppContext>) {
       }
     }
 
+    console.log('[Onboarding] === ONBOARDING COMPLETED SUCCESSFULLY ===');
+
     return c.json({
       success: true,
       message: 'Onboarding completo! Seu plano de treino foi gerado.',
@@ -205,7 +213,12 @@ export async function handleOnboarding(c: Context<AppContext>) {
       },
     });
   } catch (error: any) {
-    console.error('Onboarding error:', error);
+    console.error('[Onboarding] === ERROR IN ONBOARDING HANDLER ===');
+    console.error('[Onboarding] Error:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
     return c.json(
       {
         error: 'Failed to process onboarding',
