@@ -41,12 +41,26 @@ app.use('*', metricsMiddleware());
 
 // CORS middleware
 app.use('/*', cors({
-  origin: [
-    'http://localhost:3000',
-    'https://fitness-pro.pages.dev',
-    'https://fitpro.vip',
-    'https://www.fitpro.vip'
-  ],
+  origin: (origin) => {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://fitness-pro.pages.dev',
+      'https://fitpro.vip',
+      'https://www.fitpro.vip',
+    ];
+
+    // Allow exact matches
+    if (allowedOrigins.includes(origin)) {
+      return origin;
+    }
+
+    // Allow Cloudflare Pages deployments (*.pages.dev)
+    if (origin && /^https:\/\/[a-z0-9-]+\.fitness-pro.*\.pages\.dev$/.test(origin)) {
+      return origin;
+    }
+
+    return allowedOrigins[0]; // fallback
+  },
   credentials: true,
 }));
 

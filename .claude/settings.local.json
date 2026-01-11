@@ -18,7 +18,9 @@
       "Bash(npm run build:*)",
       "Bash(node test-equipment-mapping.js:*)",
       "Bash(xargs:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(git push:*)",
+      "Bash(openssl rand:*)"
     ]
   }
 }
