@@ -27,7 +27,7 @@ import {
   workoutExercises,
   workoutFeedback,
   exercises,
-} from '@fitness-pro/database/schema';
+} from '@fitness-pro/database';
 
 export interface ReadinessScore {
   overall: number; // 0-100

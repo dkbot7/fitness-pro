@@ -17,7 +17,8 @@
       "Bash(tee:*)",
       "Bash(npm run build:*)",
       "Bash(node test-equipment-mapping.js:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(npm install:*)"
     ]
   }
 }

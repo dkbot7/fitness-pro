@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { drizzle } from 'drizzle-orm/d1';
 import { and, sql, gte } from 'drizzle-orm';
-import { profiles } from '@fitness-pro/database/schema';
+import { profiles } from '@fitness-pro/database';
 import { clerkAuth } from './middleware/auth';
 import { validateBody } from './middleware/validator';
 import { rateLimiter, rateLimitPresets } from './middleware/rate-limiter';

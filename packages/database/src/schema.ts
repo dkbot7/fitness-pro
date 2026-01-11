@@ -148,3 +148,39 @@ export const userAchievements = sqliteTable('user_achievements', {
   achievementIdIdx: index('user_achievements_achievement_id_idx').on(table.achievementId),
   userAchievementIdx: index('user_achievements_user_achievement_idx').on(table.userId, table.achievementId),
 }));
+
+// Push notification subscriptions
+export const pushSubscriptions = sqliteTable('push_subscriptions', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  endpoint: text('endpoint').notNull().unique(),
+  p256dh: text('p256dh').notNull(),
+  auth: text('auth').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (table) => ({
+  userIdIdx: index('push_subscriptions_user_id_idx').on(table.userId),
+  endpointIdx: index('push_subscriptions_endpoint_idx').on(table.endpoint),
+}));
+
+// Notification logs (for frequency tracking)
+export const notificationLogs = sqliteTable('notification_logs', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  notificationType: text('notification_type'),
+  sentAt: integer('sent_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (table) => ({
+  userIdIdx: index('notification_logs_user_id_idx').on(table.userId),
+  sentAtIdx: index('notification_logs_sent_at_idx').on(table.sentAt),
+}));
+
+// Notification preferences
+export const notificationPreferences = sqliteTable('notification_preferences', {
+  userId: text('user_id').primaryKey().references(() => users.id, { onDelete: 'cascade' }),
+  streakReminders: integer('streak_reminders', { mode: 'boolean' }).default(true).notNull(),
+  achievementNotifications: integer('achievement_notifications', { mode: 'boolean' }).default(true).notNull(),
+  weeklySummaries: integer('weekly_summaries', { mode: 'boolean' }).default(true).notNull(),
+  workoutReminders: integer('workout_reminders', { mode: 'boolean' }).default(true).notNull(),
+  maxPerDay: integer('max_per_day').default(1).notNull(),
+  maxPerWeek: integer('max_per_week').default(5).notNull(),
+});

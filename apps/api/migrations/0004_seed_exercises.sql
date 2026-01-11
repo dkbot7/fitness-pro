@@ -2,7 +2,7 @@
 -- Bodyweight (10) + Dumbbells (10) + Gym Equipment (10)
 
 -- BODYWEIGHT EXERCISES (10)
-INSERT INTO exercises (slug, name_pt, muscle_groups, equipment_needed, difficulty, description_pt) VALUES
+INSERT OR IGNORE INTO exercises (slug, name_pt, muscle_groups, equipment_required, difficulty, description_pt) VALUES
 ('flexao', 'Flexão de Braço', 'chest,triceps,shoulders', 'bodyweight', 'beginner', 'Deite-se de bruços, mãos na largura dos ombros, empurre o corpo para cima mantendo o core ativado.'),
 ('agachamento', 'Agachamento Livre', 'legs,glutes,core', 'bodyweight', 'beginner', 'Pés na largura dos ombros, desça como se fosse sentar, joelhos alinhados com os pés.'),
 ('burpee', 'Burpee', 'full_body,cardio', 'bodyweight', 'intermediate', 'Agachamento, apoie as mãos, salto para prancha, flexão, pule de volta e salte para cima.'),
@@ -15,7 +15,7 @@ INSERT INTO exercises (slug, name_pt, muscle_groups, equipment_needed, difficult
 ('ponte-gluteo', 'Ponte de Glúteo', 'glutes,legs,core', 'bodyweight', 'beginner', 'Deitado de costas, joelhos flexionados, levante o quadril contraindo os glúteos.');
 
 -- DUMBBELL EXERCISES (10)
-INSERT INTO exercises (slug, name_pt, muscle_groups, equipment_needed, difficulty, description_pt) VALUES
+INSERT OR IGNORE INTO exercises (slug, name_pt, muscle_groups, equipment_required, difficulty, description_pt) VALUES
 ('supino-halteres', 'Supino com Halteres', 'chest,triceps,shoulders', 'dumbbells,bench', 'intermediate', 'Deitado em banco, halteres ao lado do peito, empurre para cima até estender os braços.'),
 ('desenvolvimento-halteres', 'Desenvolvimento com Halteres', 'shoulders,triceps', 'dumbbells', 'intermediate', 'Sentado ou em pé, halteres ao lado da cabeça, empurre para cima até estender os braços.'),
 ('rosca-direta', 'Rosca Direta com Halteres', 'biceps', 'dumbbells', 'beginner', 'Em pé, cotovelos fixos ao lado do corpo, flexione os braços levantando os halteres.'),
@@ -28,7 +28,7 @@ INSERT INTO exercises (slug, name_pt, muscle_groups, equipment_needed, difficult
 ('remada-curvada', 'Remada Curvada com Halteres', 'back,biceps', 'dumbbells', 'intermediate', 'Inclinado para frente, puxe os halteres em direção ao abdômen, cotovelos próximos ao corpo.');
 
 -- GYM EQUIPMENT EXERCISES (10)
-INSERT INTO exercises (slug, name_pt, muscle_groups, equipment_needed, difficulty, description_pt) VALUES
+INSERT OR IGNORE INTO exercises (slug, name_pt, muscle_groups, equipment_required, difficulty, description_pt) VALUES
 ('supino-barra', 'Supino Reto com Barra', 'chest,triceps,shoulders', 'barbell,bench', 'intermediate', 'Deitado em banco, desça a barra até o peito e empurre para cima.'),
 ('agachamento-barra', 'Agachamento com Barra', 'legs,glutes,core', 'barbell,squat_rack', 'advanced', 'Barra nas costas, pés na largura dos ombros, agache mantendo a coluna neutra.'),
 ('levantamento-terra', 'Levantamento Terra', 'back,legs,glutes,core', 'barbell', 'advanced', 'Pegada na barra, levante mantendo a coluna reta, quadril e joelhos estendidos.'),

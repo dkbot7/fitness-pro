@@ -2,7 +2,7 @@
 -- 20 achievements across 3 categories
 
 -- STREAK ACHIEVEMENTS (6)
-INSERT INTO achievements (slug, name_pt, description_pt, icon_name, category, requirement, rarity) VALUES
+INSERT OR IGNORE INTO achievements (slug, name_pt, description_pt, icon_name, category, requirement, rarity) VALUES
 ('streak-3', 'Aquecendo', 'Complete 3 dias consecutivos de treino', 'Flame', 'streak', 3, 'common'),
 ('streak-7', 'Semana Completa', 'Mantenha uma sequência de 7 dias', 'Trophy', 'streak', 7, 'rare'),
 ('streak-14', 'Duas Semanas Fortes', 'Sequência de 14 dias de dedicação', 'Zap', 'streak', 14, 'rare'),
@@ -11,7 +11,7 @@ INSERT INTO achievements (slug, name_pt, description_pt, icon_name, category, re
 ('streak-100', 'Lenda Viva', '100 dias de sequência imbatível', 'Crown', 'streak', 100, 'legendary');
 
 -- MILESTONE ACHIEVEMENTS (8)
-INSERT INTO achievements (slug, name_pt, description_pt, icon_name, category, requirement, rarity) VALUES
+INSERT OR IGNORE INTO achievements (slug, name_pt, description_pt, icon_name, category, requirement, rarity) VALUES
 ('workouts-1', 'Primeiro Passo', 'Complete seu primeiro treino', 'Check', 'milestone', 1, 'common'),
 ('workouts-5', 'Ganhando Ritmo', 'Complete 5 treinos no total', 'Heart', 'milestone', 5, 'common'),
 ('workouts-10', 'Compromisso Firme', '10 treinos completados', 'Target', 'milestone', 10, 'common'),
@@ -22,7 +22,7 @@ INSERT INTO achievements (slug, name_pt, description_pt, icon_name, category, re
 ('workouts-500', 'Lendário', '500 treinos - Status de Lenda', 'Sparkles', 'milestone', 500, 'legendary');
 
 -- SPECIAL ACHIEVEMENTS (6)
-INSERT INTO achievements (slug, name_pt, description_pt, icon_name, category, requirement, rarity) VALUES
+INSERT OR IGNORE INTO achievements (slug, name_pt, description_pt, icon_name, category, requirement, rarity) VALUES
 ('perfect-week', 'Semana Perfeita', 'Complete todos os treinos da semana', 'CalendarCheck', 'special', 1, 'epic'),
 ('early-bird', 'Madrugador', 'Complete um treino antes das 7h', 'Sunrise', 'special', 1, 'rare'),
 ('night-owl', 'Coruja Noturna', 'Complete um treino depois das 22h', 'Moon', 'special', 1, 'rare'),

@@ -19,7 +19,7 @@ import type { AppContext } from '../types';
 import { eq, and, gte, desc, sql } from 'drizzle-orm';
 import webpush from 'web-push';
 import { drizzle } from 'drizzle-orm/d1';
-import { pushSubscriptions, profiles, workouts, workoutPlans } from '@fitness-pro/database/schema';
+import { pushSubscriptions, profiles, workouts, workoutPlans } from '@fitness-pro/database';
 
 // Configure VAPID details
 function configureVAPID(env: any) {
