@@ -25,6 +25,9 @@ export const profiles = sqliteTable('profiles', {
   age: integer('age'),
   gender: text('gender'),
   onboardingCompletedAt: integer('onboarding_completed_at', { mode: 'timestamp' }),
+  currentWeek: integer('current_week').default(1).notNull(),
+  planStartDate: integer('plan_start_date', { mode: 'timestamp' }),
+  planTotalWeeks: integer('plan_total_weeks').default(8).notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 }, (table) => ({

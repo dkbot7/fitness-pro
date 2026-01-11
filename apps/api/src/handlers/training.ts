@@ -1,6 +1,6 @@
 import type { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
-import { workoutPlans, workouts, workoutExercises, exercises } from '@fitness-pro/database';
+import { profiles, workoutPlans, workouts, workoutExercises, exercises } from '@fitness-pro/database';
 import { eq, and, desc } from 'drizzle-orm';
 import type { CompleteWorkoutInput } from '../validation/schemas';
 import type { AppContext } from '../types/hono';
@@ -21,22 +21,40 @@ export async function getWorkoutPlan(c: Context<AppContext>) {
     // 2. Connect to D1 database
     const db = drizzle(c.env.DB);
 
-    // 3. Get the most recent (active) workout plan for user
+    // 3. Get user profile to determine current week
+    const weekParam = c.req.query('week'); // Optional ?week=2
+    const [profile] = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.userId, userId))
+      .limit(1);
+
+    if (!profile) {
+      return c.json({
+        error: 'Profile not found. Please complete onboarding first.',
+      }, 404);
+    }
+
+    // Determine which week to fetch
+    const targetWeek = weekParam
+      ? parseInt(weekParam, 10)
+      : (profile.currentWeek || 1);
+
+    // 4. Get workout plan for the specific week
     const plans = await db
       .select()
       .from(workoutPlans)
       .where(
         and(
           eq(workoutPlans.userId, userId),
-          eq(workoutPlans.status, 'active')
+          eq(workoutPlans.weekNumber, targetWeek)
         )
       )
-      .orderBy(desc(workoutPlans.weekNumber))
       .limit(1);
 
     if (plans.length === 0) {
       return c.json({
-        error: 'No active workout plan found. Please complete onboarding first.',
+        error: `No workout plan found for week ${targetWeek}. Please complete onboarding first.`,
       }, 404);
     }
 
@@ -123,6 +141,8 @@ export async function getWorkoutPlan(c: Context<AppContext>) {
         status: plan.status,
         difficultyMultiplier: plan.difficultyMultiplier,
         createdAt: plan.createdAt,
+        currentWeek: profile.currentWeek,
+        totalWeeks: profile.planTotalWeeks,
       },
       workouts: workoutsWithExercises,
       stats: {
@@ -137,6 +157,80 @@ export async function getWorkoutPlan(c: Context<AppContext>) {
     return c.json(
       {
         error: 'Failed to fetch workout plan',
+        details: error.message,
+      },
+      500
+    );
+  }
+}
+
+/**
+ * GET /api/training/plan/all
+ * Get overview of all weeks in the user's workout plan
+ */
+export async function getAllWeekPlans(c: Context<AppContext>) {
+  try {
+    const userId = c.get('userId');
+
+    if (!userId) {
+      return c.json({ error: 'Missing user information' }, 401);
+    }
+
+    const db = drizzle(c.env.DB);
+
+    // Get user profile
+    const [profile] = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.userId, userId))
+      .limit(1);
+
+    if (!profile) {
+      return c.json({
+        error: 'Profile not found. Please complete onboarding first.',
+      }, 404);
+    }
+
+    // Get all workout plans for the user
+    const plans = await db
+      .select()
+      .from(workoutPlans)
+      .where(eq(workoutPlans.userId, userId))
+      .orderBy(workoutPlans.weekNumber);
+
+    // For each plan, calculate workout statistics
+    const weeksData = await Promise.all(
+      plans.map(async (plan) => {
+        const planWorkouts = await db
+          .select()
+          .from(workouts)
+          .where(eq(workouts.planId, plan.id));
+
+        const completed = planWorkouts.filter(w => w.status === 'completed').length;
+        const total = planWorkouts.length;
+
+        return {
+          weekNumber: plan.weekNumber,
+          status: plan.status,
+          difficultyMultiplier: plan.difficultyMultiplier,
+          workoutsTotal: total,
+          workoutsCompleted: completed,
+          completionRate: total > 0 ? Math.round((completed / total) * 100) : 0,
+        };
+      })
+    );
+
+    return c.json({
+      success: true,
+      currentWeek: profile.currentWeek || 1,
+      totalWeeks: profile.planTotalWeeks || 8,
+      weeks: weeksData,
+    });
+  } catch (error: any) {
+    console.error('Get all week plans error:', error);
+    return c.json(
+      {
+        error: 'Failed to fetch week plans',
         details: error.message,
       },
       500
@@ -200,7 +294,70 @@ export async function completeWorkout(c: Context<AppContext>) {
       .where(eq(workouts.id, workoutId))
       .returning();
 
-    // 6. Update streak and check for new achievements
+    // 6. Check if all workouts in the week are completed (auto-advance week)
+    let weekAdvanced = false;
+    try {
+      // Get workout plan for this workout
+      const [plan] = await db
+        .select()
+        .from(workoutPlans)
+        .where(eq(workoutPlans.id, workout.planId))
+        .limit(1);
+
+      if (plan) {
+        // Get all workouts for this week's plan
+        const allWeekWorkouts = await db
+          .select()
+          .from(workouts)
+          .where(eq(workouts.planId, plan.id));
+
+        // Check if all workouts are completed
+        const allCompleted = allWeekWorkouts.every(w => w.status === 'completed');
+
+        if (allCompleted) {
+          // Mark current week plan as completed
+          await db
+            .update(workoutPlans)
+            .set({ status: 'completed' })
+            .where(eq(workoutPlans.id, plan.id));
+
+          // Get user profile to check if there's a next week
+          const [profile] = await db
+            .select()
+            .from(profiles)
+            .where(eq(profiles.userId, userId))
+            .limit(1);
+
+          const nextWeek = plan.weekNumber + 1;
+
+          if (profile && nextWeek <= (profile.planTotalWeeks || 8)) {
+            // Update currentWeek in profile
+            await db
+              .update(profiles)
+              .set({ currentWeek: nextWeek })
+              .where(eq(profiles.userId, userId));
+
+            // Activate next week's plan
+            await db
+              .update(workoutPlans)
+              .set({ status: 'active' })
+              .where(
+                and(
+                  eq(workoutPlans.userId, userId),
+                  eq(workoutPlans.weekNumber, nextWeek)
+                )
+              );
+
+            weekAdvanced = true;
+          }
+        }
+      }
+    } catch (weekAdvanceError: any) {
+      console.error('Week advancement error (non-fatal):', weekAdvanceError);
+      // Don't fail workout completion if week advancement fails
+    }
+
+    // 7. Update streak and check for new achievements
     let streakData: { currentStreak: number; newAchievements: any[] } = { currentStreak: 0, newAchievements: [] };
     try {
       const { updateUserStreak } = await import('./gamification');
@@ -212,10 +369,13 @@ export async function completeWorkout(c: Context<AppContext>) {
 
     return c.json({
       success: true,
-      message: 'Treino concluído com sucesso!',
+      message: weekAdvanced
+        ? 'Parabéns! Semana completa. Você avançou para a próxima semana!'
+        : 'Treino concluído com sucesso!',
       workout: updatedWorkout,
       streak: streakData.currentStreak,
       newAchievements: streakData.newAchievements,
+      weekAdvanced,
     });
   } catch (error: any) {
     console.error('Complete workout error:', error);

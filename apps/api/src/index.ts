@@ -1,5 +1,8 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { drizzle } from 'drizzle-orm/d1';
+import { and, sql, gte } from 'drizzle-orm';
+import { profiles } from '@fitness-pro/database/schema';
 import { clerkAuth } from './middleware/auth';
 import { validateBody } from './middleware/validator';
 import { rateLimiter, rateLimitPresets } from './middleware/rate-limiter';
@@ -12,10 +15,13 @@ import {
   submitFeedbackSchema
 } from './validation/schemas';
 import { handleOnboarding } from './handlers/onboarding';
-import { getWorkoutPlan, completeWorkout } from './handlers/training';
+import { getWorkoutPlan, getAllWeekPlans, completeWorkout } from './handlers/training';
 import { submitFeedback } from './handlers/feedback';
 import { getUserProfile, getUserStats, getWorkoutHistory } from './handlers/user';
 import { getUserStreak, getUserAchievements, checkAndUnlockAchievements } from './handlers/gamification';
+import { getExerciseVideo, getExerciseThumbnail, getSignedVideoUrl, getVideoMetadata } from './handlers/videos';
+import { subscribeToPush, unsubscribeFromPush, getUserNotificationPreferences } from './handlers/notifications';
+import { adjustWeeklyWorkouts } from './services/workout-adjuster-v2';
 import type { AppContext } from './types/hono';
 
 const app = new Hono<AppContext>();
@@ -63,6 +69,7 @@ app.post('/api/onboarding', clerkAuth, validateBody(onboardingSchema), handleOnb
 
 // Training
 app.get('/api/training/plan', clerkAuth, cache(cachePresets.userSpecific), getWorkoutPlan);
+app.get('/api/training/plan/all', clerkAuth, cache(cachePresets.dynamic), getAllWeekPlans);
 app.post('/api/training/complete', clerkAuth, validateBody(completeWorkoutSchema), completeWorkout);
 
 // Feedback
@@ -78,9 +85,82 @@ app.get('/api/gamification/streak', clerkAuth, cache(cachePresets.dynamic), getU
 app.get('/api/gamification/achievements', clerkAuth, cache(cachePresets.achievements), getUserAchievements);
 app.post('/api/gamification/check-unlocks', clerkAuth, checkAndUnlockAchievements);
 
-// Manual trigger for weekly adjustment (for testing)
-// TODO: Update to use D1 instead of Neon
-app.post('/api/admin/adjust-week', async (c) => {
+// Videos (R2 Streaming)
+app.get('/api/exercises/:slug/video', getExerciseVideo);
+app.get('/api/exercises/:slug/thumbnail', getExerciseThumbnail);
+app.get('/api/exercises/:slug/signed-url', clerkAuth, getSignedVideoUrl);
+app.get('/api/exercises/:slug/metadata', clerkAuth, getVideoMetadata);
+
+// Push Notifications
+app.post('/api/notifications/subscribe', clerkAuth, subscribeToPush);
+app.post('/api/notifications/unsubscribe', clerkAuth, unsubscribeFromPush);
+app.get('/api/notifications/preferences', clerkAuth, getUserNotificationPreferences);
+
+// Weekly Adjustment (Updated for D1)
+app.post('/api/admin/adjust-week', clerkAuth, async (c) => {
+  try {
+    const userId = c.get('userId');
+    const db = drizzle(c.env.DB);
+
+    const result = await adjustWeeklyWorkouts(db, userId);
+
+    return c.json({
+      success: true,
+      adjustment: result
+    });
+  } catch (error: any) {
+    console.error('Manual adjustment error:', error);
+    return c.json({ error: error.message }, 500);
+  }
+});
+
+// Cron handler for weekly adjustment
+app.get('/cron/weekly-adjustment', async (c) => {
+  const cronSecret = c.req.header('X-Cloudflare-Cron-Secret');
+
+  if (cronSecret !== c.env.CRON_SECRET) {
+    return c.json({ error: 'Unauthorized' }, 401);
+  }
+
+  const db = drizzle(c.env.DB);
+
+  // Get all active users
+  const activeUsers = await db
+    .select({ userId: profiles.userId })
+    .from(profiles)
+    .where(
+      and(
+        sql`onboarding_completed_at IS NOT NULL`,
+        gte(profiles.currentWeek, 1)
+      )
+    );
+
+  console.log(`[Cron] Processing ${activeUsers.length} active users`);
+
+  const results = [];
+  const errors = [];
+
+  for (const user of activeUsers) {
+    try {
+      const result = await adjustWeeklyWorkouts(db, user.userId);
+      results.push(result);
+    } catch (error: any) {
+      console.error(`[Cron] Error adjusting user ${user.userId}:`, error);
+      errors.push({ userId: user.userId, error: error.message });
+    }
+  }
+
+  return c.json({
+    success: true,
+    processed: activeUsers.length,
+    adjusted: results.length,
+    errors: errors.length,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// DEPRECATED: Old manual trigger (for backward compatibility)
+app.post('/api/admin/adjust-week-old', async (c) => {
   try {
     const { userId, weekNumber } = await c.req.json();
 

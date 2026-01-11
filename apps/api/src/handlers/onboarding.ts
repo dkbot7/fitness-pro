@@ -2,7 +2,12 @@ import type { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { users, profiles, workoutPlans, workouts, workoutExercises, exercises } from '@fitness-pro/database';
 import { eq } from 'drizzle-orm';
-import { generateInitialWorkoutPlan, type UserProfile } from '../services/workout-generator';
+import {
+  generateMultiWeekPlan,
+  getTotalWeeksForExperience,
+  calculateDifficultyMultiplier,
+  type UserProfile
+} from '../services/workout-generator';
 import type { OnboardingInput } from '../validation/schemas';
 import type { AppContext } from '../types/hono';
 
@@ -12,29 +17,20 @@ import type { AppContext } from '../types/hono';
  */
 export async function handleOnboarding(c: Context<AppContext>) {
   try {
-    console.log('[Onboarding] === START ONBOARDING HANDLER ===');
-
     // 1. Get user info from auth middleware
     const userId = c.get('userId');
     const user = c.get('user');
     let userEmail = user?.email || user?.email_address;
 
-    console.log('[Onboarding] User from context:', { userId, hasUser: !!user, hasEmail: !!userEmail });
-
     if (!userId) {
-      console.error('[Onboarding] No userId found');
       return c.json({ error: 'Missing user ID' }, 401);
     }
 
     // 2. If email is not in JWT, use userId as fallback (email is optional)
     if (!userEmail) {
-      console.log('[Onboarding] Email not in JWT, using fallback email for user:', userId);
       // Create a temporary email based on userId
       // This will be updated when the user completes their profile
       userEmail = `${userId}@clerk.temp`;
-      console.log('[Onboarding] Using fallback email:', userEmail);
-    } else {
-      console.log('[Onboarding] Email found in JWT:', userEmail);
     }
 
     // 3. Get validated request body from validator middleware
@@ -48,18 +44,8 @@ export async function handleOnboarding(c: Context<AppContext>) {
       limitations,
     } = body;
 
-    console.log('[Onboarding] Request body:', {
-      goal,
-      frequencyPerWeek,
-      location,
-      experienceLevel,
-      equipmentCount: equipment?.length || 0,
-      limitationsCount: limitations?.length || 0,
-    });
-
     // 4. Connect to D1 database
     const db = drizzle(c.env.DB);
-    console.log('[Onboarding] Database connected');
 
     // 5. Upsert user (ensure user exists in our DB)
     // Check if user exists
@@ -110,7 +96,10 @@ export async function handleOnboarding(c: Context<AppContext>) {
 
     const [profile] = await db.select().from(profiles).where(eq(profiles.userId, userId)).limit(1);
 
-    // 7. Generate Week 1 workout plan
+    // 7. Determine total weeks based on experience level
+    const totalWeeks = getTotalWeeksForExperience(experienceLevel);
+
+    // 8. Generate all weeks of workout plan with progressive overload
     const userProfile: UserProfile = {
       goal,
       frequencyPerWeek,
@@ -120,105 +109,95 @@ export async function handleOnboarding(c: Context<AppContext>) {
       limitations: limitations || [],
     };
 
-    const generatedPlan = generateInitialWorkoutPlan(userProfile);
+    const allWeekPlans = generateMultiWeekPlan(userProfile, totalWeeks);
 
-    // 8. Save workout plan to database
-    const existingPlan = await db.select().from(workoutPlans)
-      .where(eq(workoutPlans.userId, userId))
-      .limit(1);
-
-    let workoutPlan;
-    if (existingPlan.length === 0) {
-      const result = await db.insert(workoutPlans).values({
+    // 9. Save all workout plans and workouts for all weeks
+    for (const weekPlan of allWeekPlans) {
+      // Create workout plan record for this week
+      const [planRecord] = await db.insert(workoutPlans).values({
         userId,
-        weekNumber: 1,
-        status: 'active',
-        difficultyMultiplier: 1.0,
+        weekNumber: weekPlan.weekNumber,
+        status: weekPlan.weekNumber === 1 ? 'active' : 'pending',
+        difficultyMultiplier: calculateDifficultyMultiplier(weekPlan.weekNumber),
       }).returning();
-      workoutPlan = result[0];
-    } else {
-      const result = await db.update(workoutPlans)
-        .set({
-          status: 'active',
-          difficultyMultiplier: 1.0,
-        })
-        .where(eq(workoutPlans.userId, userId))
-        .returning();
-      workoutPlan = result[0];
-    }
 
-    // 9. Get exercise IDs by slug (map slugs to DB IDs)
-    const exerciseSlugs = generatedPlan.workouts.flatMap((w) =>
-      w.exercises.map((e) => e.exerciseSlug)
-    );
-    const uniqueSlugs = [...new Set(exerciseSlugs)];
+      // Get exercise IDs for this week
+      const exerciseSlugs = weekPlan.workouts.flatMap((w) =>
+        w.exercises.map((e) => e.exerciseSlug)
+      );
+      const uniqueSlugs = [...new Set(exerciseSlugs)];
 
-    // Build slug -> ID map
-    const slugToId = new Map<string, number>();
-    for (const slug of uniqueSlugs) {
-      const records = await db
-        .select()
-        .from(exercises)
-        .where(eq(exercises.slug, slug))
-        .limit(1);
+      // Build slug -> ID map
+      const slugToId = new Map<string, number>();
+      for (const slug of uniqueSlugs) {
+        const records = await db
+          .select()
+          .from(exercises)
+          .where(eq(exercises.slug, slug))
+          .limit(1);
 
-      if (records.length > 0) {
-        slugToId.set(slug, records[0].id);
-      }
-    }
-
-    // 10. Save workouts and exercises
-    for (const workout of generatedPlan.workouts) {
-      const [workoutRecord] = await db
-        .insert(workouts)
-        .values({
-          planId: workoutPlan.id,
-          userId,
-          dayOfWeek: workout.dayOfWeek,
-          workoutType: workout.workoutType,
-          status: 'pending',
-        })
-        .returning();
-
-      // Save workout exercises
-      for (const exercise of workout.exercises) {
-        const exerciseId = slugToId.get(exercise.exerciseSlug);
-        if (!exerciseId) {
-          console.warn(`Exercise not found: ${exercise.exerciseSlug}`);
-          continue;
+        if (records.length > 0) {
+          slugToId.set(slug, records[0].id);
         }
+      }
 
-        await db.insert(workoutExercises).values({
-          workoutId: workoutRecord.id,
-          exerciseId,
-          orderIndex: exercise.orderIndex,
-          sets: exercise.sets,
-          repsMin: exercise.repsMin,
-          repsMax: exercise.repsMax,
-          restSeconds: exercise.restSeconds,
-          notesPt: exercise.notesPt,
-        });
+      // Save workouts and workout exercises for this week
+      for (const workout of weekPlan.workouts) {
+        const [workoutRecord] = await db
+          .insert(workouts)
+          .values({
+            planId: planRecord.id,
+            userId,
+            dayOfWeek: workout.dayOfWeek,
+            workoutType: workout.workoutType,
+            status: 'pending',
+          })
+          .returning();
+
+        // Save workout exercises
+        for (const exercise of workout.exercises) {
+          const exerciseId = slugToId.get(exercise.exerciseSlug);
+          if (!exerciseId) {
+            console.warn(`Exercise not found: ${exercise.exerciseSlug}`);
+            continue;
+          }
+
+          await db.insert(workoutExercises).values({
+            workoutId: workoutRecord.id,
+            exerciseId,
+            orderIndex: exercise.orderIndex,
+            sets: exercise.sets,
+            repsMin: exercise.repsMin,
+            repsMax: exercise.repsMax,
+            restSeconds: exercise.restSeconds,
+            notesPt: exercise.notesPt,
+          });
+        }
       }
     }
 
-    console.log('[Onboarding] === ONBOARDING COMPLETED SUCCESSFULLY ===');
+    // 10. Update profile with plan tracking information
+    await db.update(profiles)
+      .set({
+        currentWeek: 1,
+        planStartDate: new Date(nowTimestamp * 1000),
+        planTotalWeeks: totalWeeks,
+        updatedAt: new Date(nowTimestamp * 1000),
+      })
+      .where(eq(profiles.userId, userId));
 
     return c.json({
       success: true,
-      message: 'Onboarding completo! Seu plano de treino foi gerado.',
+      message: `Onboarding completo! Seu plano de ${totalWeeks} semanas foi gerado.`,
       profile,
       workoutPlan: {
         weekNumber: 1,
-        workoutsCount: generatedPlan.workouts.length,
+        totalWeeks: totalWeeks,
+        workoutsCount: allWeekPlans[0].workouts.length,
       },
     });
   } catch (error: any) {
-    console.error('[Onboarding] === ERROR IN ONBOARDING HANDLER ===');
-    console.error('[Onboarding] Error:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name,
-    });
+    console.error('Onboarding error:', error);
     return c.json(
       {
         error: 'Failed to process onboarding',

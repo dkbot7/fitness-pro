@@ -6,10 +6,14 @@ import type { SubmitFeedbackInput } from '../validation/schemas';
  */
 export interface Env {
   DB: D1Database;
+  VIDEOS: R2Bucket; // R2 Storage for exercise videos
   CLERK_SECRET_KEY: string;
   CLERK_PUBLISHABLE_KEY?: string;
   DATABASE_URL?: string;
   ENVIRONMENT?: string;
+  CRON_SECRET?: string; // Secret for cron authentication
+  VAPID_PUBLIC_KEY?: string; // Web Push VAPID public key
+  VAPID_PRIVATE_KEY?: string; // Web Push VAPID private key
 }
 
 /**

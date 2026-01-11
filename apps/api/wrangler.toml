@@ -12,6 +12,12 @@ binding = "DB"
 database_name = "fitness-pro-db"
 database_id = "8156de65-ed3d-46a9-8b5c-c314e6920aef"
 
+# R2 Storage for videos
+[[r2_buckets]]
+binding = "VIDEOS"
+bucket_name = "fitness-pro-videos"
+preview_bucket_name = "fitness-pro-videos-preview"
+
 # Environment variables (use .dev.vars for local secrets)
 [vars]
 ENVIRONMENT = "production"

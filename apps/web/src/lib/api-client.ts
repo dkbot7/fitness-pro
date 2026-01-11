@@ -119,6 +119,8 @@ export interface WorkoutPlan {
   status: string;
   difficultyMultiplier: string;
   createdAt: Date;
+  currentWeek?: number;
+  totalWeeks?: number;
 }
 
 export interface WorkoutPlanResponse {
@@ -133,8 +135,38 @@ export interface WorkoutPlanResponse {
   };
 }
 
-export async function getWorkoutPlan(token?: string | null): Promise<WorkoutPlanResponse> {
-  return apiRequest('/api/training/plan', {
+export interface WeekOverview {
+  weekNumber: number;
+  status: string;
+  difficultyMultiplier: number;
+  workoutsTotal: number;
+  workoutsCompleted: number;
+  completionRate: number;
+}
+
+export interface AllWeeksResponse {
+  success: boolean;
+  currentWeek: number;
+  totalWeeks: number;
+  weeks: WeekOverview[];
+}
+
+export async function getWorkoutPlan(
+  token?: string | null,
+  weekNumber?: number
+): Promise<WorkoutPlanResponse> {
+  const url = weekNumber
+    ? `/api/training/plan?week=${weekNumber}`
+    : '/api/training/plan';
+
+  return apiRequest(url, {
+    method: 'GET',
+    token,
+  });
+}
+
+export async function getAllWeeks(token?: string | null): Promise<AllWeeksResponse> {
+  return apiRequest('/api/training/plan/all', {
     method: 'GET',
     token,
   });

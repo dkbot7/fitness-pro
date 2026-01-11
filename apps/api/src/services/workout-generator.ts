@@ -5,7 +5,7 @@
  * Uses rules-based algorithm (no ML) to create Week 1 workout plan.
  */
 
-import { EXERCISES, type Exercise } from '@fitness-pro/shared';
+import { EXERCISES, translateEquipmentToDatabase, type Exercise } from '@fitness-pro/shared';
 
 export interface UserProfile {
   goal: 'lose_weight' | 'gain_muscle' | 'maintenance';
@@ -41,9 +41,9 @@ export interface WorkoutPlan {
 type SplitType = 'full_body' | 'upper_lower_full' | 'upper_lower' | 'push_pull_legs';
 
 /**
- * Main function: Generate initial workout plan (Week 1)
+ * Main function: Generate initial workout plan (Week 1 or specific week)
  */
-export function generateInitialWorkoutPlan(profile: UserProfile): WorkoutPlan {
+export function generateInitialWorkoutPlan(profile: UserProfile, weekNumber: number = 1): WorkoutPlan {
   // Step 1: Determine training split based on frequency
   const split = determineSplit(profile.frequencyPerWeek);
 
@@ -64,9 +64,14 @@ export function generateInitialWorkoutPlan(profile: UserProfile): WorkoutPlan {
     workouts.push(workout);
   }
 
+  // Apply progressive overload if not Week 1
+  const progressedWorkouts = workouts.map(workout =>
+    applyProgressiveOverload(workout, weekNumber, profile.experienceLevel, availableExercises)
+  );
+
   return {
-    weekNumber: 1,
-    workouts,
+    weekNumber,
+    workouts: progressedWorkouts,
   };
 }
 
@@ -119,10 +124,13 @@ function getMuscleGroupsForDay(split: SplitType, dayIndex: number): string[] {
  * Filter exercises based on user's equipment, limitations, and experience level
  */
 function filterExercises(profile: UserProfile): Exercise[] {
+  // Translate equipment from English (frontend) to Portuguese (database)
+  const translatedEquipment = translateEquipmentToDatabase(profile.equipment);
+
   return EXERCISES.filter((exercise) => {
     // Check equipment availability
     const hasRequiredEquipment = exercise.equipmentRequired.every((eq) =>
-      eq === 'bodyweight' || profile.equipment.includes(eq)
+      eq === 'bodyweight' || translatedEquipment.includes(eq)
     );
 
     // Check contraindications (limitations)
@@ -288,4 +296,141 @@ function getNotesPt(goal: string): string {
   };
 
   return notes[goal as keyof typeof notes] || '';
+}
+
+/**
+ * Get total weeks for experience level
+ */
+export function getTotalWeeksForExperience(level: string): number {
+  const weeks = {
+    beginner: 4,
+    intermediate: 8,
+    advanced: 12
+  };
+  return weeks[level as keyof typeof weeks] || 8;
+}
+
+/**
+ * Calculate difficulty multiplier based on week number
+ */
+export function calculateDifficultyMultiplier(weekNumber: number): number {
+  if (weekNumber <= 8) return 1.0;
+  // Semanas 9-12: aumentar gradualmente de 1.0 para 1.2
+  return 1.0 + ((weekNumber - 8) * 0.05);
+}
+
+/**
+ * Find a harder exercise variation for progressive overload
+ */
+function getHarderExerciseVariation(
+  currentExercise: Exercise,
+  availableExercises: Exercise[]
+): Exercise | null {
+  // Buscar exercício com mesmo muscle group mas difficulty maior
+  const sameGroup = availableExercises.filter(ex =>
+    ex.muscleGroups.some(mg => currentExercise.muscleGroups.includes(mg)) &&
+    ex.slug !== currentExercise.slug
+  );
+
+  const difficultyOrder = ['beginner', 'intermediate', 'advanced'];
+  const currentDiffIndex = difficultyOrder.indexOf(currentExercise.difficulty);
+
+  const harder = sameGroup.find(ex =>
+    difficultyOrder.indexOf(ex.difficulty) > currentDiffIndex
+  );
+
+  return harder || null;
+}
+
+/**
+ * Apply progressive overload to a workout based on week number
+ */
+function applyProgressiveOverload(
+  baseWorkout: Workout,
+  weekNumber: number,
+  experienceLevel: string,
+  availableExercises: Exercise[]
+): Workout {
+  // Semanas 1-2: sem mudanças (baseline)
+  if (weekNumber <= 2) return baseWorkout;
+
+  // Semanas 3-4: +1 set
+  if (weekNumber <= 4) {
+    return {
+      ...baseWorkout,
+      exercises: baseWorkout.exercises.map(ex => ({
+        ...ex,
+        sets: ex.sets + 1
+      }))
+    };
+  }
+
+  // Semanas 5-6: +2 reps
+  if (weekNumber <= 6) {
+    return {
+      ...baseWorkout,
+      exercises: baseWorkout.exercises.map(ex => ({
+        ...ex,
+        sets: ex.sets + 1,
+        repsMin: ex.repsMin + 2,
+        repsMax: ex.repsMax + 2
+      }))
+    };
+  }
+
+  // Semanas 7-8: trocar exercícios por variações mais difíceis
+  if (weekNumber <= 8) {
+    const exercises = baseWorkout.exercises.map(ex => {
+      const currentExercise = availableExercises.find(e => e.slug === ex.exerciseSlug);
+      if (!currentExercise) return ex;
+
+      const harder = getHarderExerciseVariation(currentExercise, availableExercises);
+      return harder ? { ...ex, exerciseSlug: harder.slug } : ex;
+    });
+
+    return { ...baseWorkout, exercises };
+  }
+
+  // Semanas 9-10: reduzir descanso
+  if (weekNumber <= 10) {
+    return {
+      ...baseWorkout,
+      exercises: baseWorkout.exercises.map(ex => ({
+        ...ex,
+        sets: ex.sets + 1,
+        repsMin: ex.repsMin + 2,
+        repsMax: ex.repsMax + 2,
+        restSeconds: Math.max(30, ex.restSeconds - 15)
+      }))
+    };
+  }
+
+  // Semanas 11-12: manter progressão
+  return {
+    ...baseWorkout,
+    exercises: baseWorkout.exercises.map(ex => ({
+      ...ex,
+      sets: ex.sets + 1,
+      repsMin: ex.repsMin + 2,
+      repsMax: ex.repsMax + 2,
+      restSeconds: Math.max(30, ex.restSeconds - 15)
+    }))
+  };
+}
+
+/**
+ * Generate multi-week workout plan with progressive overload
+ */
+export function generateMultiWeekPlan(
+  profile: UserProfile,
+  totalWeeks: number
+): WorkoutPlan[] {
+  const plans: WorkoutPlan[] = [];
+
+  for (let week = 1; week <= totalWeeks; week++) {
+    const weekPlan = generateInitialWorkoutPlan(profile, week);
+    plans.push(weekPlan);
+  }
+
+  return plans;
 }

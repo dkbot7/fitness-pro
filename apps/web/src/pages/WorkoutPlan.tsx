@@ -1,10 +1,11 @@
 import { useWorkoutPlan } from '@/lib/hooks/use-workout-plan';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { MUSCLE_GROUPS } from '@fitness-pro/shared';
 import { ErrorState } from '@/components/ui/error-state';
 import { LoadingState, PageLoading } from '@/components/ui/loading-state';
+import { WeekNavigator } from '@/components/training/WeekNavigator';
 
 const DAYS_OF_WEEK = [
   'Segunda-feira',
@@ -42,7 +43,15 @@ function getStatusBadge(status: string) {
 }
 
 export default function WorkoutPlan() {
-  const { data, isLoading, error, refetch } = useWorkoutPlan();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const weekParam = searchParams.get('week');
+  const selectedWeek = weekParam ? parseInt(weekParam, 10) : undefined;
+
+  const { data, isLoading, error, refetch } = useWorkoutPlan(selectedWeek);
+
+  const handleWeekChange = (week: number) => {
+    setSearchParams({ week: week.toString() });
+  };
 
   if (isLoading) {
     return (
@@ -90,12 +99,25 @@ export default function WorkoutPlan() {
 
   const { plan, workouts, stats } = data;
 
+  // Use plan data for week navigation
+  const currentWeek = plan.currentWeek || plan.weekNumber;
+  const totalWeeks = plan.totalWeeks || 8;
+  const displayedWeek = selectedWeek || currentWeek;
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold">Meu Plano de Treino</h1>
-        <p className="text-gray-600">Semana {plan.weekNumber}</p>
+        <p className="text-gray-600">Acompanhe seu progresso semanal</p>
       </div>
+
+      {/* Week Navigator */}
+      <WeekNavigator
+        currentWeek={currentWeek}
+        selectedWeek={displayedWeek}
+        totalWeeks={totalWeeks}
+        onWeekChange={handleWeekChange}
+      />
 
       {/* Stats Card */}
       <Card className="mb-8">
