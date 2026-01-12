@@ -31,16 +31,14 @@ export default function AboutUs() {
             <Card className="overflow-hidden border-gray-200">
               <CardContent className="p-0">
                 <div className="grid gap-8 md:grid-cols-2">
-                  {/* Foto do Personal - Placeholder */}
+                  {/* Foto do Personal */}
                   <div className="flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-8 md:p-12">
-                    <div className="flex h-64 w-64 items-center justify-center rounded-2xl bg-white shadow-lg">
-                      <div className="text-center">
-                        <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-fitpro-red/10">
-                          <Award className="h-12 w-12 text-fitpro-red" />
-                        </div>
-                        <p className="text-sm text-gray-500">Foto do Personal Trainer</p>
-                        <p className="text-xs text-gray-400">(A ser adicionada)</p>
-                      </div>
+                    <div className="overflow-hidden rounded-2xl shadow-lg">
+                      <img
+                        src="/brand/cleiton-souza.png"
+                        alt="Cleiton Souza - Personal Trainer"
+                        className="h-auto w-full max-w-md object-cover"
+                      />
                     </div>
                   </div>
 
