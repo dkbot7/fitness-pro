@@ -266,7 +266,7 @@ export default function Home() {
               {/* Trial Plan */}
               <Card className="border-gray-200">
                 <CardContent className="p-6">
-                  <h3 className="mb-2 text-xl font-bold text-gray-900">Teste Grátis</h3>
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">Avaliação Gratuita</h3>
                   <div className="mb-4">
                     <span className="text-4xl font-bold text-gray-900">R$ 0</span>
                     <span className="text-gray-600">/7 dias</span>
@@ -274,19 +274,19 @@ export default function Home() {
                   <ul className="mb-6 space-y-3">
                     <li className="flex items-start gap-2">
                       <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Análise das Respostas do Formulário</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
                       <span className="text-gray-600">Avaliação por fotos</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
-                      <span className="text-gray-600">Consulta com personal</span>
+                      <span className="text-gray-600">Consulta via whatsapp</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
-                      <span className="text-gray-600">Análise do plano de treinamento atual</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
-                      <span className="text-gray-600">Acesso ao app</span>
+                      <span className="text-gray-600">Primeiras Orientações Personalizadas</span>
                     </li>
                   </ul>
                   <Button asChild variant="outline" className="w-full">
