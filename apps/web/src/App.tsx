@@ -6,11 +6,15 @@ import { Toaster } from '@/components/ui/toaster';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Onboarding from './pages/Onboarding';
+import ThankYou from './pages/ThankYou';
 import WorkoutPlan from './pages/WorkoutPlan';
 import WorkoutDetail from './pages/WorkoutDetail';
 import WorkoutFeedback from './pages/WorkoutFeedback';
 import Profile from './pages/Profile';
 import Achievements from './pages/Achievements';
+import Contact from './pages/Contact';
+import Privacy from './pages/Privacy';
+import AboutUs from './pages/AboutUs';
 import NotFound from './pages/NotFound';
 
 // Layout
@@ -22,6 +26,9 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/contato" element={<Contact />} />
+        <Route path="/privacidade" element={<Privacy />} />
+        <Route path="/quem-somos" element={<AboutUs />} />
         <Route
           path="/login/*"
           element={
@@ -30,7 +37,7 @@ function App() {
                 routing="path"
                 path="/login"
                 signUpUrl="/register"
-                afterSignInUrl="/dashboard"
+                afterSignInUrl="/plano"
               />
             </div>
           }
@@ -59,6 +66,7 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/obrigado" element={<ThankYou />} />
           <Route path="/plano" element={<WorkoutPlan />} />
           <Route path="/treino/:id" element={<WorkoutDetail />} />
           <Route path="/treino/:id/feedback" element={<WorkoutFeedback />} />

@@ -105,7 +105,7 @@ export default function Home() {
           <div className="mx-auto max-w-4xl">
             <div className="mb-12 text-center">
               <h2 className="mb-3 text-3xl font-bold text-gray-900 sm:text-4xl">
-                Como funciona a consultoria
+                Como funciona a consultoria <span className="text-gray-900">FIT</span><span className="text-fitpro-red">PRO</span>
               </h2>
               <p className="text-lg text-gray-600">
                 Processo profissional em 3 etapas simples
@@ -165,7 +165,7 @@ export default function Home() {
           <div className="mx-auto max-w-6xl">
             <div className="mb-12 text-center">
               <h2 className="mb-3 text-3xl font-bold text-gray-900 sm:text-4xl">
-                Por que escolher nossa consultoria
+                Por que entrar na consultoria <span className="text-gray-900">FIT</span><span className="text-fitpro-red">PRO</span>
               </h2>
               <p className="text-lg text-gray-600">
                 Acompanhamento profissional de verdade, não é treino pronto
@@ -178,7 +178,7 @@ export default function Home() {
                   <Users className="h-7 w-7 text-fitpro-red" />
                 </div>
                 <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                  Personal Dedicado
+                  Personal Trainer On-Line
                 </h3>
                 <p className="text-gray-600">
                   Tenha um profissional experiente focado 100% em você. Planos criados por humanos, não por algoritmos. Acompanhamento real que entende suas necessidades.
@@ -205,7 +205,7 @@ export default function Home() {
                   Suporte via WhatsApp
                 </h3>
                 <p className="text-gray-600">
-                  Acesso direto ao seu personal a qualquer hora. Envie vídeos dos seus treinos, tire dúvidas na hora e receba correções personalizadas. É como ter um personal no seu bolso.
+                  Envie vídeos dos seus treinos, tire dúvidas na hora e receba correções personalizadas. É como ter um personal no seu bolso.
                 </p>
               </div>
 
@@ -269,7 +269,6 @@ export default function Home() {
                   <h3 className="mb-2 text-xl font-bold text-gray-900">Avaliação Gratuita</h3>
                   <div className="mb-4">
                     <span className="text-4xl font-bold text-gray-900">R$ 0</span>
-                    <span className="text-gray-600">/7 dias</span>
                   </div>
                   <ul className="mb-6 space-y-3">
                     <li className="flex items-start gap-2">
@@ -375,9 +374,14 @@ export default function Home() {
       <section className="border-y border-gray-100 bg-white py-12">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-6xl">
-            <p className="mb-8 text-center text-sm font-semibold uppercase tracking-wide text-gray-600">
-              Alunos transformando seus corpos com consultoria profissional
-            </p>
+            <div className="mb-8 text-center">
+              <h2 className="mb-3 text-3xl font-bold text-gray-900 sm:text-4xl">
+                Depoimentos de nossos alunos
+              </h2>
+              <p className="text-sm font-semibold uppercase tracking-wide text-gray-600">
+                Alunos transformando seus corpos com consultoria profissional
+              </p>
+            </div>
             <div className="grid gap-6 sm:grid-cols-3">
               <Card className="border-gray-100 shadow-sm transition-shadow hover:shadow-md">
                 <CardContent className="p-6">
@@ -444,8 +448,7 @@ export default function Home() {
                     Como é o acompanhamento do personal?
                   </h3>
                   <p className="ml-8 text-gray-600">
-                    Você tem contato direto via WhatsApp com seu personal trainer. Tire dúvidas, envie vídeos,
-                    receba feedback. É consultoria real, não app automático.
+                    Você tem contato direto via WhatsApp com seu personal trainer. Tire dúvidas, envie vídeos, receba feedback. Suas mensagens serão respondidas em até 24 horas úteis.
                   </p>
                 </CardContent>
               </Card>
@@ -457,8 +460,7 @@ export default function Home() {
                     Funciona no Brasil e no exterior?
                   </h3>
                   <p className="ml-8 text-gray-600">
-                    Sim! Nossa consultoria é 100% online. Funciona em qualquer lugar do mundo com internet.
-                    Brasil, Europa, Estados Unidos, Ásia - onde você estiver.
+                    Absolutamente! Sua transformação não tem fronteiras. Atendemos alunos em Londres, Miami, Dubai e diversos outros países. Esteja você em São Paulo ou do outro lado do mundo - seu personal trainer está sempre com você.
                   </p>
                 </CardContent>
               </Card>
@@ -467,11 +469,10 @@ export default function Home() {
                 <CardContent className="p-6">
                   <h3 className="mb-2 flex items-start gap-3 text-lg font-bold text-gray-900">
                     <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
-                    Preciso de equipamentos?
+                    Preciso comprar equipamentos?
                   </h3>
                   <p className="ml-8 text-gray-600">
-                    Não! Adaptamos o treino aos equipamentos que você tem. Pode ser só peso corporal,
-                    halteres, elásticos, ou academia completa.
+                    Zero desculpas! Seu treino é adaptado exatamente ao que você tem disponível. Academia completa? Perfeito. Apenas halteres em casa? Ótimo. Nada além do seu próprio corpo? Funciona também. Você começa DE ONDE ESTÁ, não de onde acha que deveria estar.
                   </p>
                 </CardContent>
               </Card>
@@ -483,8 +484,19 @@ export default function Home() {
                     Posso cancelar quando quiser?
                   </h3>
                   <p className="ml-8 text-gray-600">
-                    Sim! Cancele a qualquer momento, sem multa ou burocracia. Seu acesso continua
-                    até o fim do período pago.
+                    Claro! Sem amarras, sem letrinhas miúdas. Cancele quando quiser, sem multa ou burocracia. Mantemos você porque entrega resultados, não porque te prendemos em contrato. Seu acesso continua até o fim do período já pago - simples assim.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gray-200">
+                <CardContent className="p-6">
+                  <h3 className="mb-2 flex items-start gap-3 text-lg font-bold text-gray-900">
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
+                    Preciso ter cartão de crédito?
+                  </h3>
+                  <p className="ml-8 text-gray-600">
+                    Não, se preferir você pode pagar via Pix ou Transferência Bancária. Os pagamentos são realizados diretamente para o seu personal trainer.
                   </p>
                 </CardContent>
               </Card>
@@ -498,20 +510,20 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center text-white">
             <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
-              Pronto para transformar seu corpo?
+              Sua transformação começa hoje
             </h2>
             <p className="mb-8 text-xl opacity-90">
-              Junte-se a 500+ alunos com acompanhamento profissional
+              Pare de adiar seus objetivos. Comece agora com acompanhamento profissional real
             </p>
             <Button
               asChild
               size="lg"
               className="bg-white px-8 py-6 text-lg font-semibold text-fitpro-red shadow-lg transition-all hover:scale-105 hover:bg-gray-50"
             >
-              <Link to="/register">Faça uma Avaliação Agora Mesmo</Link>
+              <Link to="/register">Faça Sua Avaliação Gratuita Agora</Link>
             </Button>
             <p className="mt-4 text-sm opacity-75">
-              Sem cartão de crédito • Cancele quando quiser • Brasil e exterior
+              Avaliação 100% gratuita • Sem cartão de crédito • Cancele quando quiser
             </p>
           </div>
         </div>
@@ -543,7 +555,7 @@ export default function Home() {
                 <h3 className="mb-4 font-semibold text-gray-900">Produto</h3>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li><a href="#como-funciona" className="hover:text-gray-900">Como funciona</a></li>
-                  <li><Link to="/register" className="hover:text-gray-900">Teste grátis</Link></li>
+                  <li><Link to="/quem-somos" className="hover:text-gray-900">Quem Somos</Link></li>
                   <li><Link to="/login" className="hover:text-gray-900">Entrar</Link></li>
                 </ul>
               </div>
@@ -560,7 +572,7 @@ export default function Home() {
               <div>
                 <h3 className="mb-4 font-semibold text-gray-900">Legal</h3>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li>CNPJ: XX.XXX.XXX/0001-XX</li>
+                  <li>CREF: A confirmar</li>
                   <li className="text-xs">© 2026 FitPro</li>
                   <li className="text-xs">Consultoria profissional</li>
                 </ul>
