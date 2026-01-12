@@ -2,54 +2,46 @@ import { Link } from 'react-router-dom';
 import { useAuth, UserButton } from '@clerk/clerk-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, Heart, Globe, TrendingUp, DollarSign, Dumbbell, MessageSquare, Star, Flag, Home as HomeIcon } from 'lucide-react';
+import { Check, Dumbbell, Home as HomeIcon, Star, MessageCircle, Clock, Users, Zap, Target, Trophy, Globe } from 'lucide-react';
 
 export default function Home() {
   const { isSignedIn } = useAuth();
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Header / Navigation */}
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
+      {/* Minimal Header */}
+      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur-sm">
+        <div className="container mx-auto flex items-center justify-between px-4 py-3">
+          <Link to="/" className="flex items-center gap-2">
             <img
-              src="/brand/logos/fitpro-logo-original.png"
+              src="/brand/logos/fitpro-logo-new.png"
               alt="FitPro"
-              className="h-10 w-10 sm:h-12 sm:w-12"
+              className="h-8 w-8"
             />
-            <span className="text-2xl font-bold text-fitpro-charcoal">FitPro</span>
+            <span className="text-xl font-bold">
+              <span className="text-gray-900">FIT</span>
+              <span className="text-fitpro-red">PRO</span>
+            </span>
           </Link>
 
-          {/* Navigation */}
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-3">
             {isSignedIn ? (
               <>
-                <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-                  <Link to="/onboarding">Configurar</Link>
-                </Button>
-                <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
+                <Button asChild variant="ghost" size="sm">
                   <Link to="/plano">
-                    <HomeIcon className="mr-2 h-4 w-4" />
+                    <HomeIcon className="mr-1 h-4 w-4" />
                     Meu Treino
                   </Link>
                 </Button>
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: 'w-10 h-10',
-                    },
-                  }}
-                />
+                <UserButton />
               </>
             ) : (
               <>
-                <Button asChild variant="ghost" className="hidden sm:inline-flex">
+                <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
                   <Link to="/login">Entrar</Link>
                 </Button>
-                <Button asChild className="bg-fitpro-red hover:bg-fitpro-red-600">
-                  <Link to="/register">Experimentar 7 Dias Grátis</Link>
+                <Button asChild size="sm" className="bg-fitpro-red hover:bg-fitpro-red/90">
+                  <Link to="/register">Avaliação Grátis</Link>
                 </Button>
               </>
             )}
@@ -57,293 +49,108 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section - Emocional e Direto */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-fitpro-red-50 via-white to-fitpro-red-50">
-        <div className="container mx-auto px-4 py-16 sm:py-24">
-          <div className="mx-auto max-w-4xl text-center">
-            {/* Logo Hero - Maior */}
-            <div className="mb-8 flex justify-center">
-              <img
-                src="/brand/logos/fitpro-logo-original.png"
-                alt="FitPro"
-                className="h-24 w-24 sm:h-32 sm:w-32 md:h-40 md:w-40"
-              />
+      {/* Hero Section - Minimal & Focused */}
+      <section className="relative bg-gradient-to-b from-gray-50 to-white py-16 sm:py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center">
+            {/* Trust Badge */}
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-fitpro-red/10 px-4 py-2 text-sm font-medium text-fitpro-red">
+              <Trophy className="h-4 w-4" />
+              Torne-se a sua melhor versão
             </div>
 
-            {/* Main Headline */}
-            <h1 className="mb-6 text-4xl font-extrabold leading-tight tracking-tight text-fitpro-charcoal sm:text-5xl md:text-6xl lg:text-7xl">
-              Ter um belo corpo de brasileira,{' '}
-              <span className="block text-fitpro-red">
-                mesmo morando fora do Brasil
+            {/* Hero Headline - Clear Value Prop */}
+            <h1 className="mb-4 text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+              Consultoria Online com Personal Trainer,{' '}
+              <span className="text-fitpro-red">
+                em qualquer lugar do mundo
               </span>
             </h1>
 
-            {/* Subheadline */}
-            <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-700 sm:text-xl md:text-2xl">
-              Treinos em português que funcionam com qualquer equipamento.
-              <span className="block mt-2 font-semibold text-fitpro-charcoal">
-                Você não precisa de uma academia brasileira para ter resultados brasileiros.
-              </span>
+            {/* Subheadline - Specific Benefit */}
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 sm:text-xl">
+              Treinos 100% personalizados que vão te levar do ANTES para o DEPOIS em menos tempo e com mais qualidade
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            {/* Single Clear CTA */}
+            <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Button
                 asChild
                 size="lg"
-                className="w-full bg-fitpro-red px-10 py-7 text-xl font-bold shadow-2xl transition-all hover:scale-105 hover:bg-fitpro-red-600 hover:shadow-2xl sm:w-auto"
+                className="w-full bg-fitpro-red px-8 py-6 text-lg font-semibold shadow-lg transition-all hover:scale-105 hover:bg-fitpro-red/90 sm:w-auto"
               >
-                <Link to="/register">Começar Teste Grátis de 7 Dias</Link>
+                <Link to="/register">Faça uma Avaliação Agora Mesmo</Link>
               </Button>
             </div>
-            <p className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
-              <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> 7 dias grátis</span>
-              <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> R$ 97,80/mês após teste</span>
-              <span className="flex items-center gap-1"><Check className="h-4 w-4 text-green-600" /> Cancele quando quiser</span>
-            </p>
 
-            {/* Social Proof Badge */}
-            <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 shadow-md">
-              <div className="flex -space-x-2">
-                <div className="h-8 w-8 rounded-full bg-fitpro-red-100 border-2 border-white"></div>
-                <div className="h-8 w-8 rounded-full bg-fitpro-red-200 border-2 border-white"></div>
-                <div className="h-8 w-8 rounded-full bg-fitpro-red-300 border-2 border-white"></div>
-              </div>
-              <p className="text-sm font-medium text-gray-700">
-                <span className="font-bold text-fitpro-red">500+</span> brasileiras no exterior já treinam com a gente
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof - Depoimentos de Brasileiras */}
-      <section className="border-y border-gray-200 bg-gray-50 py-12">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-6xl">
-            <p className="mb-8 text-center text-sm font-semibold uppercase tracking-wide text-gray-600">
-              Brasileiras que estão transformando seus corpos no exterior
-            </p>
-            <div className="grid gap-6 sm:grid-cols-3">
-              <Card className="border-0 bg-white shadow-md">
-                <CardContent className="p-6">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-fitpro-red to-fitpro-red-600"></div>
-                    <div>
-                      <p className="font-bold text-fitpro-charcoal">Sofia M.</p>
-                      <p className="flex items-center gap-1 text-sm text-gray-600">
-                        <Flag className="h-3 w-3" /> Londres, Reino Unido
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-gray-700">
-                    "Morando em Londres, achei que nunca mais ia conseguir treinar direito. O FitPro me salvou! Treino em casa, em português, e já perdi 8kg."
-                  </p>
-                  <div className="mt-4 flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-0 bg-white shadow-md">
-                <CardContent className="p-6">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-fitpro-red to-fitpro-red-600"></div>
-                    <div>
-                      <p className="font-bold text-fitpro-charcoal">Camila R.</p>
-                      <p className="flex items-center gap-1 text-sm text-gray-600">
-                        <Flag className="h-3 w-3" /> Toronto, Canadá
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-gray-700">
-                    "Academia aqui é caríssima! Com o FitPro treino em casa com os halteres que comprei. Resultado em 2 meses: -6kg e muito mais forte!"
-                  </p>
-                  <div className="mt-4 flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-0 bg-white shadow-md">
-                <CardContent className="p-6">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-fitpro-red to-fitpro-red-600"></div>
-                    <div>
-                      <p className="font-bold text-fitpro-charcoal">Juliana S.</p>
-                      <p className="flex items-center gap-1 text-sm text-gray-600">
-                        <Flag className="h-3 w-3" /> Miami, EUA
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-gray-700">
-                    "Finalmente encontrei um app em português! Não preciso ficar traduzindo exercício. Estou na semana 8 e já vejo diferença no espelho."
-                  </p>
-                  <div className="mt-4 flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* O Problema - Empatia */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-4xl text-center">
-            <h2 className="mb-6 text-3xl font-bold text-fitpro-charcoal sm:text-4xl">
-              Sabemos como é difícil treinar no exterior
-            </h2>
-            <p className="mb-12 text-xl text-gray-700">
-              Academia cara, equipamento limitado, apps só em inglês...
-              <br />
-              <span className="font-semibold text-fitpro-charcoal">
-                Você merece uma solução que funciona para você.
+            {/* Trust Indicators */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600">
+              <span className="flex items-center gap-1">
+                <Check className="h-4 w-4 text-green-600" /> Treinos com Consistência
               </span>
-            </p>
-
-            <div className="grid gap-6 sm:grid-cols-3">
-              <div className="rounded-lg bg-gray-50 p-6">
-                <div className="mb-4 flex justify-center">
-                  <DollarSign className="h-12 w-12 text-fitpro-red" />
-                </div>
-                <h3 className="mb-2 font-semibold text-fitpro-charcoal">Academia cara</h3>
-                <p className="text-sm text-gray-600">
-                  £50-100/mês que você não quer gastar
-                </p>
-              </div>
-
-              <div className="rounded-lg bg-gray-50 p-6">
-                <div className="mb-4 flex justify-center">
-                  <Dumbbell className="h-12 w-12 text-fitpro-red" />
-                </div>
-                <h3 className="mb-2 font-semibold text-fitpro-charcoal">Equipamento limitado</h3>
-                <p className="text-sm text-gray-600">
-                  Treinar em casa com o que você tem
-                </p>
-              </div>
-
-              <div className="rounded-lg bg-gray-50 p-6">
-                <div className="mb-4 flex justify-center">
-                  <MessageSquare className="h-12 w-12 text-fitpro-red" />
-                </div>
-                <h3 className="mb-2 font-semibold text-fitpro-charcoal">Apps só em inglês</h3>
-                <p className="text-sm text-gray-600">
-                  Cansada de traduzir tudo na cabeça
-                </p>
-              </div>
+              <span className="flex items-center gap-1">
+                <Check className="h-4 w-4 text-green-600" /> Progressão de Carga
+              </span>
+              <span className="flex items-center gap-1">
+                <Check className="h-4 w-4 text-green-600" /> 100% On-Line
+              </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* A Solução */}
-      <section className="bg-gradient-to-br from-fitpro-red to-fitpro-red-600 py-16 text-white">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="mb-4 text-center text-3xl font-bold sm:text-4xl">
-              A solução perfeita para brasileiras no exterior
-            </h2>
-            <p className="mb-12 text-center text-xl opacity-90">
-              Tudo o que você precisa para manter seu corpo em forma, do seu jeito
-            </p>
-
-            <div className="grid gap-8 md:grid-cols-3">
-              <Card className="border-0 bg-white/10 backdrop-blur-sm transition-all hover:bg-white/20">
-                <CardContent className="p-8 text-center">
-                  <HomeIcon className="mx-auto mb-4 h-12 w-12" />
-                  <h3 className="mb-3 text-xl font-bold">Casa ou Academia</h3>
-                  <p className="opacity-90">
-                    Treinos adaptados para qualquer lugar. Halteres? Elástico? Só peso corporal? Funciona com tudo.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-0 bg-white/10 backdrop-blur-sm transition-all hover:bg-white/20">
-                <CardContent className="p-8 text-center">
-                  <Globe className="mx-auto mb-4 h-12 w-12" />
-                  <h3 className="mb-3 text-xl font-bold">100% em Português</h3>
-                  <p className="opacity-90">
-                    Nomes de exercícios, instruções, tudo em português brasileiro. Como você merece.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-0 bg-white/10 backdrop-blur-sm transition-all hover:bg-white/20">
-                <CardContent className="p-8 text-center">
-                  <TrendingUp className="mx-auto mb-4 h-12 w-12" />
-                  <h3 className="mb-3 text-xl font-bold">Evolui com Você</h3>
-                  <p className="opacity-90">
-                    Seu plano se ajusta toda semana baseado no seu feedback. Você sempre progride.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Como Funciona */}
-      <section className="py-16">
+      {/* How It Works - Simple 3 Steps */}
+      <section id="como-funciona" className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl">
-            <h2 className="mb-4 text-center text-3xl font-bold text-fitpro-charcoal sm:text-4xl">
-              Como funciona
-            </h2>
-            <p className="mb-12 text-center text-xl text-gray-700">
-              Simples e rápido. Você começa em menos de 5 minutos.
-            </p>
+            <div className="mb-12 text-center">
+              <h2 className="mb-3 text-3xl font-bold text-gray-900 sm:text-4xl">
+                Como funciona a consultoria
+              </h2>
+              <p className="text-lg text-gray-600">
+                Processo profissional em 3 etapas simples
+              </p>
+            </div>
 
             <div className="space-y-6">
-              <div className="flex items-start gap-6 rounded-2xl bg-white p-8 shadow-lg transition-all hover:shadow-xl">
-                <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red text-2xl font-bold text-white">
+              <div className="flex items-start gap-6 rounded-2xl bg-white p-6 shadow-sm">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red text-xl font-bold text-white">
                   1
                 </div>
                 <div className="flex-1">
-                  <h3 className="mb-2 text-2xl font-bold text-fitpro-charcoal">
-                    Responda 4 perguntas rápidas
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">
+                    Avaliação Inicial Completa
                   </h3>
-                  <p className="text-lg text-gray-700">
-                    Seu objetivo, frequência de treino, onde você treina e equipamentos disponíveis.
-                    Leva 2 minutos.
+                  <p className="text-gray-600">
+                    Preencha o questionário <Link to="/register" className="text-fitpro-red font-semibold hover:underline">(clique aqui)</Link> e envie ele diretamente para O WHATSAPP do seu novo personal trainer.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-6 rounded-2xl bg-white p-8 shadow-lg transition-all hover:shadow-xl">
-                <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red text-2xl font-bold text-white">
+              <div className="flex items-start gap-6 rounded-2xl bg-white p-6 shadow-sm">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red text-xl font-bold text-white">
                   2
                 </div>
                 <div className="flex-1">
-                  <h3 className="mb-2 text-2xl font-bold text-fitpro-charcoal">
-                    Receba seu plano personalizado
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">
+                    Consulta com Personal Trainer
                   </h3>
-                  <p className="text-lg text-gray-700">
-                    Geramos automaticamente sua primeira semana com exercícios específicos
-                    para você. Tudo em português, com cronômetro integrado.
+                  <p className="text-gray-600">
+                    Depois que enviar as informações do questionário por whatsapp, o seu personal vai conversar com você para te entender melhor e montar o melhor plano de treinos para o seu objetivo.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-6 rounded-2xl bg-white p-8 shadow-lg transition-all hover:shadow-xl">
-                <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red text-2xl font-bold text-white">
+              <div className="flex items-start gap-6 rounded-2xl bg-white p-6 shadow-sm">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-fitpro-red text-xl font-bold text-white">
                   3
                 </div>
                 <div className="flex-1">
-                  <h3 className="mb-2 text-2xl font-bold text-fitpro-charcoal">
-                    Veja seu corpo mudar
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">
+                    Treinamento e Acompanhamento
                   </h3>
-                  <p className="text-lg text-gray-700">
-                    Dê feedback após cada treino. Toda segunda-feira, ajustamos seu plano
-                    automaticamente. Você evolui toda semana.
+                  <p className="text-gray-600">
+                    Você recebe um treino 100% personalizado, feito sob medida para sua realidade. O app oferece cronômetro integrado que te guia durante os exercícios e controla o tempo de descanso. Todo mês, seu personal ajusta o treino de acordo com seu progresso, baseado nas atualizações do app e no feedback direto via WhatsApp.
                   </p>
                 </div>
               </div>
@@ -352,234 +159,412 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Grid de Resultados - Prova Social */}
-      <section className="bg-gray-50 py-16">
+      {/* Benefits - Focused on User Value */}
+      <section className="bg-white py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-6xl">
-            <h2 className="mb-4 text-center text-3xl font-bold text-fitpro-charcoal sm:text-4xl">
-              Brasileiras que já estão vendo resultados
-            </h2>
-            <p className="mb-12 text-center text-xl text-gray-700">
-              Você também pode conseguir
-            </p>
-
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                { name: 'Ana Paula', location: 'Dublin', result: '-10kg em 3 meses' },
-                { name: 'Mariana', location: 'Berlin', result: 'Ganhou massa magra' },
-                { name: 'Patricia', location: 'Paris', result: '-15kg em 5 meses' },
-                { name: 'Fernanda', location: 'Sydney', result: 'Corpo definido' },
-                { name: 'Beatriz', location: 'Amsterdam', result: '-7kg em 2 meses' },
-                { name: 'Carolina', location: 'Barcelona', result: 'Mais forte e confiante' },
-              ].map((person, i) => (
-                <Card key={i} className="border-0 shadow-md">
-                  <CardContent className="p-6">
-                    <div className="mb-4 h-48 rounded-lg bg-gradient-to-br from-fitpro-red-100 to-fitpro-red-200"></div>
-                    <p className="mb-1 font-bold text-fitpro-charcoal">{person.name}</p>
-                    <p className="mb-2 text-sm text-gray-600">{person.location}</p>
-                    <p className="text-sm font-semibold text-fitpro-red">{person.result}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Final Poderoso */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-4xl">
-            <div className="rounded-3xl bg-gradient-to-br from-fitpro-red via-fitpro-red-600 to-fitpro-red-700 p-12 text-center shadow-2xl sm:p-16">
-              <Heart className="mx-auto mb-6 h-16 w-16 text-white" />
-              <h2 className="mb-6 text-4xl font-bold text-white sm:text-5xl">
-                Pronta para começar?
+            <div className="mb-12 text-center">
+              <h2 className="mb-3 text-3xl font-bold text-gray-900 sm:text-4xl">
+                Por que escolher nossa consultoria
               </h2>
-              <p className="mb-8 text-xl text-white/90 sm:text-2xl">
-                Seu plano personalizado está esperando você
-              </p>
-              <p className="mb-10 text-lg text-white/80">
-                Junte-se a 500+ brasileiras que já estão transformando seus corpos no exterior
-              </p>
-              <Button
-                asChild
-                size="lg"
-                className="bg-white px-12 py-8 text-2xl font-bold text-fitpro-red shadow-xl transition-all hover:scale-105 hover:bg-gray-50"
-              >
-                <Link to="/register">Sim, Quero Meu Corpo de Brasileira</Link>
-              </Button>
-              <p className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/75">
-                <span className="flex items-center gap-1"><Check className="h-4 w-4" /> 7 dias grátis</span>
-                <span className="flex items-center gap-1"><Check className="h-4 w-4" /> R$ 97,80/mês</span>
-                <span className="flex items-center gap-1"><Check className="h-4 w-4" /> Cancele quando quiser</span>
-              </p>
-              <p className="mt-4 text-xs text-white/60">
-                Leva menos de 2 minutos para começar
+              <p className="text-lg text-gray-600">
+                Acompanhamento profissional de verdade, não é treino pronto
               </p>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* FAQ */}
-      <section className="border-t border-gray-200 bg-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="mb-12 text-center text-3xl font-bold text-fitpro-charcoal">
-              Perguntas frequentes
-            </h2>
-
-            <div className="space-y-6">
-              <Card className="border border-gray-200">
-                <CardContent className="p-6">
-                  <h3 className="mb-3 flex items-start gap-3 text-lg font-bold text-fitpro-charcoal">
-                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
-                    Funciona sem equipamento?
-                  </h3>
-                  <p className="ml-8 text-gray-700">
-                    Sim! Nossos treinos se adaptam aos equipamentos que você tem. Pode ser só peso corporal,
-                    halteres, elásticos, ou tudo junto. Você escolhe no início.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-gray-200">
-                <CardContent className="p-6">
-                  <h3 className="mb-3 flex items-start gap-3 text-lg font-bold text-fitpro-charcoal">
-                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
-                    Quanto tempo leva para ver resultados?
-                  </h3>
-                  <p className="ml-8 text-gray-700">
-                    A maioria das nossas usuárias vê mudanças visíveis em 4-6 semanas. Com consistência,
-                    resultados significativos aparecem em 2-3 meses.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-gray-200">
-                <CardContent className="p-6">
-                  <h3 className="mb-3 flex items-start gap-3 text-lg font-bold text-fitpro-charcoal">
-                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
-                    Quanto custa?
-                  </h3>
-                  <p className="ml-8 text-gray-700">
-                    O FitPro custa R$ 97,80 por mês. Você tem 7 dias grátis para testar todos os recursos.
-                    Cancele a qualquer momento, sem multa ou burocracia.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-gray-200">
-                <CardContent className="p-6">
-                  <h3 className="mb-3 flex items-start gap-3 text-lg font-bold text-fitpro-charcoal">
-                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
-                    Preciso ter experiência com treino?
-                  </h3>
-                  <p className="ml-8 text-gray-700">
-                    Não! Temos treinos para iniciantes, intermediários e avançados. O plano se adapta ao
-                    seu nível. Você escolhe sua experiência no onboarding.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-gray-200">
-                <CardContent className="p-6">
-                  <h3 className="mb-3 flex items-start gap-3 text-lg font-bold text-fitpro-charcoal">
-                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
-                    Como o treino evolui?
-                  </h3>
-                  <p className="ml-8 text-gray-700">
-                    Após cada treino, você dá feedback (fácil/ok/difícil). Toda segunda-feira,
-                    ajustamos automaticamente seu plano baseado no seu progresso. Você sempre é desafiada na medida certa.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-gray-200">
-                <CardContent className="p-6">
-                  <h3 className="mb-3 flex items-start gap-3 text-lg font-bold text-fitpro-charcoal">
-                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
-                    Funciona no celular?
-                  </h3>
-                  <p className="ml-8 text-gray-700">
-                    Sim! O FitPro funciona perfeitamente no navegador do celular. É responsivo e foi
-                    feito pensando mobile-first. Adicione à tela inicial para usar como app.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer Melhorado */}
-      <footer className="border-t-2 border-fitpro-red bg-fitpro-charcoal py-12 text-white">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-6xl">
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {/* Brand */}
-              <div>
-                <div className="mb-4 flex items-center gap-3">
-                  <img
-                    src="/brand/logos/fitpro-logo-original.png"
-                    alt="FitPro"
-                    className="h-10 w-10"
-                  />
-                  <span className="text-xl font-bold">FitPro</span>
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-fitpro-red/10">
+                  <Users className="h-7 w-7 text-fitpro-red" />
                 </div>
-                <p className="text-sm text-gray-400">
-                  Seu personal trainer digital em português. Feito por brasileiros, para brasileiras no mundo todo.
+                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                  Personal Dedicado
+                </h3>
+                <p className="text-gray-600">
+                  Tenha um profissional experiente focado 100% em você. Planos criados por humanos, não por algoritmos. Acompanhamento real que entende suas necessidades.
                 </p>
               </div>
 
-              {/* Produto */}
-              <div>
-                <h3 className="mb-4 font-semibold">Produto</h3>
-                <ul className="space-y-2 text-sm text-gray-400">
-                  <li><Link to="/register" className="hover:text-white">Como funciona</Link></li>
-                  <li><Link to="/register" className="hover:text-white">Teste grátis 7 dias</Link></li>
-                  <li><Link to="/login" className="hover:text-white">Entrar</Link></li>
-                </ul>
-              </div>
-
-              {/* Suporte */}
-              <div>
-                <h3 className="mb-4 font-semibold">Suporte</h3>
-                <ul className="space-y-2 text-sm text-gray-400">
-                  <li><a href="#faq" className="hover:text-white">FAQ</a></li>
-                  <li className="hover:text-white">Contato</li>
-                  <li className="hover:text-white">Privacidade</li>
-                </ul>
-              </div>
-
-              {/* Trust Signals */}
-              <div>
-                <h3 className="mb-4 font-semibold">Segurança</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <Check className="h-4 w-4 text-green-400" />
-                    Dados 100% seguros
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <Check className="h-4 w-4 text-green-400" />
-                    Privacidade garantida
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <Check className="h-4 w-4 text-green-400" />
-                    Cancele quando quiser
-                  </div>
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-fitpro-red/10">
+                  <Globe className="h-7 w-7 text-fitpro-red" />
                 </div>
+                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                  Onde Você Estiver
+                </h3>
+                <p className="text-gray-600">
+                  Sua transformação não tem fronteiras. Esteja no Brasil, Europa, Ásia ou em qualquer lugar do mundo - seu personal trainer vai com você, sempre.
+                </p>
+              </div>
+
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-fitpro-red/10">
+                  <MessageCircle className="h-7 w-7 text-fitpro-red" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                  Suporte via WhatsApp
+                </h3>
+                <p className="text-gray-600">
+                  Acesso direto ao seu personal a qualquer hora. Envie vídeos dos seus treinos, tire dúvidas na hora e receba correções personalizadas. É como ter um personal no seu bolso.
+                </p>
+              </div>
+
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-fitpro-red/10">
+                  <Dumbbell className="h-7 w-7 text-fitpro-red" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                  Qualquer Equipamento
+                </h3>
+                <p className="text-gray-600">
+                  Sem desculpas. Treine com o que você tem: academia completa, halteres em casa ou apenas peso corporal no hotel. Seu plano se adapta à sua realidade.
+                </p>
+              </div>
+
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-fitpro-red/10">
+                  <Target className="h-7 w-7 text-fitpro-red" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                  Plano 100% Seu
+                </h3>
+                <p className="text-gray-600">
+                  Cada corpo é único, seu treino também deve ser. Construímos seu plano considerando seus objetivos, rotina, equipamentos disponíveis e limitações. Zero genérico.
+                </p>
+              </div>
+
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-fitpro-red/10">
+                  <Clock className="h-7 w-7 text-fitpro-red" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                  App com Cronômetro
+                </h3>
+                <p className="text-gray-600">
+                  Treinos guiados com precisão. Cronômetro inteligente controla execução e descanso automaticamente. Você só precisa focar nos exercícios e nos resultados.
+                </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="mt-12 border-t border-gray-700 pt-8 text-center">
-              <p className="text-sm text-gray-400">
-                © 2026 FitPro - Feito com dedicação para brasileiras no exterior
+      {/* Pricing Section - 3 Tiers */}
+      <section className="bg-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-5xl">
+            <div className="mb-12 text-center">
+              <h2 className="mb-3 text-3xl font-bold text-gray-900 sm:text-4xl">
+                Investimento em consultoria profissional
+              </h2>
+              <p className="text-lg text-gray-600">
+                Planos transparentes para sua transformação
               </p>
-              <p className="mt-2 flex items-center justify-center gap-2 text-xs text-gray-500">
-                <Flag className="h-4 w-4 text-green-500" />
-                Orgulhosamente brasileiro
-              </p>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* Trial Plan */}
+              <Card className="border-gray-200">
+                <CardContent className="p-6">
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">Teste Grátis</h3>
+                  <div className="mb-4">
+                    <span className="text-4xl font-bold text-gray-900">R$ 0</span>
+                    <span className="text-gray-600">/7 dias</span>
+                  </div>
+                  <ul className="mb-6 space-y-3">
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Avaliação por fotos</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Consulta com personal</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Análise do plano de treinamento atual</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Acesso ao app</span>
+                    </li>
+                  </ul>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to="/register">Avaliação Grátis</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Monthly Plan - Most Popular */}
+              <Card className="relative border-2 border-fitpro-red shadow-lg">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="rounded-full bg-fitpro-red px-4 py-1 text-sm font-semibold text-white">
+                    Mais Popular
+                  </span>
+                </div>
+                <CardContent className="p-6">
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">Mensal</h3>
+                  <div className="mb-4">
+                    <span className="text-4xl font-bold text-gray-900">R$ 297,80</span>
+                    <span className="text-gray-600">/mês</span>
+                  </div>
+                  <ul className="mb-6 space-y-3">
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Tudo do teste grátis</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Acompanhamento contínuo</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Ajustes no plano</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Suporte via WhatsApp</span>
+                    </li>
+                  </ul>
+                  <Button asChild className="w-full bg-fitpro-red hover:bg-fitpro-red/90">
+                    <Link to="/register">Começar Agora</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Quarterly Plan */}
+              <Card className="border-gray-200">
+                <CardContent className="p-6">
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">Trimestral</h3>
+                  <div className="mb-4">
+                    <span className="text-4xl font-bold text-gray-900">R$ 253,13</span>
+                    <span className="text-gray-600">/mês</span>
+                  </div>
+                  <p className="mb-4 text-sm text-green-600 font-semibold">
+                    Economize 15% • R$ 759,39 total
+                  </p>
+                  <ul className="mb-6 space-y-3">
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Tudo do plano mensal</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">15% de desconto</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">3 meses garantidos</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+                      <span className="text-gray-600">Melhor custo-benefício</span>
+                    </li>
+                  </ul>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to="/register">Começar Agora</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof - Real Testimonials */}
+      <section className="border-y border-gray-100 bg-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-6xl">
+            <p className="mb-8 text-center text-sm font-semibold uppercase tracking-wide text-gray-600">
+              Alunos transformando seus corpos com consultoria profissional
+            </p>
+            <div className="grid gap-6 sm:grid-cols-3">
+              <Card className="border-gray-100 shadow-sm transition-shadow hover:shadow-md">
+                <CardContent className="p-6">
+                  <div className="mb-3 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-4 text-gray-700">
+                    "Morando em Londres, não encontrei uma academia com professores que falam português. Agora tenho meu tão sonhado "bumbum na nuca" e um personal trainer que me entende"
+                  </p>
+                  <p className="font-semibold text-gray-900">Sofia M.</p>
+                  <p className="text-sm text-gray-600">Londres, Reino Unido</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gray-100 shadow-sm transition-shadow hover:shadow-md">
+                <CardContent className="p-6">
+                  <div className="mb-3 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-4 text-gray-700">
+                    "Trabalho muito e não tinha tempo de ir à academia. A consultoria online se encaixou perfeitamente. Treino em casa e tenho acompanhamento de um personal trainer de verdade"
+                  </p>
+                  <p className="font-semibold text-gray-900">Ricardo P.</p>
+                  <p className="text-sm text-gray-600">São Paulo, Brasil</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gray-100 shadow-sm transition-shadow hover:shadow-md">
+                <CardContent className="p-6">
+                  <div className="mb-3 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-4 text-gray-700">
+                    "Finalmente encontrei um personal que realmente acompanha meu progresso. Não é app automático, é consultoria de verdade. Eu envio os vídeos e ele corrige minha postura"
+                  </p>
+                  <p className="font-semibold text-gray-900">Juliana S.</p>
+                  <p className="text-sm text-gray-600">Miami, EUA</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ - Reduced */}
+      <section id="faq" className="bg-gray-50 py-16">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">
+              Perguntas frequentes
+            </h2>
+
+            <div className="space-y-4">
+              <Card className="border-gray-200">
+                <CardContent className="p-6">
+                  <h3 className="mb-2 flex items-start gap-3 text-lg font-bold text-gray-900">
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
+                    Como é o acompanhamento do personal?
+                  </h3>
+                  <p className="ml-8 text-gray-600">
+                    Você tem contato direto via WhatsApp com seu personal trainer. Tire dúvidas, envie vídeos,
+                    receba feedback. É consultoria real, não app automático.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gray-200">
+                <CardContent className="p-6">
+                  <h3 className="mb-2 flex items-start gap-3 text-lg font-bold text-gray-900">
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
+                    Funciona no Brasil e no exterior?
+                  </h3>
+                  <p className="ml-8 text-gray-600">
+                    Sim! Nossa consultoria é 100% online. Funciona em qualquer lugar do mundo com internet.
+                    Brasil, Europa, Estados Unidos, Ásia - onde você estiver.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gray-200">
+                <CardContent className="p-6">
+                  <h3 className="mb-2 flex items-start gap-3 text-lg font-bold text-gray-900">
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
+                    Preciso de equipamentos?
+                  </h3>
+                  <p className="ml-8 text-gray-600">
+                    Não! Adaptamos o treino aos equipamentos que você tem. Pode ser só peso corporal,
+                    halteres, elásticos, ou academia completa.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gray-200">
+                <CardContent className="p-6">
+                  <h3 className="mb-2 flex items-start gap-3 text-lg font-bold text-gray-900">
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-fitpro-red" />
+                    Posso cancelar quando quiser?
+                  </h3>
+                  <p className="ml-8 text-gray-600">
+                    Sim! Cancele a qualquer momento, sem multa ou burocracia. Seu acesso continua
+                    até o fim do período pago.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA - Strong */}
+      <section className="bg-fitpro-red py-16">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center text-white">
+            <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
+              Pronto para transformar seu corpo?
+            </h2>
+            <p className="mb-8 text-xl opacity-90">
+              Junte-se a 500+ alunos com acompanhamento profissional
+            </p>
+            <Button
+              asChild
+              size="lg"
+              className="bg-white px-8 py-6 text-lg font-semibold text-fitpro-red shadow-lg transition-all hover:scale-105 hover:bg-gray-50"
+            >
+              <Link to="/register">Faça uma Avaliação Agora Mesmo</Link>
+            </Button>
+            <p className="mt-4 text-sm opacity-75">
+              Sem cartão de crédito • Cancele quando quiser • Brasil e exterior
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer - Minimal */}
+      <footer className="border-t border-gray-200 bg-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid gap-8 sm:grid-cols-4">
+              <div>
+                <div className="mb-4 flex items-center gap-2">
+                  <img
+                    src="/brand/logos/fitpro-logo-new.png"
+                    alt="FitPro"
+                    className="h-8 w-8"
+                  />
+                  <span className="text-lg font-bold">
+                    <span className="text-gray-900">FIT</span>
+                    <span className="text-fitpro-red">PRO</span>
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600">
+                  Consultoria online com personal trainer profissional. Brasil e exterior.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="mb-4 font-semibold text-gray-900">Produto</h3>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li><a href="#como-funciona" className="hover:text-gray-900">Como funciona</a></li>
+                  <li><Link to="/register" className="hover:text-gray-900">Teste grátis</Link></li>
+                  <li><Link to="/login" className="hover:text-gray-900">Entrar</Link></li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="mb-4 font-semibold text-gray-900">Suporte</h3>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li><a href="#faq" className="hover:text-gray-900">FAQ</a></li>
+                  <li><Link to="/contato" className="hover:text-gray-900">Contato</Link></li>
+                  <li><Link to="/privacidade" className="hover:text-gray-900">Privacidade</Link></li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="mb-4 font-semibold text-gray-900">Legal</h3>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>CNPJ: XX.XXX.XXX/0001-XX</li>
+                  <li className="text-xs">© 2026 FitPro</li>
+                  <li className="text-xs">Consultoria profissional</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
