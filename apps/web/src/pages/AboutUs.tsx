@@ -120,7 +120,7 @@ export default function AboutUs() {
                   {/* Informações do Personal */}
                   <div className="flex flex-col justify-center p-8 md:p-12">
                     <h3 className="mb-2 text-2xl font-bold text-gray-900">
-                      [Nome do Personal Trainer]
+                      Cleiton Souza
                     </h3>
                     <p className="mb-6 text-lg text-fitpro-red font-semibold">
                       Personal Trainer & Atleta de Fisiculturismo
@@ -136,15 +136,15 @@ export default function AboutUs() {
                         <ul className="space-y-2">
                           <li className="flex items-start gap-2">
                             <Trophy className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
-                            <span>[Título 1 - Ex: Campeão Regional de Fisiculturismo 2023]</span>
+                            <span className="font-medium">🥇 1º Lugar - Brasileiro WFF (Open)</span>
                           </li>
                           <li className="flex items-start gap-2">
                             <Trophy className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
-                            <span>[Título 2 - Ex: 3º Lugar Nacional de Fisiculturismo 2022]</span>
+                            <span className="font-medium">🥉 3º Lugar - Copa Sul IFBB (Classic)</span>
                           </li>
                           <li className="flex items-start gap-2">
                             <Trophy className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
-                            <span>[Título 3 - Ex: Certificação Internacional em Musculação]</span>
+                            <span className="font-medium">4º Lugar - Copa Sul IFBB (Bodybuilding)</span>
                           </li>
                           <li className="flex items-start gap-2">
                             <Award className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
