@@ -20,8 +20,72 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* O que é o FITPRO */}
+      {/* Seu Personal Trainer */}
       <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">
+              Seu Personal Trainer
+            </h2>
+
+            <Card className="overflow-hidden border-gray-200">
+              <CardContent className="p-0">
+                <div className="grid gap-8 md:grid-cols-2">
+                  {/* Foto do Personal - Placeholder */}
+                  <div className="flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-8 md:p-12">
+                    <div className="flex h-64 w-64 items-center justify-center rounded-2xl bg-white shadow-lg">
+                      <div className="text-center">
+                        <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-fitpro-red/10">
+                          <Award className="h-12 w-12 text-fitpro-red" />
+                        </div>
+                        <p className="text-sm text-gray-500">Foto do Personal Trainer</p>
+                        <p className="text-xs text-gray-400">(A ser adicionada)</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Informações do Personal */}
+                  <div className="flex flex-col justify-center p-8 md:p-12">
+                    <h3 className="mb-2 text-2xl font-bold text-gray-900">
+                      Cleiton Souza
+                    </h3>
+                    <p className="mb-6 text-lg text-fitpro-red font-semibold">
+                      Personal Trainer & Atleta de Fisiculturismo
+                    </p>
+
+                    <div className="space-y-4 text-gray-700">
+                      <div className="pt-4">
+                        <h4 className="mb-3 font-semibold text-gray-900">Títulos e Conquistas:</h4>
+                        <ul className="space-y-2">
+                          <li className="flex items-start gap-2">
+                            <Trophy className="mt-1 h-4 w-4 flex-shrink-0 text-yellow-500" />
+                            <span className="font-medium">1º Lugar - Brasileiro WFF (Open)</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Trophy className="mt-1 h-4 w-4 flex-shrink-0 text-amber-700" />
+                            <span className="font-medium">3º Lugar - Copa Sul IFBB (Classic)</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Trophy className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
+                            <span className="font-medium">4º Lugar - Copa Sul IFBB (Bodybuilding)</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Award className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
+                            <span>CREF: [Número a confirmar]</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* O que é o FITPRO */}
+      <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl">
             <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">
@@ -89,74 +153,6 @@ export default function AboutUs() {
                 </CardContent>
               </Card>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Seu Personal Trainer */}
-      <section className="bg-gray-50 py-16">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">
-              Seu Personal Trainer
-            </h2>
-
-            <Card className="overflow-hidden border-gray-200">
-              <CardContent className="p-0">
-                <div className="grid gap-8 md:grid-cols-2">
-                  {/* Foto do Personal - Placeholder */}
-                  <div className="flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-8 md:p-12">
-                    <div className="flex h-64 w-64 items-center justify-center rounded-2xl bg-white shadow-lg">
-                      <div className="text-center">
-                        <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-fitpro-red/10">
-                          <Award className="h-12 w-12 text-fitpro-red" />
-                        </div>
-                        <p className="text-sm text-gray-500">Foto do Personal Trainer</p>
-                        <p className="text-xs text-gray-400">(A ser adicionada)</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Informações do Personal */}
-                  <div className="flex flex-col justify-center p-8 md:p-12">
-                    <h3 className="mb-2 text-2xl font-bold text-gray-900">
-                      Cleiton Souza
-                    </h3>
-                    <p className="mb-6 text-lg text-fitpro-red font-semibold">
-                      Personal Trainer & Atleta de Fisiculturismo
-                    </p>
-
-                    <div className="space-y-4 text-gray-700">
-                      <p>
-                        [Descrição do personal trainer - experiência, filosofia de treino, especialidades, etc.]
-                      </p>
-
-                      <div className="pt-4">
-                        <h4 className="mb-3 font-semibold text-gray-900">Títulos e Conquistas:</h4>
-                        <ul className="space-y-2">
-                          <li className="flex items-start gap-2">
-                            <Trophy className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
-                            <span className="font-medium">🥇 1º Lugar - Brasileiro WFF (Open)</span>
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Trophy className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
-                            <span className="font-medium">🥉 3º Lugar - Copa Sul IFBB (Classic)</span>
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Trophy className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
-                            <span className="font-medium">4º Lugar - Copa Sul IFBB (Bodybuilding)</span>
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Award className="mt-1 h-4 w-4 flex-shrink-0 text-fitpro-red" />
-                            <span>CREF: [Número a confirmar]</span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
