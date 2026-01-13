@@ -115,15 +115,19 @@ export async function getWorkoutPlan(c: Context<AppContext>) {
     }
 
     // Map workouts to include their exercises (no async needed - data already fetched)
-    const workoutsWithExercises = planWorkouts.map(workout => ({
-      id: workout.id,
-      dayOfWeek: workout.dayOfWeek,
-      workoutType: workout.workoutType,
-      status: workout.status,
-      startedAt: workout.startedAt,
-      completedAt: workout.completedAt,
-      exercises: exercisesByWorkout.get(workout.id) || [],
-    }));
+    const workoutsWithExercises = planWorkouts.map(workout => {
+      const exercises = exercisesByWorkout.get(workout.id) || [];
+      console.log(`[training.ts] Workout ${workout.id} has ${exercises.length} exercises`);
+      return {
+        id: workout.id,
+        dayOfWeek: workout.dayOfWeek,
+        workoutType: workout.workoutType,
+        status: workout.status,
+        startedAt: workout.startedAt,
+        completedAt: workout.completedAt,
+        exercises,
+      };
+    });
 
     // 6. Calculate completion stats
     const totalWorkouts = workoutsWithExercises.length;
