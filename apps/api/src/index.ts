@@ -15,6 +15,11 @@ import {
   submitFeedbackSchema
 } from './validation/schemas';
 import { handleOnboarding } from './handlers/onboarding';
+import { handleOnboardingStatus } from './handlers/onboarding-status';
+import { handleOnboardingInitial } from './handlers/onboarding-initial';
+import { handleOnboardingStep2 } from './handlers/onboarding-step2';
+import { handleOnboardingStep3 } from './handlers/onboarding-step3';
+import { handleOnboardingStep4 } from './handlers/onboarding-step4';
 import { getWorkoutPlan, getAllWeekPlans, completeWorkout } from './handlers/training';
 import { submitFeedback } from './handlers/feedback';
 import { getUserProfile, getUserStats, getWorkoutHistory } from './handlers/user';
@@ -79,6 +84,11 @@ app.get('/api', (c) => {
 });
 
 // Onboarding
+app.get('/api/onboarding/status', clerkAuth, handleOnboardingStatus);
+app.post('/api/onboarding/initial', clerkAuth, handleOnboardingInitial);
+app.post('/api/onboarding/step2', clerkAuth, handleOnboardingStep2);
+app.post('/api/onboarding/step3', clerkAuth, handleOnboardingStep3);
+app.post('/api/onboarding/step4', clerkAuth, handleOnboardingStep4);
 app.post('/api/onboarding', clerkAuth, validateBody(onboardingSchema), handleOnboarding);
 
 // Training
