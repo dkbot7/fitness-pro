@@ -80,7 +80,7 @@ export async function getWorkoutPlan(c: Context<AppContext>) {
       // Drizzle supports inArray for this
       const { inArray } = await import('drizzle-orm');
 
-      allExerciseRecords = await db
+      const rawRecords = await db
         .select({
           workoutId: workoutExercises.workoutId,
           id: workoutExercises.id,
@@ -102,6 +102,14 @@ export async function getWorkoutPlan(c: Context<AppContext>) {
         .innerJoin(exercises, eq(workoutExercises.exerciseId, exercises.id))
         .where(inArray(workoutExercises.workoutId, workoutIds))
         .orderBy(workoutExercises.workoutId, workoutExercises.orderIndex);
+
+      // Parse JSON fields (SQLite stores JSON as strings)
+      allExerciseRecords = rawRecords.map(record => ({
+        ...record,
+        muscleGroups: typeof record.muscleGroups === 'string'
+          ? JSON.parse(record.muscleGroups)
+          : record.muscleGroups,
+      }));
     }
 
     // Group exercises by workout ID
@@ -115,19 +123,15 @@ export async function getWorkoutPlan(c: Context<AppContext>) {
     }
 
     // Map workouts to include their exercises (no async needed - data already fetched)
-    const workoutsWithExercises = planWorkouts.map(workout => {
-      const exercises = exercisesByWorkout.get(workout.id) || [];
-      console.log(`[training.ts] Workout ${workout.id} has ${exercises.length} exercises`);
-      return {
-        id: workout.id,
-        dayOfWeek: workout.dayOfWeek,
-        workoutType: workout.workoutType,
-        status: workout.status,
-        startedAt: workout.startedAt,
-        completedAt: workout.completedAt,
-        exercises,
-      };
-    });
+    const workoutsWithExercises = planWorkouts.map(workout => ({
+      id: workout.id,
+      dayOfWeek: workout.dayOfWeek,
+      workoutType: workout.workoutType,
+      status: workout.status,
+      startedAt: workout.startedAt,
+      completedAt: workout.completedAt,
+      exercises: exercisesByWorkout.get(workout.id) || [],
+    }));
 
     // 6. Calculate completion stats
     const totalWorkouts = workoutsWithExercises.length;

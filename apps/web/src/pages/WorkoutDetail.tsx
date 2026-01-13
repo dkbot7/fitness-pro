@@ -67,12 +67,6 @@ export default function WorkoutDetail() {
 
   const workout = data.workouts.find((w) => w.id === workoutId);
 
-  // Debug: Log workout data
-  console.log('[WorkoutDetail] Looking for workout ID:', workoutId);
-  console.log('[WorkoutDetail] All workouts:', data.workouts.map(w => ({ id: w.id, exercises: w.exercises?.length || 0 })));
-  console.log('[WorkoutDetail] Found workout:', workout);
-  console.log('[WorkoutDetail] Workout exercises:', workout?.exercises);
-
   if (!workout) {
     return (
       <div className="container mx-auto px-4 py-8">
