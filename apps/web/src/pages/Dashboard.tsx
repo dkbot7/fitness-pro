@@ -3,6 +3,7 @@ import { Navigate, Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PageLoading } from '@/components/ui/loading-state';
+import { ProgramInfoCard } from '@/components/methodology/ProgramInfoCard';
 import { Dumbbell, Target } from 'lucide-react';
 
 export default function Dashboard() {
@@ -26,6 +27,9 @@ export default function Dashboard() {
           </CardDescription>
         </CardHeader>
       </Card>
+
+      {/* Methodology Program Info */}
+      <ProgramInfoCard />
 
       {/* Quick Actions */}
       <div className="grid gap-6 md:grid-cols-2">
