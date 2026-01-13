@@ -1,11 +1,13 @@
 import { useWorkoutPlan } from '@/lib/hooks/use-workout-plan';
+import { useOnboardingStatus } from '@/hooks/use-onboarding-status';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { MUSCLE_GROUPS } from '@fitness-pro/shared';
 import { ErrorState } from '@/components/ui/error-state';
 import { LoadingState, PageLoading } from '@/components/ui/loading-state';
 import { WeekNavigator } from '@/components/training/WeekNavigator';
+import { MessageCircle, RefreshCw, CheckCircle2, Clock } from 'lucide-react';
 
 const DAYS_OF_WEEK = [
   'Segunda-feira',
@@ -16,6 +18,25 @@ const DAYS_OF_WEEK = [
   'Sábado',
   'Domingo',
 ];
+
+interface DaySchedule {
+  dayOfWeek: number; // 1-7
+  dayName: string;
+  workout: any | null; // null if rest day
+  isRestDay: boolean;
+}
+
+function createWeekCalendar(workouts: any[]): DaySchedule[] {
+  return [1, 2, 3, 4, 5, 6, 7].map((dayNum) => {
+    const workout = workouts.find((w) => w.dayOfWeek === dayNum);
+    return {
+      dayOfWeek: dayNum,
+      dayName: DAYS_OF_WEEK[dayNum - 1],
+      workout: workout || null,
+      isRestDay: !workout,
+    };
+  });
+}
 
 function getWorkoutTypeLabel(workoutType: string): string {
   const muscleGroups = workoutType.split('_');
@@ -42,6 +63,311 @@ function getStatusBadge(status: string) {
   );
 }
 
+// Component for "Waiting for Personal Trainer" state
+function WaitingForPlan() {
+  const onboardingStatus = useOnboardingStatus();
+  const navigate = useNavigate();
+
+  const handleWhatsAppClick = () => {
+    const trainerNumber = '41222222222';
+    const profile = onboardingStatus.profile;
+
+    if (!profile) {
+      const message = encodeURIComponent('Olá! Completei meu cadastro no FitPro e gostaria de agendar minha consulta.');
+      window.open(`https://wa.me/${trainerNumber}?text=${message}`, '_blank');
+      return;
+    }
+
+    // Format maps
+    const goalMap: Record<string, string> = {
+      'lose_weight': 'Perder Peso',
+      'gain_muscle': 'Ganhar Massa Muscular',
+      'maintenance': 'Manutenção/Condicionamento'
+    };
+    const locationMap: Record<string, string> = {
+      'home': 'Em Casa',
+      'gym': 'Academia'
+    };
+    const experienceMap: Record<string, string> = {
+      'beginner': 'Iniciante (<6 meses)',
+      'intermediate': 'Intermediário (6-24 meses)',
+      'advanced': 'Avançado (>2 anos)'
+    };
+    const genderMap: Record<string, string> = {
+      'male': 'Masculino',
+      'female': 'Feminino',
+      'other': 'Outro'
+    };
+
+    // Format equipment
+    const equipmentMap: Record<string, string> = {
+      'full_gym': 'Academia Completa',
+      'bodyweight': 'Peso Corporal',
+      'dumbbells': 'Halteres',
+      'resistance_bands': 'Faixas Elasticas',
+      'pull_up_bar': 'Barra Fixa',
+      'bench': 'Banco',
+      'barbell': 'Barra',
+      'squat_rack': 'Rack de Agachamento',
+      'cable_machine': 'Polia/Crossover',
+      'leg_press_machine': 'Leg Press',
+      'leg_extension_machine': 'Cadeira Extensora',
+      'shoulder_press_machine': 'Maquina de Desenvolvimento',
+    };
+
+    // Build the message - Simple format without emojis
+    let message = '*NOVO CADASTRO - FITPRO*\n\n';
+
+    message += '*DADOS PESSOAIS*\n';
+    if (profile.fullName) message += `Nome: ${profile.fullName}\n`;
+    if (profile.whatsappNumber) message += `WhatsApp: ${profile.whatsappNumber}\n`;
+    if (profile.age) message += `Idade: ${profile.age} anos\n`;
+    if (profile.gender) message += `Genero: ${genderMap[profile.gender] || profile.gender}\n`;
+    if (profile.currentWeightKg) message += `Peso: ${profile.currentWeightKg}kg\n`;
+    if (profile.heightCm) message += `Altura: ${profile.heightCm}cm\n`;
+    message += '\n';
+
+    message += '*OBJETIVO*\n';
+    if (profile.goal) message += `${goalMap[profile.goal] || profile.goal}\n`;
+    if (profile.goalDescription) message += `Descricao: ${profile.goalDescription}\n`;
+    message += '\n';
+
+    message += '*PREFERENCIAS DE TREINO*\n';
+    if (profile.frequencyPerWeek) message += `Frequencia: ${profile.frequencyPerWeek}x por semana\n`;
+    if (profile.location) message += `Local: ${locationMap[profile.location] || profile.location}\n`;
+    if (profile.experienceLevel) message += `Nivel: ${experienceMap[profile.experienceLevel] || profile.experienceLevel}\n`;
+    message += '\n';
+
+    if (profile.equipment && profile.equipment.length > 0) {
+      message += '*EQUIPAMENTOS DISPONIVEIS*\n';
+      const translatedEquipment = profile.equipment.map(eq => equipmentMap[eq] || eq);
+      message += translatedEquipment.join(', ') + '\n';
+      if (profile.otherEquipment) {
+        message += `Outros: ${profile.otherEquipment}\n`;
+      }
+      message += '\n';
+    }
+
+    if ((profile.limitations && profile.limitations.length > 0) || profile.limitationsDescription) {
+      message += '*LIMITACOES FISICAS*\n';
+      if (profile.limitations && profile.limitations.length > 0) {
+        message += profile.limitations.join(', ') + '\n';
+      }
+      if (profile.limitationsDescription) {
+        message += `Detalhes: ${profile.limitationsDescription}\n`;
+      }
+      message += '\n';
+    }
+
+    message += '================================\n';
+    message += 'Gostaria de agendar minha consulta para criar meu plano personalizado!';
+
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${trainerNumber}?text=${encodedMessage}`, '_blank');
+  };
+
+  const profile = onboardingStatus.profile;
+
+  // Format maps for display
+  const goalMap: Record<string, string> = {
+    'lose_weight': 'Perder Peso',
+    'gain_muscle': 'Ganhar Massa Muscular',
+    'maintenance': 'Manutenção/Condicionamento'
+  };
+  const locationMap: Record<string, string> = {
+    'home': 'Em Casa',
+    'gym': 'Academia'
+  };
+  const experienceMap: Record<string, string> = {
+    'beginner': 'Iniciante',
+    'intermediate': 'Intermediário',
+    'advanced': 'Avançado'
+  };
+  const equipmentMap: Record<string, string> = {
+    'full_gym': 'Academia Completa',
+    'bodyweight': 'Peso Corporal',
+    'dumbbells': 'Halteres',
+    'resistance_bands': 'Faixas Elásticas',
+    'pull_up_bar': 'Barra Fixa',
+    'bench': 'Banco',
+    'barbell': 'Barra',
+    'squat_rack': 'Rack de Agachamento',
+    'cable_machine': 'Polia/Crossover',
+    'leg_press_machine': 'Leg Press',
+    'leg_extension_machine': 'Cadeira Extensora',
+    'shoulder_press_machine': 'Máquina de Desenvolvimento',
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <div className="mx-auto w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+          <Clock className="w-12 h-12 text-blue-600" />
+        </div>
+        <h1 className="text-3xl font-bold mb-2">Seu Treino Está Sendo Elaborado</h1>
+        <p className="text-gray-600 text-lg">
+          O personal trainer está criando seu plano personalizado
+        </p>
+      </div>
+
+      {/* Status Card */}
+      <Card className="mb-6 bg-blue-50 border-blue-200">
+        <CardHeader>
+          <CardTitle className="text-blue-900">📞 Próximos Passos</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ol className="list-decimal list-inside space-y-2 text-blue-800">
+            <li>Envie suas respostas ao personal pelo WhatsApp (clique no botão abaixo)</li>
+            <li>Aguarde o contato do personal trainer para agendar sua consulta</li>
+            <li>Realize a entrevista para alinhamento de objetivos</li>
+            <li>Receba seu plano de treino personalizado aqui no app</li>
+          </ol>
+        </CardContent>
+      </Card>
+
+      {/* User Responses Summary */}
+      {profile && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>📋 Suas Respostas</CardTitle>
+            <CardDescription>Revise as informações que você forneceu</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Personal Info */}
+            <div>
+              <h3 className="font-semibold text-sm text-gray-700 mb-2">Dados Pessoais</h3>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                {profile.fullName && (
+                  <div>
+                    <span className="text-gray-600">Nome:</span> <span className="font-medium">{profile.fullName}</span>
+                  </div>
+                )}
+                {profile.age && (
+                  <div>
+                    <span className="text-gray-600">Idade:</span> <span className="font-medium">{profile.age} anos</span>
+                  </div>
+                )}
+                {profile.currentWeightKg && (
+                  <div>
+                    <span className="text-gray-600">Peso:</span> <span className="font-medium">{profile.currentWeightKg}kg</span>
+                  </div>
+                )}
+                {profile.heightCm && (
+                  <div>
+                    <span className="text-gray-600">Altura:</span> <span className="font-medium">{profile.heightCm}cm</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Goal */}
+            {profile.goal && (
+              <div>
+                <h3 className="font-semibold text-sm text-gray-700 mb-2">Objetivo</h3>
+                <p className="text-sm">
+                  <span className="font-medium">{goalMap[profile.goal] || profile.goal}</span>
+                </p>
+                {profile.goalDescription && (
+                  <p className="text-sm text-gray-600 mt-1">{profile.goalDescription}</p>
+                )}
+              </div>
+            )}
+
+            {/* Training Preferences */}
+            <div>
+              <h3 className="font-semibold text-sm text-gray-700 mb-2">Preferências de Treino</h3>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                {profile.frequencyPerWeek && (
+                  <div>
+                    <span className="text-gray-600">Frequência:</span> <span className="font-medium">{profile.frequencyPerWeek}x/semana</span>
+                  </div>
+                )}
+                {profile.location && (
+                  <div>
+                    <span className="text-gray-600">Local:</span> <span className="font-medium">{locationMap[profile.location] || profile.location}</span>
+                  </div>
+                )}
+                {profile.experienceLevel && (
+                  <div className="col-span-2">
+                    <span className="text-gray-600">Nível:</span> <span className="font-medium">{experienceMap[profile.experienceLevel] || profile.experienceLevel}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Equipment */}
+            {profile.equipment && profile.equipment.length > 0 && (
+              <div>
+                <h3 className="font-semibold text-sm text-gray-700 mb-2">Equipamentos</h3>
+                <div className="flex flex-wrap gap-2">
+                  {profile.equipment.map((eq: string) => (
+                    <span key={eq} className="bg-gray-100 px-2 py-1 rounded text-xs">
+                      {equipmentMap[eq] || eq}
+                    </span>
+                  ))}
+                </div>
+                {profile.otherEquipment && (
+                  <p className="text-sm text-gray-600 mt-2">Outros: {profile.otherEquipment}</p>
+                )}
+              </div>
+            )}
+
+            {/* Limitations */}
+            {((profile.limitations && profile.limitations.length > 0) || profile.limitationsDescription) && (
+              <div>
+                <h3 className="font-semibold text-sm text-gray-700 mb-2">Limitações Físicas</h3>
+                {profile.limitations && profile.limitations.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {profile.limitations.map((lim: string) => (
+                      <span key={lim} className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">
+                        {lim}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {profile.limitationsDescription && (
+                  <p className="text-sm text-gray-600">{profile.limitationsDescription}</p>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Action Buttons */}
+      <div className="space-y-4">
+        <div className="text-center">
+          <p className="text-sm text-gray-600 mb-3">
+            Envie suas respostas agora para o personal trainer
+          </p>
+          <Button
+            onClick={handleWhatsAppClick}
+            className="w-full py-6 text-lg bg-green-600 hover:bg-green-700 text-white"
+            size="lg"
+          >
+            <MessageCircle className="mr-2 h-5 w-5" />
+            Enviar Respostas via WhatsApp
+          </Button>
+        </div>
+
+        <div className="text-center">
+          <Button
+            onClick={() => navigate('/onboarding')}
+            variant="outline"
+            className="w-full"
+            size="lg"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Refazer Cadastro
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main Component
 export default function WorkoutPlan() {
   const [searchParams, setSearchParams] = useSearchParams();
   const weekParam = searchParams.get('week');
@@ -68,33 +394,9 @@ export default function WorkoutPlan() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <ErrorState
-          title="Erro ao carregar plano de treino"
-          message={error instanceof Error ? error.message : 'Não foi possível carregar seu plano de treino. Tente novamente.'}
-          onRetry={() => refetch()}
-        />
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Complete seu perfil</CardTitle>
-            <CardDescription>
-              Se você ainda não completou o onboarding, faça isso primeiro para gerar seu plano de treino.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild>
-              <Link to="/onboarding">Ir para onboarding</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return <PageLoading message="Carregando seu plano de treino..." />;
+  // If error or no data, show "waiting for plan" state
+  if (error || !data || !data.workouts || data.workouts.length === 0) {
+    return <WaitingForPlan />;
   }
 
   const { plan, workouts, stats } = data;
@@ -106,9 +408,21 @@ export default function WorkoutPlan() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Meu Plano de Treino</h1>
-        <p className="text-gray-600">Acompanhe seu progresso semanal</p>
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Meu Plano de Treino</h1>
+          <p className="text-gray-600">Acompanhe seu progresso semanal</p>
+        </div>
+        <Button
+          variant="outline"
+          asChild
+          className="border-primary text-primary hover:bg-primary hover:text-white"
+        >
+          <Link to="/onboarding">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Refazer Cadastro
+          </Link>
+        </Button>
       </div>
 
       {/* Week Navigator */}
@@ -152,64 +466,75 @@ export default function WorkoutPlan() {
         </CardContent>
       </Card>
 
-      {/* Workouts List */}
+      {/* Workouts List - 7 Day Calendar */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Treinos da Semana</h2>
+        <h2 className="text-xl font-semibold">Seu Plano Semanal</h2>
 
-        {workouts.map((workout) => (
-          <Card key={workout.id} className="transition-shadow hover:shadow-lg">
+        {/* Generate 7-day calendar */}
+        {createWeekCalendar(workouts).map((day) => (
+          <Card
+            key={day.dayOfWeek}
+            className={`transition-shadow ${
+              day.isRestDay ? 'bg-gray-50 border-gray-200' : 'hover:shadow-lg'
+            }`}
+          >
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg">
-                    {DAYS_OF_WEEK[workout.dayOfWeek - 1]}
-                  </CardTitle>
-                  <CardDescription>
-                    {getWorkoutTypeLabel(workout.workoutType)}
-                  </CardDescription>
+                  <CardTitle className="text-lg">{day.dayName}</CardTitle>
+                  {day.workout ? (
+                    <CardDescription>
+                      {getWorkoutTypeLabel(day.workout.workoutType)}
+                    </CardDescription>
+                  ) : (
+                    <CardDescription className="text-gray-500">
+                      Dia de descanso
+                    </CardDescription>
+                  )}
                 </div>
-                {getStatusBadge(workout.status)}
+                {day.isRestDay && (
+                  <span className="inline-flex items-center rounded-full bg-gray-200 px-3 py-1 text-xs font-medium text-gray-600">
+                    Descanso
+                  </span>
+                )}
+                {day.workout && getStatusBadge(day.workout.status)}
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <p className="text-sm text-gray-600">
-                  {workout.exercises.length} exercícios
-                </p>
 
-                {workout.status === 'completed' && workout.completedAt && (
-                  <p className="text-sm text-green-600">
-                    Concluído em {new Date(workout.completedAt).toLocaleDateString('pt-BR')}
+            {day.workout ? (
+              <CardContent>
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-600">
+                    {day.workout.exercises.length} exercícios
                   </p>
-                )}
 
-                <div className="flex gap-2">
-                  <Button asChild className="flex-1">
-                    <Link to={`/treino/${workout.id}`}>
-                      {workout.status === 'completed' ? 'Ver treino' : 'Iniciar treino'}
-                    </Link>
-                  </Button>
+                  {day.workout.status === 'completed' && day.workout.completedAt && (
+                    <p className="text-sm text-green-600">
+                      Concluído em{' '}
+                      {new Date(day.workout.completedAt).toLocaleDateString('pt-BR')}
+                    </p>
+                  )}
+
+                  <div className="flex gap-2">
+                    <Button asChild className="flex-1">
+                      <Link to={`/treino/${day.workout.id}`}>
+                        {day.workout.status === 'completed'
+                          ? 'Ver treino'
+                          : 'Iniciar treino'}
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
+              </CardContent>
+            ) : (
+              <CardContent>
+                <p className="text-center text-gray-500 py-4">
+                  Dia de recuperação muscular
+                </p>
+              </CardContent>
+            )}
           </Card>
         ))}
-
-        {workouts.length === 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Nenhum treino encontrado</CardTitle>
-              <CardDescription>
-                Complete o onboarding para gerar seu plano de treino.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild>
-                <Link to="/onboarding">Completar onboarding</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   );
