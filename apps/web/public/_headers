@@ -22,7 +22,7 @@
 
   # Content Security Policy
   # Note: Clerk requires 'unsafe-inline' for styles and scripts
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.fitpro.vip https://*.clerk.accounts.dev https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://api.fitpro.vip https://fitness-pro-api.chatbotimoveis.workers.dev https://*.clerk.accounts.dev https://clerk.fitpro.vip wss://*.clerk.accounts.dev; frame-src https://*.clerk.accounts.dev https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.fitpro.vip https://*.clerk.accounts.dev https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; media-src 'self' https://player.vimeo.com https://*.vimeocdn.com data: blob:; connect-src 'self' https://api.fitpro.vip https://fitness-pro-api.chatbotimoveis.workers.dev https://*.clerk.accounts.dev https://clerk.fitpro.vip wss://*.clerk.accounts.dev; frame-src https://*.clerk.accounts.dev https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'
 
 # Service Worker
 /sw.js
