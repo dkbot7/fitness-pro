@@ -68,6 +68,13 @@ export function ExerciseCard({ exercise, exerciseNumber, workoutId }: ExerciseCa
   const completedCount = completedSets.filter(Boolean).length;
   const allCompleted = completedCount === exercise.sets;
 
+  // Ensure muscleGroups is always an array (handle API returning string)
+  const muscleGroups = Array.isArray(exercise.muscleGroups)
+    ? exercise.muscleGroups
+    : typeof exercise.muscleGroups === 'string'
+    ? JSON.parse(exercise.muscleGroups)
+    : [];
+
   return (
     <Card className={`transition-all ${allCompleted ? 'border-green-500 bg-green-50' : ''}`}>
       <CardHeader>
@@ -77,7 +84,7 @@ export function ExerciseCard({ exercise, exerciseNumber, workoutId }: ExerciseCa
               {exerciseNumber}. {exercise.exerciseName}
             </CardTitle>
             <div className="mt-1 flex flex-wrap gap-1">
-              {exercise.muscleGroups.map((mg) => (
+              {muscleGroups.map((mg) => (
                 <span
                   key={mg}
                   className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800"
