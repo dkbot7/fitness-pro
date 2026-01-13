@@ -7,9 +7,11 @@ import { LIMITATIONS_OPTIONS } from '@fitness-pro/shared';
 interface LimitationsSelectorProps {
   value: string[];
   onChange: (value: string[]) => void;
+  limitationsDescription?: string;
+  onDescriptionChange?: (value: string) => void;
 }
 
-export function LimitationsSelector({ value, onChange }: LimitationsSelectorProps) {
+export function LimitationsSelector({ value, onChange, limitationsDescription, onDescriptionChange }: LimitationsSelectorProps) {
   const toggleLimitation = (limitationValue: string) => {
     if (value.includes(limitationValue)) {
       onChange(value.filter((l) => l !== limitationValue));
@@ -43,6 +45,24 @@ export function LimitationsSelector({ value, onChange }: LimitationsSelectorProp
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      {/* Campo para descrever limitações em detalhes */}
+      <div className="space-y-2">
+        <label htmlFor="limitationsDescription" className="text-sm font-medium text-gray-700">
+          Descreva suas limitações físicas em detalhes (opcional)
+        </label>
+        <textarea
+          id="limitationsDescription"
+          value={limitationsDescription || ''}
+          onChange={(e) => onDescriptionChange?.(e.target.value)}
+          placeholder="Descreva qualquer lesão, dor crônica, condição médica ou limitação física que o trainer deve considerar..."
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent min-h-[100px] resize-y"
+          maxLength={1000}
+        />
+        <p className="text-xs text-gray-500">
+          {(limitationsDescription?.length || 0)}/1000 caracteres
+        </p>
       </div>
     </div>
   );

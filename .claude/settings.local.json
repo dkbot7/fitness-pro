@@ -20,7 +20,8 @@
       "Bash(xargs:*)",
       "Bash(npm install:*)",
       "Bash(git push:*)",
-      "Bash(openssl rand:*)"
+      "Bash(openssl rand:*)",
+      "Bash(wrangler pages deploy:*)"
     ]
   }
 }
